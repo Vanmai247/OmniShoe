@@ -120,4 +120,22 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast(`Đã thêm ${productName} vào giỏ hàng! 🛒`);
     });
   });
+
+  // Newsletter Form Submit handler safely
+  const newsletterForm = document.getElementById('newsletter-form');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast("Đăng ký nhận tin thành công! 🎉 Hãy check hộp thư.");
+      newsletterForm.reset();
+    });
+  }
+
+  // Hamburger Mobile Menu toggle handler safely
+  const mobileToggle = document.getElementById('mobile-menu-toggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', () => {
+      showToast("Kích hoạt Menu di động thành công! 📱");
+    });
+  }
 });
