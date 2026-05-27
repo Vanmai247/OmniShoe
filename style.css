@@ -37,3 +37,120 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+/* Header Glassmorphism Styles */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background-color: rgba(var(--bg-rgb), 0.75);
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  text-decoration: none;
+  color: var(--foreground);
+}
+.logo span {
+  color: var(--accent);
+  margin-left: 2px;
+}
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 15px;
+  transition: var(--transition);
+}
+.nav-links a:hover {
+  color: var(--accent);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.search-box {
+  position: relative;
+}
+.search-box input {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  padding: 8px 16px 8px 40px;
+  font-size: 14px;
+  color: var(--foreground);
+  width: 200px;
+  transition: var(--transition);
+}
+.search-box input:focus {
+  outline: none;
+  border-color: var(--accent);
+  width: 240px;
+}
+.search-box i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+}
+.action-btn {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 22px;
+  cursor: pointer;
+  position: relative;
+  padding: 8px;
+  border-radius: 50%;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-btn:hover {
+  background-color: var(--bg-secondary);
+  color: var(--accent);
+}
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border-color);
+}
+.mobile-toggle {
+  display: none;
+}

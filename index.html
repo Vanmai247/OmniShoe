@@ -11,7 +11,43 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header></header>
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="logo">OMNI<span>SHOE</span></a>
+      <nav class="nav-links">
+        <a href="#">Nam</a>
+        <a href="#">Nữ</a>
+        <a href="#">Thương hiệu</a>
+        <a href="#">Sale</a>
+        <a href="#">Xu hướng</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-box">
+          <input type="text" placeholder="Tìm kiếm sneaker...">
+          <i class="ti ti-search"></i>
+        </div>
+        <button id="wishlist-btn" class="action-btn" aria-label="Yêu thích">
+          <i class="ti ti-heart"></i>
+          <span id="wishlist-badge" class="badge">0</span>
+        </button>
+        <button id="cart-btn" class="action-btn" aria-label="Giỏ hàng">
+          <i class="ti ti-shopping-bag"></i>
+          <span id="cart-badge" class="badge">0</span>
+        </button>
+        <button id="profile-btn" class="action-btn" aria-label="Tài khoản">
+          <i class="ti ti-user"></i>
+        </button>
+        <span class="divider"></span>
+        <button id="theme-toggle" class="action-btn" aria-label="Đổi chế độ sáng tối">
+          <i id="theme-icon" class="ti ti-moon"></i>
+        </button>
+      </div>
+      <!-- Hamburger Menu Mobile -->
+      <button id="mobile-menu-toggle" class="mobile-toggle" aria-label="Menu di động">
+        <i class="ti ti-menu-2"></i>
+      </button>
+    </div>
+  </header>
   <main></main>
   <footer></footer>
   <script src="app.js"></script>
