@@ -265,7 +265,7 @@ body {
   gap: 24px;
   border-top: 1px solid var(--border-color);
   padding-top: 32px;
-  max-w: 400px;
+  max-width: 400px;
 }
 .stat-item h4 {
   font-size: 30px;
