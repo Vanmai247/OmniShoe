@@ -96,6 +96,42 @@ try {
   const productCards = doc5.querySelectorAll('.product-card');
   assert.strictEqual(productCards.length, 6, "Phải có đúng 6 sản phẩm mockup trong DOM");
   console.log("✅ Test 5: Hệ thống lọc và tải sản phẩm chính xác!");
+
+  // Test 6: Kiểm tra wishlist, giỏ hàng động và hộp Toast
+  const htmlContent6 = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+  const dom6 = new JSDOM(htmlContent6, { runScripts: "dangerously" });
+  const doc6 = dom6.window.document;
+  
+  // Giả lập nạp app.js
+  const appJsCode6 = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+  const scriptEl6 = doc6.createElement('script');
+  scriptEl6.textContent = appJsCode6;
+  doc6.body.appendChild(scriptEl6);
+  
+  // Kích hoạt DOMContentLoaded sự kiện trong JSDOM giả lập
+  const event6 = doc6.createEvent("Event");
+  event6.initEvent("DOMContentLoaded", true, true);
+  doc6.dispatchEvent(event6);
+
+  const cardHeart = doc6.querySelector('.product-card[data-id="1"] .wishlist-btn-card');
+  const cardAdd = doc6.querySelector('.product-card[data-id="1"] .add-to-cart-btn');
+  const wishlistBadge = doc6.getElementById('wishlist-badge');
+  const cartBadge = doc6.getElementById('cart-badge');
+  const toast = doc6.getElementById('toast');
+  
+  assert.ok(cardHeart, "Thiếu nút trái tim ở card");
+  assert.ok(cardAdd, "Thiếu nút cộng (+) ở card");
+  assert.ok(toast, "Thiếu khung thông báo #toast");
+  
+  // Click yêu thích
+  cardHeart.click();
+  assert.strictEqual(wishlistBadge.textContent, '1', "Badge yêu thích chưa lên 1");
+  
+  // Click thêm giỏ hàng
+  cardAdd.click();
+  assert.strictEqual(cartBadge.textContent, '1', "Badge giỏ hàng chưa lên 1");
+  assert.strictEqual(toast.classList.contains('show'), true, "Chưa nổ Toast thông báo show");
+  console.log("✅ Test 6: Wishlist, giỏ hàng động và hộp Toast hoạt động xuất sắc!");
 } catch (error) {
   console.error("❌ Test thất bại:", error.message || error);
   process.exit(1);

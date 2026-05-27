@@ -59,4 +59,65 @@ document.addEventListener('DOMContentLoaded', () => {
       img.src = 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80';
     });
   });
+
+  // Chức năng giỏ hàng, wishlist & toast
+  let wishlist = [];
+  let cartCount = 0;
+
+  const wishlistBadge = document.getElementById('wishlist-badge');
+  const cartBadge = document.getElementById('cart-badge');
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+
+  function showToast(msg) {
+    if (toastMessage) toastMessage.textContent = msg;
+    if (toast) {
+      toast.classList.add('show');
+      // Xóa timeout cũ nếu có hoặc đặt timeout mới tự đóng sau 3 giây
+      if (toast.timeoutId) clearTimeout(toast.timeoutId);
+      toast.timeoutId = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  }
+
+  // Wishlist clicks
+  const heartButtons = document.querySelectorAll('.wishlist-btn-card');
+  heartButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.product-card');
+      const productId = parseInt(card.getAttribute('data-id'));
+      const productName = card.querySelector('.product-name').textContent;
+
+      if (wishlist.includes(productId)) {
+        wishlist = wishlist.filter(id => id !== productId);
+        btn.classList.remove('active');
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = 'ti ti-heart';
+        showToast("Đã xóa khỏi danh sách yêu thích 💔");
+      } else {
+        wishlist.push(productId);
+        btn.classList.add('active');
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = 'ti ti-heart-filled';
+        showToast("Đã thêm vào danh sách yêu thích ❤️");
+      }
+      if (wishlistBadge) wishlistBadge.textContent = wishlist.length;
+    });
+  });
+
+  // Cart clicks
+  const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+  addToCartButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.product-card');
+      const productName = card.querySelector('.product-name').textContent;
+
+      cartCount++;
+      if (cartBadge) cartBadge.textContent = cartCount;
+      showToast(`Đã thêm ${productName} vào giỏ hàng! 🛒`);
+    });
+  });
 });
