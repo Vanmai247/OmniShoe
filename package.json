@@ -1,0 +1,12 @@
+{
+  "name": "omnishoe-vanilla",
+  "version": "1.0.0",
+  "description": "OmniShoe Vanilla HTML/CSS/JS mockup with TDD",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  }
+}
