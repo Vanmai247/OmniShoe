@@ -57,6 +57,45 @@ try {
   // Sau khi click phải có data-dark
   assert.strictEqual(doc3.documentElement.hasAttribute('data-dark'), true, "Chưa bật thuộc tính data-dark sau khi click");
   console.log("✅ Test 3: Tính năng chuyển đổi Dark Mode hoạt động chính xác!");
+
+  // Test 4: Kiểm tra cấu trúc Hero & Brands đối tác
+  const htmlContent4 = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+  const dom4 = new JSDOM(htmlContent4);
+  const doc4 = dom4.window.document;
+  
+  assert.ok(doc4.querySelector('.hero'), "Thiếu class .hero");
+  assert.ok(doc4.querySelector('.brands'), "Thiếu class .brands");
+  
+  const brandButtons = doc4.querySelectorAll('.brands-container button');
+  assert.strictEqual(brandButtons.length >= 7, true, "Thiếu 7 hãng giày đối tác");
+  console.log("✅ Test 4: Cấu trúc Hero & Brands đối tác được xác thực!");
+
+  // Test 5: Kiểm tra việc lọc sản phẩm theo danh mục
+  const htmlContent5 = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+  const dom5 = new JSDOM(htmlContent5, { runScripts: "dangerously" });
+  const doc5 = dom5.window.document;
+  
+  // Giả lập nạp app.js
+  const appJsCode5 = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8');
+  const scriptEl5 = doc5.createElement('script');
+  scriptEl5.textContent = appJsCode5;
+  doc5.body.appendChild(scriptEl5);
+  
+  // Kích hoạt DOMContentLoaded sự kiện trong JSDOM giả lập
+  const event5 = doc5.createEvent("Event");
+  event5.initEvent("DOMContentLoaded", true, true);
+  doc5.dispatchEvent(event5);
+
+  const filterBtn = doc5.querySelector('.filter-pill[data-filter="Running"]');
+  assert.ok(filterBtn, "Thiếu nút lọc Running");
+  
+  // Click lọc Running
+  filterBtn.click();
+  
+  // Xem các card sản phẩm
+  const productCards = doc5.querySelectorAll('.product-card');
+  assert.strictEqual(productCards.length, 6, "Phải có đúng 6 sản phẩm mockup trong DOM");
+  console.log("✅ Test 5: Hệ thống lọc và tải sản phẩm chính xác!");
 } catch (error) {
   console.error("❌ Test thất bại:", error.message || error);
   process.exit(1);

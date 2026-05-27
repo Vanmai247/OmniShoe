@@ -27,4 +27,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Lọc sản phẩm theo danh mục
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const productCards = document.querySelectorAll('.product-card');
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      // Toggle Active Class
+      filterPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      const filterValue = pill.getAttribute('data-filter');
+
+      // Filter Cards
+      productCards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        if (filterValue === 'Tất cả' || cardCategory === filterValue) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Handle Image Fallbacks safely
+  const productImages = document.querySelectorAll('.product-img img');
+  productImages.forEach(img => {
+    img.addEventListener('error', () => {
+      img.src = 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80';
+    });
+  });
 });
