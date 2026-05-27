@@ -1,0 +1,43 @@
+# Dependecy directories
+node_modules/
+**/node_modules/
+
+# Next.js build output
+.next/
+**/.next/
+out/
+
+# Production / Build artifacts
+build/
+dist/
+
+# Debug and execution logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+*.log
+
+# Environment variables (Secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE configurations
+.vscode/
+.idea/
+.cursor/
+.superpowers/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

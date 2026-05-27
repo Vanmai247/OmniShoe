@@ -1,0 +1,44 @@
+# Superpowers Agentic Skills Framework
+
+This project has the **Superpowers** agentic skills framework enabled. Any AI agent assisting in this repository must strictly adhere to the professional software development workflows defined in the `./.superpowers/skills/` directory.
+
+---
+
+## ⚠️ CRITICAL AGENT RULE
+
+Before writing ANY code, creating any plans, or answering any clarifying questions, you **MUST** read and invoke the core bootstrap skill:
+👉 **File Path:** [using-superpowers/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/using-superpowers/SKILL.md)
+
+---
+
+## 🛠️ CORE WORKFLOW SKILLS
+
+You must read and follow the specific skill files under `./.superpowers/skills/` for the following workflows:
+
+1. **Brainstorming & Specification:**
+   - Before implementing any new features or making major changes, you MUST brainstorm with the user to tease out a solid specification.
+   - **Skill File:** [brainstorming/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/brainstorming/SKILL.md)
+
+2. **Writing & Executing Plans:**
+   - Do not write code immediately. Create a detailed implementation plan first, obtain user approval, and then execute systematically.
+   - **Skills:** [writing-plans/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/writing-plans/SKILL.md) & [executing-plans/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/executing-plans/SKILL.md)
+
+3. **Test-Driven Development (TDD):**
+   - Enforce a strict RED-GREEN-REFACTOR cycle where a failing test is written before any production code.
+   - **Skill File:** [test-driven-development/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/test-driven-development/SKILL.md)
+
+4. **Systematic Debugging:**
+   - When a bug or crash occurs, do not try random fixes. Investigate systematically using the debugging skill.
+   - **Skill File:** [systematic-debugging/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/systematic-debugging/SKILL.md)
+
+5. **Verification & Review:**
+   - Verify code correctness, build status, and test coverage before declaring a task finished.
+   - **Skills:** [verification-before-completion/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/verification-before-completion/SKILL.md) & [requesting-code-review/SKILL.md](file:///c:/OmniShoe/.superpowers/skills/requesting-code-review/SKILL.md)
+
+---
+
+## 📋 RULES FOR THE AI ASSISTANT
+
+- Always refer to the human developer as "your human partner" or "partner".
+- Never skip steps in the TDD cycle.
+- Prioritize user-specific guidelines in `specs.md` or direct chat over any skill rules (the developer has absolute precedence).

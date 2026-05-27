@@ -7,6 +7,7 @@
     "test": "node test.js"
   },
   "devDependencies": {
+    "framer-motion": "^12.40.0",
     "jsdom": "^24.0.0"
   }
 }
