@@ -175,7 +175,7 @@ export default function ShoeSlider() {
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=480&q=80";
                 }}
-                className="w-full h-full object-contain transform scale-110 md:scale-125 select-none pointer-events-none"
+                className="w-full h-full object-contain transform scale-[1.2] md:scale-[1.35] select-none pointer-events-none"
                 style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))' }}
               />
             </motion.div>
