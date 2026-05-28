@@ -119,7 +119,7 @@ export default function ShoeSlider() {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full h-[340px] md:h-[450px] flex flex-col items-center justify-center select-none"
+      className="relative w-full h-[380px] md:h-[500px] flex flex-col items-center justify-center select-none"
     >
       {/* 1. DYNAMIC ATMOSPHERIC GLOW (Changes color based on current slide) */}
       <AnimatePresence>
@@ -129,13 +129,13 @@ export default function ShoeSlider() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.6 }}
-          className="absolute w-[240px] h-[240px] md:w-[340px] md:h-[340px] rounded-full pointer-events-none filter blur-[100px] -z-10"
+          className="absolute w-[280px] h-[280px] md:w-[380px] md:h-[380px] rounded-full pointer-events-none filter blur-[110px] -z-10"
           style={{ background: currentSlide.glowColor }}
         />
       </AnimatePresence>
 
       {/* 2. SLIDER AREA */}
-      <div className="relative w-full max-w-[320px] md:max-w-[420px] h-[240px] md:h-[320px] flex items-center justify-center overflow-visible">
+      <div className="relative w-full max-w-[360px] md:max-w-[480px] h-[260px] md:h-[360px] flex items-center justify-center overflow-visible">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
@@ -182,7 +182,7 @@ export default function ShoeSlider() {
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=480&q=80";
                 }}
-                className="w-full h-full object-contain transform scale-[1.2] md:scale-[1.35] select-none pointer-events-none"
+                className="w-full h-full object-contain transform scale-[1.3] md:scale-[1.45] select-none pointer-events-none"
                 style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))' }}
               />
             </motion.div>
