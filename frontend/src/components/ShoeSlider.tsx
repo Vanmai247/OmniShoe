@@ -114,7 +114,7 @@ export default function ShoeSlider() {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative w-full h-[260px] md:h-[340px] flex flex-col items-center justify-center select-none"
+      className="relative w-full h-[340px] md:h-[450px] flex flex-col items-center justify-center select-none"
     >
       {/* 1. DYNAMIC ATMOSPHERIC GLOW (Changes color based on current slide) */}
       <AnimatePresence>
@@ -124,13 +124,13 @@ export default function ShoeSlider() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.6 }}
-          className="absolute w-[180px] h-[180px] md:w-[220px] md:h-[220px] rounded-full pointer-events-none filter blur-[80px] -z-10"
+          className="absolute w-[240px] h-[240px] md:w-[340px] md:h-[340px] rounded-full pointer-events-none filter blur-[100px] -z-10"
           style={{ background: currentSlide.glowColor }}
         />
       </AnimatePresence>
 
       {/* 2. SLIDER AREA */}
-      <div className="relative w-full max-w-[240px] md:max-w-[280px] h-[180px] md:h-[220px] flex items-center justify-center overflow-visible">
+      <div className="relative w-full max-w-[320px] md:max-w-[420px] h-[240px] md:h-[320px] flex items-center justify-center overflow-visible">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
