@@ -47,6 +47,11 @@ export default function ShoeSlider() {
   const [direction, setDirection] = useState(0); // -1 for prev, 1 for next
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Auto play logic
   useEffect(() => {
@@ -155,9 +160,10 @@ export default function ShoeSlider() {
             {/* Sneaker floating container */}
             <motion.div
               inherit={false}
-              animate={{
+              variants={{}}
+              animate={isMounted ? {
                 y: [0, -16, 0],
-              }}
+              } : {}}
               transition={{
                 duration: 4,
                 repeat: Infinity,
