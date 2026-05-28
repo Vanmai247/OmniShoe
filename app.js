@@ -93,14 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (wishlist.includes(productId)) {
         wishlist = wishlist.filter(id => id !== productId);
         btn.classList.remove('active');
-        const icon = btn.querySelector('i');
-        if (icon) icon.className = 'ti ti-heart';
         showToast("Đã xóa khỏi danh sách yêu thích 💔");
       } else {
         wishlist.push(productId);
         btn.classList.add('active');
-        const icon = btn.querySelector('i');
-        if (icon) icon.className = 'ti ti-heart-filled';
         showToast("Đã thêm vào danh sách yêu thích ❤️");
       }
       if (wishlistBadge) wishlistBadge.textContent = wishlist.length;

@@ -529,23 +529,43 @@ body, html {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgba(var(--bg-rgb), 0.8);
-  border: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(8px);
-  color: var(--foreground);
+  -webkit-backdrop-filter: blur(8px);
+  color: #111111;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   cursor: pointer;
   transition: var(--transition);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 .wishlist-btn-card:hover {
+  color: #ff4757;
+  transform: scale(1.1);
+  background-color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+.wishlist-btn-card.active {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
   color: #ef4444;
-  transform: scale(1.05);
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.3); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 .wishlist-btn-card.active i {
   color: #ef4444;
+  animation: heartbeat 0.45s ease-in-out;
 }
 .product-img {
   width: 100%;
@@ -985,3 +1005,96 @@ body, html {
     text-align: center;
   }
 }
+
+/* --- OMNISHOE NEW PREMIUM EFFECTS & UTILITIES --- */
+
+/* 1. Infinite Logo Marquee */
+.marquee-wrapper {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* 2. Pulse Glow Animation */
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1) translate(0px, 0px);
+    opacity: 0.1;
+  }
+  50% {
+    transform: scale(1.15) translate(10px, -10px);
+    opacity: 0.22;
+  }
+}
+.animate-pulse-glow {
+  animation: pulseGlow 10s ease-in-out infinite;
+}
+
+/* 3. Accordion transitions */
+.accordion-content {
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s;
+}
+.accordion-content.open {
+  grid-template-rows: 1fr;
+}
+
+/* 4. Masonry hover zoom */
+.social-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  aspect-ratio: 1;
+}
+
+.social-card-large {
+  aspect-ratio: 0.75;
+}
+
+.social-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-card:hover img {
+  transform: scale(1.08);
+}
+
+.social-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 55%, transparent 100%);
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.social-card:hover .social-card-overlay {
+  opacity: 1;
+}
+

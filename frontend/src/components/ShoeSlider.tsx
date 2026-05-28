@@ -94,9 +94,9 @@ export default function ShoeSlider() {
       rotate: 0,
       scale: 1,
       transition: {
-        x: { type: "spring", stiffness: 100, damping: 20 },
+        x: { type: "spring" as const, stiffness: 100, damping: 20 },
         opacity: { duration: 0.4 },
-        rotate: { type: "spring", stiffness: 80, damping: 15 },
+        rotate: { type: "spring" as const, stiffness: 80, damping: 15 },
         scale: { duration: 0.4 },
       },
     },
