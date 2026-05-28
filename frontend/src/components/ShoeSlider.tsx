@@ -154,6 +154,7 @@ export default function ShoeSlider() {
           >
             {/* Sneaker floating container */}
             <motion.div
+              inherit={false}
               animate={{
                 y: [0, -16, 0],
               }}
