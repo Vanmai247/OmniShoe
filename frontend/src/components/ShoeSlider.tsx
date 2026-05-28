@@ -14,31 +14,31 @@ interface SlideItem {
 const slides: SlideItem[] = [
   {
     id: 1,
-    name: "Volt Green Edition",
-    color: "#39ff14",
-    glowColor: "rgba(57, 255, 20, 0.2)",
-    image: "/sneaker-green.png",
+    name: "Nike Air Edition",
+    color: "#ff3e00",
+    glowColor: "rgba(255, 62, 0, 0.2)",
+    image: "/Nike_air-removebg-preview.png",
   },
   {
     id: 2,
-    name: "Hyper Pink Edition",
-    color: "#ff007f",
-    glowColor: "rgba(255, 0, 127, 0.2)",
-    image: "/sneaker-pink.png",
-  },
-  {
-    id: 3,
-    name: "Cyber Yellow Edition",
-    color: "#ffea00",
-    glowColor: "rgba(255, 234, 0, 0.2)",
-    image: "/sneaker-yellow.png",
-  },
-  {
-    id: 4,
     name: "Cosmic Purple Edition",
     color: "#b026ff",
     glowColor: "rgba(176, 38, 255, 0.2)",
-    image: "/sneaker-purple.png",
+    image: "/Nike_air.png",
+  },
+  {
+    id: 3,
+    name: "Neon Green Edition",
+    color: "#00ff88",
+    glowColor: "rgba(0, 255, 136, 0.2)",
+    image: "/Nike_3-removebg-preview.png",
+  },
+  {
+    id: 4,
+    name: "Sky Blue Edition",
+    color: "#00bfff",
+    glowColor: "rgba(0, 191, 255, 0.2)",
+    image: "/Nike_4-removebg-preview.png",
   },
 ];
 
@@ -53,7 +53,7 @@ export default function ShoeSlider() {
     if (!isHovered) {
       autoPlayRef.current = setInterval(() => {
         handleNext();
-      }, 4500);
+      }, 3000);
     }
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
@@ -117,7 +117,7 @@ export default function ShoeSlider() {
       className="relative w-full h-[260px] md:h-[340px] flex flex-col items-center justify-center select-none"
     >
       {/* 1. DYNAMIC ATMOSPHERIC GLOW (Changes color based on current slide) */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
           key={`glow-${currentSlide.id}`}
           initial={{ opacity: 0, scale: 0.8 }}
@@ -171,76 +171,41 @@ export default function ShoeSlider() {
               <img
                 src={currentSlide.image}
                 alt={currentSlide.name}
+                draggable={false}
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=480&q=80";
                 }}
-                className="w-[80%] h-[80%] object-contain"
+                className="w-full h-full object-contain transform scale-110 md:scale-125 select-none pointer-events-none"
                 style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.3))' }}
               />
             </motion.div>
           </motion.div>
         </AnimatePresence>
 
-        {/* 3. NAVIGATION CONTROLS */}
+      </div>
+
+      {/* 3. CONTROL DOCK (Option 2) */}
+      <div className="slider-controls-container">
         <button
           onClick={handlePrev}
-          className="absolute left-[-20px] md:left-[-40px] w-10 h-10 md:w-12 md:h-12 rounded-full border border-neutral-200/10 bg-white/5 dark:bg-black/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:border-neutral-200/30 transition-all duration-300 z-20 cursor-pointer shadow-lg"
+          className="slider-dock-btn"
           aria-label="Previous Slide"
         >
-          <i className="ti ti-chevron-left text-lg md:text-xl"></i>
+          <i className="ti ti-chevron-left text-xl"></i>
         </button>
-
         <button
           onClick={handleNext}
-          className="absolute right-[-20px] md:right-[-40px] w-10 h-10 md:w-12 md:h-12 rounded-full border border-neutral-200/10 bg-white/5 dark:bg-black/10 backdrop-blur-md flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:border-neutral-200/30 transition-all duration-300 z-20 cursor-pointer shadow-lg"
+          className="slider-dock-btn"
           aria-label="Next Slide"
         >
-          <i className="ti ti-chevron-right text-lg md:text-xl"></i>
+          <i className="ti ti-chevron-right text-xl"></i>
         </button>
       </div>
 
-      {/* 4. SNEAKER SPECIFICATION / BADGE */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`name-${currentSlide.id}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-          className="mt-6 flex flex-col items-center gap-1.5"
-        >
-          <span
-            className="text-[10px] uppercase tracking-[3px] font-bold px-3 py-1 rounded-full border border-neutral-200/15"
-            style={{
-              color: currentSlide.color,
-              borderColor: `${currentSlide.color}33`,
-              backgroundColor: `${currentSlide.color}10`,
-            }}
-          >
-            {currentSlide.name}
-          </span>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* 5. SLIDE INDICATOR DOTS */}
-      <div className="flex gap-2.5 mt-6">
-        {slides.map((slide, idx) => (
-          <button
-            key={slide.id}
-            onClick={() => selectSlide(idx)}
-            className="relative w-6 h-6 flex items-center justify-center rounded-full border border-transparent hover:border-white/20 transition-all duration-300 cursor-pointer"
-            aria-label={`Go to slide ${idx + 1}`}
-          >
-            <span
-              className="w-2.5 h-2.5 rounded-full transition-all duration-300"
-              style={{
-                backgroundColor: slide.color,
-                opacity: idx === currentIndex ? 1 : 0.4,
-                transform: idx === currentIndex ? "scale(1.2)" : "scale(1)",
-                boxShadow: idx === currentIndex ? `0 0 10px ${slide.color}` : "none",
-              }}
-            />
-          </button>
+      {/* 4. PRELOAD IMAGES */}
+      <div style={{ display: 'none' }}>
+        {slides.map((slide) => (
+          <img key={`preload-${slide.id}`} src={slide.image} alt="preload" />
         ))}
       </div>
     </div>

@@ -156,7 +156,15 @@ export default function Home() {
 
   // Main render
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 relative z-0">
+      {/* Background Image Overlay */}
+      <div 
+        className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
+        style={{
+          backgroundImage: `url('/Gemini_Generated_Image_kb01qnkb01qnkb01.png')`,
+          backgroundBlendMode: 'overlay',
+        }}
+      />
       
       {/* 1. STICKY HEADER WITH GLASSMORPHISM */}
       <header className="header w-full">

@@ -31,7 +31,7 @@ html[data-dark] {
   padding: 0;
 }
 
-body {
+body, html {
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Outfit', system-ui, sans-serif;
@@ -640,6 +640,38 @@ body {
   background-color: var(--accent);
   color: white;
   transform: rotate(90deg);
+}
+
+/* Slider Dock Buttons */
+.slider-controls-container {
+  position: absolute;
+  bottom: -48px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  z-index: 30;
+}
+
+.slider-dock-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: white;
+  transition: var(--transition);
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.slider-dock-btn:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 /* Toast Notification Styles */
