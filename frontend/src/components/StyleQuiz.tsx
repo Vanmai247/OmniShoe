@@ -306,7 +306,7 @@ export default function StyleQuiz({ products, onAddToCart, onShowToast }: StyleQ
                   {/* Shoe Image */}
                   <div className="w-[140px] h-[120px] shrink-0 bg-bg-secondary rounded-xl overflow-hidden flex items-center justify-center p-2">
                     <img
-                      src={`https://images.unsplash.com/${product.photoId}?w=240&q=80`}
+                      src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=240&q=80`}
                       alt={product.name}
                       onError={(e) => {
                         e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=240&q=80";

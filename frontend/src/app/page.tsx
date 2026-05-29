@@ -24,16 +24,15 @@ interface Product {
 const mockProducts: Product[] = [
   {
     id: 1,
-    name: "Air Max 270 React",
+    name: "Court Vision Low Next Nature",
     brand: "Nike",
-    price: "3,490,000₫",
-    oldPrice: "4,200,000₫",
+    price: "1,909,000₫",
     rating: 4.8,
     reviews: 120,
-    badge: "Bestseller",
-    photoId: "photo-1542291026-7eec264c27ff",
+    badge: "Hot",
+    photoId: "/Nike_4-removebg-preview.png",
     category: "Lifestyle",
-    glowColor: "rgba(255, 87, 34, 0.45)",
+    glowColor: "rgba(255, 255, 255, 0.45)",
     sizes: [39, 40, 41, 42, 43],
   },
   {
@@ -52,15 +51,15 @@ const mockProducts: Product[] = [
   },
   {
     id: 3,
-    name: "Air Jordan 1 High OG",
+    name: "Air Jordan 11 Low 'Mother's Day'",
     brand: "Jordan",
-    price: "5,800,000₫",
+    price: "5,589,000₫",
     rating: 4.9,
     reviews: 210,
     badge: "Hot",
-    photoId: "photo-1600185365483-26d7a4cc7519",
+    photoId: "/Air Jordan 11 Low 'Mother's Day'.png",
     category: "Basketball",
-    glowColor: "rgba(239, 68, 68, 0.45)",
+    glowColor: "rgba(244, 114, 182, 0.45)",
     sizes: [39, 40, 41, 42, 43],
   },
   {
@@ -79,30 +78,29 @@ const mockProducts: Product[] = [
   },
   {
     id: 5,
-    name: "990v6 Made in USA",
+    name: "ABZORB 2010 Grey Days",
     brand: "New Balance",
-    price: "6,200,000₫",
+    price: "3,625,000₫",
     rating: 4.8,
     reviews: 43,
     badge: "Limited",
-    photoId: "photo-1539185441755-769473a23570",
+    photoId: "/ABZORB 2010 Grey Day's.png",
     category: "Lifestyle",
     glowColor: "rgba(163, 163, 163, 0.45)",
     sizes: [40, 41, 42, 43, 44],
   },
   {
     id: 6,
-    name: "Chuck 70 Hi",
-    brand: "Converse",
-    price: "1,890,000₫",
-    oldPrice: "2,100,000₫",
-    rating: 4.6,
+    name: "Air Max 90 'Hypervenom'",
+    brand: "Nike",
+    price: "4,109,000₫",
+    rating: 4.8,
     reviews: 150,
-    badge: "Classic",
-    photoId: "photo-1514989940723-e8e51635b782",
+    badge: "Limited",
+    photoId: "/Nike Air Max 90 'Hypervenom'.png",
     category: "Lifestyle",
-    glowColor: "rgba(251, 191, 36, 0.45)",
-    sizes: [37, 38, 39, 40, 41, 42],
+    glowColor: "rgba(132, 204, 22, 0.45)",
+    sizes: [39, 40, 41, 42, 43, 44],
   },
 ];
 
@@ -114,7 +112,19 @@ const brands = [
   "New Balance",
   "Converse",
   "Vans",
+  "MLB",
 ];
+
+const brandLogos: Record<string, string> = {
+  "Nike": "/Nike.png",
+  "Adidas": "/adidas.png",
+  "Jordan": "/puma-logo-3.jpg",
+  "Puma": "/puma-logo-3.jpg",
+  "New Balance": "/new-balance-logo.png",
+  "Converse": "/logo-converse-vector.jpg",
+  "Vans": "/puma-logo-3.jpg",
+  "MLB": "/logo-mlb-korea-ruby-store.webp",
+};
 
 const categories = ["Tất cả", "Lifestyle", "Running", "Basketball"];
 
@@ -345,26 +355,32 @@ export default function Home() {
           <p className="brands-subtitle">Thương hiệu đối tác nổi bật</p>
           <div className="marquee-wrapper mt-4">
             <div className="animate-marquee py-2">
-              {/* First Set */}
-              {brands.map((brand, idx) => (
+              {/* First Set (Repeated 3 times to cover any widescreen seamlessly) */}
+              {[...Array(3)].flatMap(() => brands.filter(b => b !== "Jordan" && b !== "Vans")).map((brand, idx) => (
                 <button
                   key={`brand-1-${idx}`}
                   onClick={() => showToastNotification(`Đang hiển thị sản phẩm liên quan đến ${brand}`)}
-                  className="mx-2 hover:scale-105 transition-all duration-300"
+                  className="mx-8 transition-all duration-300 group hover:-translate-y-1 shrink-0"
                 >
-                  <i className="ti ti-brand-kickstarter"></i>
-                  {brand}
+                  <img
+                    src={brandLogos[brand]}
+                    alt={brand}
+                    className="h-14 md:h-20 w-auto object-contain opacity-85 group-hover:opacity-100 transition-all duration-300"
+                  />
                 </button>
               ))}
-              {/* Duplicate Set for Loop */}
-              {brands.map((brand, idx) => (
+              {/* Duplicate Set for Loop (Perfect Identical Half for seamless transition) */}
+              {[...Array(3)].flatMap(() => brands.filter(b => b !== "Jordan" && b !== "Vans")).map((brand, idx) => (
                 <button
                   key={`brand-2-${idx}`}
                   onClick={() => showToastNotification(`Đang hiển thị sản phẩm liên quan đến ${brand}`)}
-                  className="mx-2 hover:scale-105 transition-all duration-300"
+                  className="mx-8 transition-all duration-300 group hover:-translate-y-1 shrink-0"
                 >
-                  <i className="ti ti-brand-kickstarter"></i>
-                  {brand}
+                  <img
+                    src={brandLogos[brand]}
+                    alt={brand}
+                    className="h-14 md:h-20 w-auto object-contain opacity-85 group-hover:opacity-100 transition-all duration-300"
+                  />
                 </button>
               ))}
             </div>
@@ -451,12 +467,14 @@ export default function Home() {
                     {/* Image container with Sliding Quick Size Picker */}
                     <div className="product-img relative overflow-hidden bg-bg-secondary w-full aspect-[1.15]">
                       <img
-                        src={`https://images.unsplash.com/${product.photoId}?w=480&q=80`}
+                        src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
                         alt={product.name}
                         onError={(e) => {
                           e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
                         }}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${
+                          product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
+                        }`}
                       />
 
                       {/* Sliding Quick Size Picker */}

@@ -1026,7 +1026,11 @@ body, html {
   display: flex;
   gap: 16px;
   width: max-content;
-  animation: marquee 30s linear infinite;
+  animation: marquee 45s linear infinite; /* Slightly slower for premium elegance */
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .animate-marquee:hover {
