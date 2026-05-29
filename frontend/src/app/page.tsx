@@ -24,7 +24,7 @@ interface Product {
 const mockProducts: Product[] = [
   {
     id: 1,
-    name: "Court Vision Low Next Nature",
+    name: "Court Vision Low ",
     brand: "Nike",
     price: "1,909,000₫",
     rating: 4.8,
@@ -134,7 +134,7 @@ export default function Home() {
   const [cart, setCart] = useState<(Product & { selectedSize?: number })[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("Tất cả");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  
+
   // Custom interactive states
   const [selectedSizes, setSelectedSizes] = useState<Record<number, number>>({});
   const [addedProducts, setAddedProducts] = useState<number[]>([]);
@@ -176,7 +176,7 @@ export default function Home() {
     const size = selectedSizes[product.id] || product.sizes[2]; // fallback to index 2 (usually size 41)
     setCart([...cart, { ...product, selectedSize: size }]);
     showToastNotification(`Đã thêm ${product.name} (Size ${size}) vào giỏ hàng! 🛒`);
-    
+
     // Trigger tick micro-interaction
     setAddedProducts((prev) => [...prev, product.id]);
     setTimeout(() => {
@@ -193,18 +193,18 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300 relative z-0">
       {/* Background Image Overlay */}
-      <div 
+      <div
         className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
         style={{
           backgroundImage: `url('/Gemini_Generated_Image_kb01qnkb01qnkb01.png')`,
           backgroundBlendMode: 'overlay',
         }}
       />
-      
+
       {/* 1. STICKY HEADER WITH GLASSMORPHISM */}
       <header className="header w-full">
         <div className="header-container">
-          
+
           {/* Logo */}
           <a href="#" className="logo">
             OMNI<span>SHOE</span>
@@ -228,7 +228,7 @@ export default function Home() {
             </div>
 
             {/* Actions */}
-            <button 
+            <button
               onClick={() => showToastNotification(`Yêu thích đang có ${wishlist.length} sản phẩm`)}
               className="action-btn"
               aria-label="Yêu thích"
@@ -298,24 +298,24 @@ export default function Home() {
                   Drop mới
                 </span>
               </div>
-              
+
               <h1 className="hero-title">
                 NÂNG TẦM PHONG CÁCH <span>SNEAKER</span> CỦA BẠN
               </h1>
-              
+
               <p className="hero-desc">
                 Đón đầu xu hướng sneaker culture tại Việt Nam. Khám phá những phối màu giới hạn độc nhất dành riêng cho thế hệ Gen Z.
               </p>
-              
+
               <div className="hero-ctas">
-                <button 
+                <button
                   onClick={() => showToastNotification("Tính năng mua hàng đang được cập nhật!")}
                   className="btn btn-primary animate-pulse"
                 >
                   Mua ngay <i className="ti ti-arrow-up-right"></i>
                 </button>
-                
-                <button 
+
+                <button
                   onClick={() => {
                     const element = document.getElementById("product-section");
                     element?.scrollIntoView({ behavior: "smooth" });
@@ -420,14 +420,14 @@ export default function Home() {
             <div className="product-grid">
               {filteredProducts.map((product) => {
                 const isAdded = addedProducts.includes(product.id);
-                
+
                 return (
-                  <div 
-                    key={product.id} 
+                  <div
+                    key={product.id}
                     className="product-card group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,87,34,0.08)] bg-card-background border border-border-color rounded-[24px]"
                   >
                     {/* Dynamic Radial Mesh Glow behind card */}
-                    <div 
+                    <div
                       className="absolute -inset-10 opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-full blur-[40px] pointer-events-none -z-10"
                       style={{ background: `radial-gradient(circle, ${product.glowColor} 0%, transparent 70%)` }}
                     />
@@ -472,9 +472,8 @@ export default function Home() {
                         onError={(e) => {
                           e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
                         }}
-                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${
-                          product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
-                        }`}
+                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
+                          }`}
                       />
 
                       {/* Sliding Quick Size Picker */}
@@ -492,11 +491,10 @@ export default function Home() {
                                   setSelectedSizes((prev) => ({ ...prev, [product.id]: sz }));
                                   showToastNotification(`Đã chọn Size ${sz} cho ${product.name} 👟`);
                                 }}
-                                className={`w-8 h-8 rounded-lg text-xs font-black flex items-center justify-center transition-all duration-200 border ${
-                                  isSelected 
-                                    ? "bg-accent border-accent text-white" 
+                                className={`w-8 h-8 rounded-lg text-xs font-black flex items-center justify-center transition-all duration-200 border ${isSelected
+                                    ? "bg-accent border-accent text-white"
                                     : "bg-bg-secondary border-border-color text-text-muted hover:border-accent hover:text-accent"
-                                }`}
+                                  }`}
                               >
                                 {sz}
                               </button>
@@ -511,7 +509,7 @@ export default function Home() {
                       <div>
                         <span className="product-brand text-xs font-bold text-accent uppercase tracking-wider">{product.brand}</span>
                         <h3 className="product-name text-lg font-extrabold text-foreground leading-snug mt-1">{product.name}</h3>
-                        
+
                         {/* Stars Rating */}
                         <div className="product-rating flex items-center gap-1.5 mt-2">
                           <i className="ti ti-star-filled text-amber-500 text-sm"></i>
@@ -532,9 +530,8 @@ export default function Home() {
                         {/* Add to Cart button with check micro-interaction */}
                         <button
                           onClick={() => addToCart(product)}
-                          className={`add-to-cart-btn shrink-0 ${
-                            isAdded ? "bg-accent text-white" : ""
-                          }`}
+                          className={`add-to-cart-btn shrink-0 ${isAdded ? "bg-accent text-white" : ""
+                            }`}
                           aria-label="Thêm vào giỏ hàng"
                         >
                           {isAdded ? (
@@ -557,10 +554,10 @@ export default function Home() {
         </section>
 
         {/* 4.1. INTERACTIVE STYLE FINDER QUIZ */}
-        <StyleQuiz 
-          products={mockProducts} 
-          onAddToCart={addToCart} 
-          onShowToast={showToastNotification} 
+        <StyleQuiz
+          products={mockProducts}
+          onAddToCart={addToCart}
+          onShowToast={showToastNotification}
         />
 
         {/* 4.2. SOCIAL PROOF WALL: #OMNISHOESTYLE */}
@@ -578,8 +575,8 @@ export default function Home() {
               { id: 3, user: "@sneakerhead_vn", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80", shoe: "990v6 Made in USA", size: "social-card-large" },
               { id: 4, user: "@quanganh_oootd", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500&q=80", shoe: "RS-X Bold", size: "" },
             ].map((card) => (
-              <div 
-                key={card.id} 
+              <div
+                key={card.id}
                 className={`social-card group ${card.size}`}
               >
                 <img src={card.image} alt={card.user} />
@@ -645,7 +642,7 @@ export default function Home() {
                       "{t.comment}"
                     </p>
                   </div>
-                  
+
                   {/* User Profile */}
                   <div className="flex items-center gap-3 pt-4 border-t border-border-color">
                     <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover border border-border-color" />
@@ -670,13 +667,13 @@ export default function Home() {
             <h3>Giao hàng miễn phí</h3>
             <p>Miễn phí vận chuyển cho tất cả đơn hàng nội thành Hà Nội & TP. HCM với hóa đơn trên 1 triệu.</p>
           </div>
-          
+
           <div className="value-card">
             <div className="value-icon"><i className="ti ti-arrows-right-left"></i></div>
             <h3>Đổi trả 30 ngày</h3>
             <p>Chính sách đổi hàng dễ dàng trong vòng 30 ngày kể từ khi nhận sản phẩm nếu không vừa size.</p>
           </div>
-          
+
           <div className="value-card">
             <div className="value-icon"><i className="ti ti-shield-check"></i></div>
             <h3>Chính hãng 100%</h3>
@@ -713,7 +710,7 @@ export default function Home() {
           ].map((faq, idx) => {
             const isOpen = activeFaq === idx;
             return (
-              <div 
+              <div
                 key={idx}
                 className="bg-bg-secondary/40 border border-border-color rounded-2xl overflow-hidden transition-colors duration-300"
               >
@@ -725,10 +722,9 @@ export default function Home() {
                   <i className={`ti ${isOpen ? "ti-chevron-up" : "ti-chevron-down"} text-accent transition-transform duration-300 text-lg`}></i>
                 </button>
 
-                <div 
-                  className={`transition-all duration-300 overflow-hidden ${
-                    isOpen ? "max-h-[200px] border-t border-border-color p-6 bg-black/25" : "max-h-0"
-                  }`}
+                <div
+                  className={`transition-all duration-300 overflow-hidden ${isOpen ? "max-h-[200px] border-t border-border-color p-6 bg-black/25" : "max-h-0"
+                    }`}
                 >
                   <p className="text-xs md:text-sm text-text-muted leading-relaxed font-semibold">
                     {faq.a}
@@ -748,8 +744,8 @@ export default function Home() {
             <h3>NHẬN NGAY VOUCHER 100K</h3>
             <p>Đăng ký email để nhận tin tức các đợt Restock & đợt phát hành hot nhất sớm nhất.</p>
           </div>
-          
-          <form 
+
+          <form
             onSubmit={(e) => {
               e.preventDefault();
               showToastNotification("Đăng ký nhận tin thành công! 🎉 Hãy check hộp thư.");
@@ -772,7 +768,7 @@ export default function Home() {
       {/* 6. FOOTER */}
       <footer className="footer">
         <div className="footer-container">
-          
+
           {/* Brand Column */}
           <div className="footer-col brand-col">
             <a href="#" className="logo">
@@ -836,7 +832,7 @@ export default function Home() {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} OmniShoe. Bản quyền thuộc về sneakerhead Việt Nam.</p>
-          
+
           <div className="bottom-links">
             <a href="#">Điều khoản dịch vụ</a>
             <a href="#">Chính sách bảo mật</a>
