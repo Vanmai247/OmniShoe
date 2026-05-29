@@ -24,7 +24,7 @@ interface Product {
 const mockProducts: Product[] = [
   {
     id: 1,
-    name: "Court Vision Low ",
+    name: "Court Vision Low Next Nature",
     brand: "Nike",
     price: "1,909,000₫",
     rating: 4.8,
