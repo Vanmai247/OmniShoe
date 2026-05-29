@@ -58,7 +58,7 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
   };
 
   return (
-    <section className="relative overflow-hidden rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-black to-card-background p-8 md:p-12 my-16 max-w-[1440px] mx-auto">
+    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-black to-card-background p-5 md:p-12 my-16 max-w-[1440px] mx-auto">
       {/* Background Neon Glowing Spot */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-accent/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" />
 
@@ -116,7 +116,7 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
           </p>
 
           {/* Countdown Clock Container */}
-          <div className="flex flex-wrap gap-4 my-2">
+          <div className="flex flex-wrap gap-2.5 sm:gap-4 my-2">
             {[
               { label: "Ngày", value: timeLeft.days },
               { label: "Giờ", value: timeLeft.hours },
@@ -125,12 +125,12 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="flex flex-col items-center justify-center bg-bg-secondary/60 border border-border-color backdrop-blur-sm min-w-[75px] md:min-w-[85px] py-3.5 px-2 rounded-2xl"
+                className="flex flex-col items-center justify-center bg-bg-secondary/60 border border-border-color backdrop-blur-sm min-w-[62px] sm:min-w-[85px] py-2.5 sm:py-3.5 px-1 sm:px-2 rounded-xl sm:rounded-2xl"
               >
-                <span className="text-2xl md:text-3xl font-black text-foreground font-mono leading-none tracking-tight">
+                <span className="text-xl sm:text-3xl font-black text-foreground font-mono leading-none tracking-tight">
                   {formatNumber(item.value)}
                 </span>
-                <span className="text-[10px] text-text-muted font-bold tracking-wider uppercase mt-1">
+                <span className="text-[9px] sm:text-[10px] text-text-muted font-bold tracking-wider uppercase mt-1">
                   {item.label}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
                 Đăng ký thành công! Hệ thống sẽ thông báo ngay khi sự kiện diễn ra.
               </div>
             ) : (
-              <form onSubmit={handleRegister} className="flex gap-2">
+              <form onSubmit={handleRegister} className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="email"
                   required
@@ -160,7 +160,7 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
                 />
                 <button
                   type="submit"
-                  className="bg-accent hover:bg-[#e54e1b] active:scale-95 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 whitespace-nowrap shadow-lg shadow-accent/25"
+                  className="bg-accent hover:bg-[#e54e1b] active:scale-95 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-accent/25"
                 >
                   Nhắc tôi <i className="ti ti-bell-ringing"></i>
                 </button>

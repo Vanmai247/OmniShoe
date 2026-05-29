@@ -145,7 +145,7 @@ export default function StyleQuiz({ products, onAddToCart, onShowToast }: StyleQ
   };
 
   return (
-    <section className="relative overflow-hidden rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-bg-secondary/40 to-card-background p-8 md:p-12 my-16 max-w-[1440px] mx-auto text-center">
+    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-bg-secondary/40 to-card-background p-5 md:p-12 my-16 max-w-[1440px] mx-auto text-center">
       {/* Absolute Glow Lights */}
       <div className="absolute -top-1/4 -right-1/4 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute -bottom-1/4 -left-1/4 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none" />
@@ -294,17 +294,17 @@ export default function StyleQuiz({ products, onAddToCart, onShowToast }: StyleQ
             </div>
 
             {/* Results Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[800px] mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-[800px] mx-auto w-full">
               {recommended.map((product) => (
                 <div 
                   key={product.id}
-                  className="flex flex-col md:flex-row items-center gap-6 p-6 rounded-2xl border border-border-color bg-bg-secondary/40 text-left relative group overflow-hidden"
+                  className="flex flex-row items-center gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl border border-border-color bg-bg-secondary/40 text-left relative group overflow-hidden"
                 >
                   {/* Glowing background */}
                   <div className="absolute -inset-10 opacity-0 group-hover:opacity-10 rounded-full blur-[40px] pointer-events-none -z-10 bg-accent transition-opacity duration-500" />
 
                   {/* Shoe Image */}
-                  <div className="w-[140px] h-[120px] shrink-0 bg-bg-secondary rounded-xl overflow-hidden flex items-center justify-center p-2">
+                  <div className="w-[100px] h-[90px] sm:w-[140px] sm:h-[120px] shrink-0 bg-bg-secondary rounded-xl overflow-hidden flex items-center justify-center p-2">
                     <img
                       src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=240&q=80`}
                       alt={product.name}
@@ -316,16 +316,16 @@ export default function StyleQuiz({ products, onAddToCart, onShowToast }: StyleQ
                   </div>
 
                   {/* Shoe Info */}
-                  <div className="flex-grow flex flex-col justify-between h-full gap-4">
+                  <div className="flex-grow flex flex-col justify-between gap-2.5">
                     <div>
-                      <span className="text-[10px] text-accent font-black tracking-wider uppercase">{product.brand}</span>
-                      <h4 className="font-extrabold text-base text-foreground leading-snug mt-0.5">{product.name}</h4>
-                      <p className="text-accent font-black text-sm mt-1">{product.price}</p>
+                      <span className="text-[9px] sm:text-[10px] text-accent font-black tracking-wider uppercase">{product.brand}</span>
+                      <h4 className="font-extrabold text-sm sm:text-base text-foreground leading-tight sm:leading-snug mt-0.5">{product.name}</h4>
+                      <p className="text-accent font-black text-xs sm:text-sm mt-1">{product.price}</p>
                     </div>
 
                     <button
                       onClick={() => onAddToCart(product)}
-                      className="bg-foreground hover:bg-accent text-background hover:text-white active:scale-95 font-bold text-xs uppercase tracking-wider py-2.5 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 self-start"
+                      className="bg-foreground hover:bg-accent text-background hover:text-white active:scale-95 font-bold text-[10px] sm:text-xs uppercase tracking-wider py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 self-start"
                     >
                       Chọn & Mua <i className="ti ti-plus"></i>
                     </button>
