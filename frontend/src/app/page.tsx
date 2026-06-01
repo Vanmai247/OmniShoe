@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ShoeSlider from "@/components/ShoeSlider";
 import CountdownDrop from "@/components/CountdownDrop";
 import StyleQuiz from "@/components/StyleQuiz";
+import { useAppContext } from "@/context/AppContext";
 
 // Mock products data with dynamic glow colors and sizes
 interface Product {
@@ -129,9 +130,14 @@ const brandLogos: Record<string, string> = {
 const categories = ["Tất cả", "Lifestyle", "Running", "Basketball"];
 
 export default function Home() {
-  // App States
-  const [wishlist, setWishlist] = useState<number[]>([]);
-  const [cart, setCart] = useState<(Product & { selectedSize?: number })[]>([]);
+  const {
+    cart,
+    wishlist,
+    addToCart: globalAddToCart,
+    toggleWishlist,
+    showToast: globalShowToast,
+  } = useAppContext();
+
   const [activeFilter, setActiveFilter] = useState<string>("Tất cả");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
@@ -139,12 +145,6 @@ export default function Home() {
   const [selectedSizes, setSelectedSizes] = useState<Record<number, number>>({});
   const [addedProducts, setAddedProducts] = useState<number[]>([]);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
-  // Notification Toast State
-  const [toast, setToast] = useState<{ show: boolean; message: string }>({
-    show: false,
-    message: "",
-  });
 
   // Dark Mode Sync safely on mount (Permanently Dark Mode)
   useEffect(() => {
@@ -154,28 +154,13 @@ export default function Home() {
 
   // Helper for Toast Notifications
   const showToastNotification = (msg: string) => {
-    setToast({ show: true, message: msg });
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, show: false }));
-    }, 3000);
-  };
-
-  // Wishlist actions
-  const toggleWishlist = (productId: number) => {
-    if (wishlist.includes(productId)) {
-      setWishlist(wishlist.filter((id) => id !== productId));
-      showToastNotification("Đã xóa khỏi danh sách yêu thích 💔");
-    } else {
-      setWishlist([...wishlist, productId]);
-      showToastNotification("Đã thêm vào danh sách yêu thích ❤️");
-    }
+    globalShowToast(msg);
   };
 
   // Add to cart action with size support and click feedback
   const addToCart = (product: Product) => {
     const size = selectedSizes[product.id] || product.sizes[2]; // fallback to index 2 (usually size 41)
-    setCart([...cart, { ...product, selectedSize: size }]);
-    showToastNotification(`Đã thêm ${product.name} (Size ${size}) vào giỏ hàng! 🛒`);
+    globalAddToCart(product, size, 1);
 
     // Trigger tick micro-interaction
     setAddedProducts((prev) => [...prev, product.id]);
@@ -840,15 +825,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* INTERACTIVE TOAST NOTIFICATION */}
-      <div className={`toast ${toast.show ? "show" : ""}`}>
-        <div className="toast-icon">
-          <i className="ti ti-info-circle"></i>
-        </div>
-        <p className="toast-message">{toast.message}</p>
-      </div>
-
     </div>
   );
 }
