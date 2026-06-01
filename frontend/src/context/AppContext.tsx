@@ -28,7 +28,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
-  const [toast, setToast] = useState({ show: boolean; message: "" });
+  const [toast, setToast] = useState({ show: false, message: "" });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
