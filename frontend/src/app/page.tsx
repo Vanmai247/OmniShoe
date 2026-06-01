@@ -5,6 +5,7 @@ import ShoeSlider from "@/components/ShoeSlider";
 import CountdownDrop from "@/components/CountdownDrop";
 import StyleQuiz from "@/components/StyleQuiz";
 import { useAppContext } from "@/context/AppContext";
+import Link from "next/link";
 
 // Mock products data with dynamic glow colors and sizes
 interface Product {
@@ -451,15 +452,17 @@ export default function Home() {
 
                     {/* Image container with Sliding Quick Size Picker */}
                     <div className="product-img relative overflow-hidden bg-bg-secondary w-full aspect-[1.15]">
-                      <img
-                        src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
-                        alt={product.name}
-                        onError={(e) => {
-                          e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
-                        }}
-                        className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
-                          }`}
-                      />
+                      <Link href={`/products/${product.id}`} className="block w-full h-full">
+                        <img
+                          src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
+                          }}
+                          className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
+                            }`}
+                        />
+                      </Link>
 
                       {/* Sliding Quick Size Picker */}
                       <div className="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-sm p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-1.5 items-center z-20">
@@ -492,8 +495,10 @@ export default function Home() {
                     {/* Product Details */}
                     <div className="product-info p-6 flex-grow flex flex-col justify-between">
                       <div>
-                        <span className="product-brand text-xs font-bold text-accent uppercase tracking-wider">{product.brand}</span>
-                        <h3 className="product-name text-lg font-extrabold text-foreground leading-snug mt-1">{product.name}</h3>
+                        <Link href={`/products/${product.id}`} className="hover:text-accent transition-colors block group/title">
+                          <span className="product-brand text-xs font-bold text-accent uppercase tracking-wider block">{product.brand}</span>
+                          <h3 className="product-name text-lg font-extrabold text-foreground leading-snug mt-1 group-hover/title:text-accent transition-colors">{product.name}</h3>
+                        </Link>
 
                         {/* Stars Rating */}
                         <div className="product-rating flex items-center gap-1.5 mt-2">
