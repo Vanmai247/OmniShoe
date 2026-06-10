@@ -182,7 +182,7 @@ export default function Home() {
       <div
         className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
         style={{
-          backgroundImage: `url('/Gemini_Generated_Image_kb01qnkb01qnkb01.png')`,
+          backgroundImage: `url('/studio_light_bg.png')`,
           backgroundBlendMode: 'overlay',
         }}
       />
@@ -192,9 +192,9 @@ export default function Home() {
         <div className="header-container">
 
           {/* Logo */}
-          <a href="#" className="logo">
-            OMNI<span>SHOE</span>
-          </a>
+          <Link href="/" className="header-logo-link">
+            <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
+          </Link>
 
           {/* Navigation Links (Desktop) */}
           <nav className="nav-links">
