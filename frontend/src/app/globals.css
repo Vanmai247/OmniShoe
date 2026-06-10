@@ -192,6 +192,7 @@ body, html {
 .nav-links {
   display: flex;
   gap: 32px;
+  align-items: center;
 }
 .nav-links a {
   text-decoration: none;
@@ -1484,7 +1485,8 @@ body, html {
 /* --- BRAND MEGA-MENU STYLING --- */
 .nav-item-has-submenu {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
 .mega-menu {
   position: absolute;
