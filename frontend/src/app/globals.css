@@ -84,7 +84,6 @@ body, html {
   width: auto;
   display: block;
   object-fit: contain;
-  mix-blend-mode: multiply;
 }
 @media (max-width: 767px) {
   .header-logo-image {
