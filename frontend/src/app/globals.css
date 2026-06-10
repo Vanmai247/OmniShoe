@@ -5,7 +5,7 @@
 :root {
   --background: #f8f9fa;
   --foreground: #111111;
-  --accent: #FF5722;
+  --accent: #FF6B00;
   --bg-secondary: #f1f3f5;
   --text-muted: #6b7280;
   --border-color: #e5e7eb;
@@ -614,8 +614,8 @@ body, html {
 }
 @media (min-width: 1024px) {
   .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
 }
 .product-card {
