@@ -343,6 +343,7 @@ body, html {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -1px;
+  color: #ffffff;
 }
 @media (min-width: 768px) {
   .hero-title {
@@ -354,7 +355,7 @@ body, html {
 }
 .hero-desc {
   font-size: 17px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.6;
   max-width: 460px;
 }
@@ -388,19 +389,19 @@ body, html {
 }
 .btn-secondary {
   background: none;
-  border: 1px solid var(--border-color);
-  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
 }
 .btn-secondary:hover {
-  background-color: var(--bg-secondary);
-  border-color: var(--foreground);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
   transform: translateY(-2px);
 }
 .hero-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding-top: 32px;
   max-width: 400px;
 }
@@ -411,7 +412,7 @@ body, html {
 }
 .stat-item p {
   font-size: 12px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.5);
   font-weight: 600;
   text-transform: uppercase;
 }
