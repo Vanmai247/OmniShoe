@@ -153,10 +153,22 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState<number>(6000000);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
 
-  // Dark Mode Sync safely on mount (Permanently Dark Mode)
+  // Dark Mode Sync and Query Params safely on mount
   useEffect(() => {
     document.documentElement.setAttribute("data-dark", "true");
     localStorage.setItem("theme", "dark");
+
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const brandParam = params.get("brand");
+      if (brandParam) {
+        setSelectedBrands([brandParam]);
+        setTimeout(() => {
+          const element = document.getElementById("product-section");
+          element?.scrollIntoView({ behavior: "smooth" });
+        }, 300);
+      }
+    }
   }, []);
 
   // Helper for Toast Notifications
@@ -206,13 +218,34 @@ export default function Home() {
             <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
           </Link>
 
-          {/* Navigation Links (Desktop) */}
           <nav className="nav-links">
-            {["Nam", "Nữ", "Thương hiệu", "Sale", "Xu hướng"].map((link) => (
-              <a key={link} href="#">
-                {link}
-              </a>
-            ))}
+            <a href="#">Nam</a>
+            <a href="#">Nữ</a>
+            <div className="nav-item-has-submenu">
+              <a href="#" className="nav-link-trigger">Thương hiệu</a>
+              <div className="mega-menu">
+                <div className="mega-menu-grid">
+                  {brands.map((brand) => (
+                    <button 
+                      key={brand}
+                      onClick={() => {
+                        setSelectedBrands([brand]);
+                        setActiveFilter("Tất cả");
+                        const element = document.getElementById("product-section");
+                        element?.scrollIntoView({ behavior: "smooth" });
+                        showToastNotification(`Đang lọc thương hiệu: ${brand}`);
+                      }}
+                      className="mega-menu-item"
+                    >
+                      <img src={brandLogos[brand]} alt={brand} />
+                      <span>{brand}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <a href="#">Sale</a>
+            <a href="#">Xu hướng</a>
           </nav>
 
           {/* Search bar & Icons (Desktop) */}

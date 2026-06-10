@@ -102,6 +102,28 @@ const mockProducts = [
   },
 ];
 
+const brands = [
+  "Nike",
+  "Adidas",
+  "Jordan",
+  "Puma",
+  "New Balance",
+  "Converse",
+  "Vans",
+  "MLB",
+];
+
+const brandLogos: Record<string, string> = {
+  "Nike": "/Nike.png",
+  "Adidas": "/adidas.png",
+  "Jordan": "/puma-logo-3.jpg",
+  "Puma": "/puma-logo-3.jpg",
+  "New Balance": "/new-balance-logo.png",
+  "Converse": "/logo-converse-vector.jpg",
+  "Vans": "/puma-logo-3.jpg",
+  "MLB": "/logo-mlb-korea-ruby-store.webp",
+};
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -160,11 +182,27 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
           </Link>
           <nav className="nav-links">
-            {["Nam", "Nữ", "Thương hiệu", "Sale", "Xu hướng"].map((link) => (
-              <Link key={link} href="/">
-                {link}
-              </Link>
-            ))}
+            <Link href="/">Nam</Link>
+            <Link href="/">Nữ</Link>
+            <div className="nav-item-has-submenu">
+              <Link href="/" className="nav-link-trigger">Thương hiệu</Link>
+              <div className="mega-menu">
+                <div className="mega-menu-grid">
+                  {brands.map((brand) => (
+                    <Link 
+                      key={brand}
+                      href={`/?brand=${brand}`}
+                      className="mega-menu-item"
+                    >
+                      <img src={brandLogos[brand]} alt={brand} />
+                      <span>{brand}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <Link href="/">Sale</Link>
+            <Link href="/">Xu hướng</Link>
           </nav>
           <div className="header-actions">
             <Link href="/" className="action-btn" aria-label="Home">
