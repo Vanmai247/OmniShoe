@@ -156,8 +156,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       {/* Global Header clone for Detail Page navigation */}
       <header className="header w-full">
         <div className="header-container">
-          <Link href="/" className="logo">
-            OMNI<span>SHOE</span>
+          <Link href="/" className="header-logo-link">
+            <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
           </Link>
           <nav className="nav-links">
             {["Nam", "Nữ", "Thương hiệu", "Sale", "Xu hướng"].map((link) => (
