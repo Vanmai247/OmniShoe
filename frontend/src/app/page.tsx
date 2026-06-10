@@ -252,7 +252,7 @@ export default function Home() {
           <div className="header-actions">
             {/* Search Input */}
             <div className="search-box">
-              <input type="text" placeholder="Tìm kiếm sneaker..." />
+              <input type="text" placeholder="Tìm kiếm Air Jordan, Nike..." />
               <i className="ti ti-search"></i>
             </div>
 
@@ -962,6 +962,14 @@ export default function Home() {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} OmniShoe. Bản quyền thuộc về sneakerhead Việt Nam.</p>
+
+          <div className="bottom-social-links flex gap-4 my-2 sm:my-0">
+            {["instagram", "tiktok", "facebook", "youtube"].map((social) => (
+              <a key={social} href="#" aria-label={social} className="text-text-muted hover:text-accent transition-colors text-lg">
+                <i className={`ti ti-brand-${social}`}></i>
+              </a>
+            ))}
+          </div>
 
           <div className="bottom-links">
             <a href="#">Điều khoản dịch vụ</a>

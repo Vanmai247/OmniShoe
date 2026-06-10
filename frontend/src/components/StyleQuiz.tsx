@@ -44,9 +44,9 @@ const quizQuestions: Question[] = [
     subtitle: "Chúng tôi sẽ lọc ra dòng giày tối ưu cho hoạt động của bạn.",
     field: "category",
     options: [
-      { label: "Thời trang hàng ngày", value: "Lifestyle", desc: "Đi học, đi làm, dạo phố nhẹ nhàng", icon: "ti-shirt" },
+      { label: "Thời trang hàng ngày", value: "Lifestyle", desc: "Đi học, đi làm, dạo phố nhẹ nhàng", icon: "ti-walk" },
       { label: "Thể thao & Chạy bộ", value: "Running", desc: "Tập gym, chạy bộ bền bỉ với đệm êm", icon: "ti-run" },
-      { label: "Bóng rổ & Streetwear", value: "Basketball", desc: "Độ bám sân cao, phong cách hiphop cực chất", icon: "ti-ball-volleyball" },
+      { label: "Bóng rổ & Streetwear", value: "Basketball", desc: "Độ bám sân cao, phong cách hiphop cực chất", icon: "ti-flame" },
     ],
   },
   {
