@@ -604,7 +604,7 @@ export default function Home() {
 
                           {/* Sliding Quick Size Picker */}
                           <div className="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-sm p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-1.5 items-center z-20">
-                            <span className="text-[10px] text-text-muted font-black tracking-wider uppercase">Chọn nhanh Size giày</span>
+                            <span className="text-[10px] text-zinc-400 font-black tracking-wider uppercase">Chọn nhanh Size giày</span>
                             <div className="flex flex-wrap gap-1.5 justify-center">
                               {product.sizes.map((sz) => {
                                 const isSelected = selectedSizes[product.id] === sz;
@@ -618,8 +618,8 @@ export default function Home() {
                                       showToastNotification(`Đã chọn Size ${sz} cho ${product.name} 👟`);
                                     }}
                                     className={`w-8 h-8 rounded-lg text-xs font-black flex items-center justify-center transition-all duration-200 border ${isSelected
-                                        ? "bg-accent border-accent text-white"
-                                        : "bg-bg-secondary border-border-color text-text-muted hover:border-accent hover:text-accent"
+                                        ? "bg-accent border-accent text-white shadow-[0_0_10px_rgba(255,107,0,0.5)]"
+                                        : "bg-white/10 border-white/15 text-zinc-200 hover:border-accent hover:text-accent hover:bg-accent/10"
                                       }`}
                                   >
                                     {sz}
