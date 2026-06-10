@@ -147,6 +147,12 @@ export default function Home() {
   const [addedProducts, setAddedProducts] = useState<number[]>([]);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
+  // Filter States
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [filterSizes, setFilterSizes] = useState<number[]>([]);
+  const [maxPrice, setMaxPrice] = useState<number>(6000000);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
+
   // Dark Mode Sync safely on mount (Permanently Dark Mode)
   useEffect(() => {
     document.documentElement.setAttribute("data-dark", "true");
@@ -172,8 +178,12 @@ export default function Home() {
 
   // Filter products
   const filteredProducts = mockProducts.filter((p) => {
-    if (activeFilter === "Tất cả") return true;
-    return p.category === activeFilter;
+    const matchCategory = activeFilter === "Tất cả" || p.category === activeFilter;
+    const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
+    const matchSize = filterSizes.length === 0 || p.sizes.some((sz) => filterSizes.includes(sz));
+    const priceVal = parseInt(p.price.replace(/[^\d]/g, ""));
+    const matchPrice = priceVal <= maxPrice;
+    return matchCategory && matchBrand && matchSize && matchPrice;
   });
 
   return (
@@ -384,163 +394,260 @@ export default function Home() {
               <h2 className="section-title">SNEAKER CỰC HOT CHO BẠN</h2>
             </div>
 
-            {/* Filter Pills */}
-            <div className="filters">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setActiveFilter(cat);
-                    showToastNotification(`Đã lọc danh mục: ${cat}`);
-                  }}
-                  className={`filter-pill ${activeFilter === cat ? "active" : ""}`}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Filter Pills & Mobile filter trigger */}
+            <div className="filters-header-row flex items-center gap-4 flex-wrap mt-4">
+              <div className="filters">
+                {categories.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setActiveFilter(cat);
+                      showToastNotification(`Đã lọc danh mục: ${cat}`);
+                    }}
+                    className={`filter-pill ${activeFilter === cat ? "active" : ""}`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <button 
+                onClick={() => setIsFilterDrawerOpen(true)}
+                className="mobile-filter-trigger-btn filter-pill flex items-center gap-1.5 active"
+              >
+                <i className="ti ti-adjustments-horizontal"></i> Bộ lọc
+              </button>
             </div>
           </div>
 
-          {/* Product Grid */}
-          {filteredProducts.length > 0 ? (
-            <div className="product-grid">
-              {filteredProducts.map((product) => {
-                const isAdded = addedProducts.includes(product.id);
+          <div className="products-body-container">
+            {/* Filter Sidebar (Desktop Sticky / Mobile Drawer) */}
+            <aside className={`filter-sidebar ${isFilterDrawerOpen ? 'open' : ''}`}>
+              <div className="sidebar-header">
+                <h3>Bộ lọc sản phẩm</h3>
+                <button onClick={() => setIsFilterDrawerOpen(false)} aria-label="Close">
+                  <i className="ti ti-x"></i>
+                </button>
+              </div>
 
-                return (
-                  <div
-                    key={product.id}
-                    className="product-card group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,87,34,0.08)] bg-card-background border border-border-color rounded-[24px]"
-                  >
-                    {/* Dynamic Radial Mesh Glow behind card */}
-                    <div
-                      className="absolute -inset-10 opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-full blur-[40px] pointer-events-none -z-10"
-                      style={{ background: `radial-gradient(circle, ${product.glowColor} 0%, transparent 70%)` }}
-                    />
-
-                    {/* Badge */}
-                    {product.badge && (
-                      <span className="product-badge">
-                        {product.badge}
-                      </span>
-                    )}
-
-                    {/* Wishlist Button */}
-                    <button
-                      onClick={() => toggleWishlist(product.id)}
-                      className={`wishlist-btn-card ${wishlist.includes(product.id) ? "active" : ""}`}
-                      aria-label="Yêu thích"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill={wishlist.includes(product.id) ? "#ef4444" : "none"}
-                        stroke={wishlist.includes(product.id) ? "#ef4444" : "currentColor"}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="transition-all duration-300"
-                        style={{
-                          animation: wishlist.includes(product.id) ? "heartbeat 0.45s ease-in-out" : "none"
+              <div className="filter-group">
+                <h4>Thương hiệu</h4>
+                <div className="filter-checkbox-list">
+                  {brands.map((brand) => (
+                    <label key={brand} className="filter-checkbox-label">
+                      <input 
+                        type="checkbox"
+                        checked={selectedBrands.includes(brand)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedBrands([...selectedBrands, brand]);
+                          } else {
+                            setSelectedBrands(selectedBrands.filter((b) => b !== brand));
+                          }
                         }}
+                      />
+                      <span>{brand}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="filter-group">
+                <h4>Size giày</h4>
+                <div className="size-filter-grid">
+                  {[38, 39, 40, 41, 42, 43, 44].map((sz) => {
+                    const isSelected = filterSizes.includes(sz);
+                    return (
+                      <button
+                        key={sz}
+                        onClick={() => {
+                          if (isSelected) {
+                            setFilterSizes(filterSizes.filter((s) => s !== sz));
+                          } else {
+                            setFilterSizes([...filterSizes, sz]);
+                          }
+                        }}
+                        className={`size-filter-btn ${isSelected ? 'active' : ''}`}
                       >
-                        <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
-                      </svg>
-                    </button>
+                        {sz}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-                    {/* Image container with Sliding Quick Size Picker */}
-                    <div className="product-img relative overflow-hidden bg-bg-secondary w-full aspect-[1.15]">
-                      <Link href={`/products/${product.id}`} className="block w-full h-full">
-                        <img
-                          src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
-                          alt={product.name}
-                          onError={(e) => {
-                            e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
-                          }}
-                          className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
-                            }`}
+              <div className="filter-group">
+                <h4>Khoảng giá (Dưới)</h4>
+                <input 
+                  type="range"
+                  min="1000000"
+                  max="6000000"
+                  step="500000"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(parseInt(e.target.value))}
+                  className="price-slider"
+                />
+                <div className="price-display">
+                  <span>{maxPrice.toLocaleString('vi-VN')}₫</span>
+                </div>
+              </div>
+
+              {(selectedBrands.length > 0 || filterSizes.length > 0 || maxPrice < 6000000) && (
+                <button 
+                  onClick={() => {
+                    setSelectedBrands([]);
+                    setFilterSizes([]);
+                    setMaxPrice(6000000);
+                  }}
+                  className="clear-filters-btn"
+                >
+                  Xóa tất cả bộ lọc
+                </button>
+              )}
+            </aside>
+
+            {/* Product Area */}
+            <div className="products-grid-area">
+              {filteredProducts.length > 0 ? (
+                <div className="product-grid">
+                  {filteredProducts.map((product) => {
+                    const isAdded = addedProducts.includes(product.id);
+
+                    return (
+                      <div
+                        key={product.id}
+                        className="product-card group relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(255,87,34,0.08)] bg-card-background border border-border-color rounded-[24px]"
+                      >
+                        {/* Dynamic Radial Mesh Glow behind card */}
+                        <div
+                          className="absolute -inset-10 opacity-0 group-hover:opacity-15 transition-opacity duration-500 rounded-full blur-[40px] pointer-events-none -z-10"
+                          style={{ background: `radial-gradient(circle, ${product.glowColor} 0%, transparent 70%)` }}
                         />
-                      </Link>
 
-                      {/* Sliding Quick Size Picker */}
-                      <div className="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-sm p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-1.5 items-center z-20">
-                        <span className="text-[10px] text-text-muted font-black tracking-wider uppercase">Chọn nhanh Size giày</span>
-                        <div className="flex flex-wrap gap-1.5 justify-center">
-                          {product.sizes.map((sz) => {
-                            const isSelected = selectedSizes[product.id] === sz;
-                            return (
-                              <button
-                                key={sz}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setSelectedSizes((prev) => ({ ...prev, [product.id]: sz }));
-                                  showToastNotification(`Đã chọn Size ${sz} cho ${product.name} 👟`);
-                                }}
-                                className={`w-8 h-8 rounded-lg text-xs font-black flex items-center justify-center transition-all duration-200 border ${isSelected
-                                    ? "bg-accent border-accent text-white"
-                                    : "bg-bg-secondary border-border-color text-text-muted hover:border-accent hover:text-accent"
-                                  }`}
-                              >
-                                {sz}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
+                        {/* Badge */}
+                        {product.badge && (
+                          <span className="product-badge">
+                            {product.badge}
+                          </span>
+                        )}
 
-                    {/* Product Details */}
-                    <div className="product-info p-6 flex-grow flex flex-col justify-between">
-                      <div>
-                        <Link href={`/products/${product.id}`} className="hover:text-accent transition-colors block group/title">
-                          <span className="product-brand text-xs font-bold text-accent uppercase tracking-wider block">{product.brand}</span>
-                          <h3 className="product-name text-lg font-extrabold text-foreground leading-snug mt-1 group-hover/title:text-accent transition-colors">{product.name}</h3>
-                        </Link>
-
-                        {/* Stars Rating */}
-                        <div className="product-rating flex items-center gap-1.5 mt-2">
-                          <i className="ti ti-star-filled text-amber-500 text-sm"></i>
-                          <span className="rating-value text-xs font-bold">{product.rating}</span>
-                          <span className="reviews-count text-xs text-text-muted">({product.reviews} đánh giá)</span>
-                        </div>
-                      </div>
-
-                      {/* Price & Cart CTA */}
-                      <div className="product-meta flex items-center justify-between mt-4">
-                        <div className="product-price flex flex-col">
-                          <span className="current-price text-xl font-black text-accent">{product.price}</span>
-                          {product.oldPrice && (
-                            <span className="old-price text-xs text-text-muted text-decoration-line-through">{product.oldPrice}</span>
-                          )}
-                        </div>
-
-                        {/* Add to Cart button with check micro-interaction */}
+                        {/* Wishlist Button */}
                         <button
-                          onClick={() => addToCart(product)}
-                          className={`add-to-cart-btn shrink-0 ${isAdded ? "bg-accent text-white" : ""
-                            }`}
-                          aria-label="Thêm vào giỏ hàng"
+                          onClick={() => toggleWishlist(product.id)}
+                          className={`wishlist-btn-card ${wishlist.includes(product.id) ? "active" : ""}`}
+                          aria-label="Yêu thích"
                         >
-                          {isAdded ? (
-                            <i className="ti ti-check animate-bounce"></i>
-                          ) : (
-                            <i className="ti ti-plus"></i>
-                          )}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill={wishlist.includes(product.id) ? "#ef4444" : "none"}
+                            stroke={wishlist.includes(product.id) ? "#ef4444" : "currentColor"}
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="transition-all duration-300"
+                            style={{
+                              animation: wishlist.includes(product.id) ? "heartbeat 0.45s ease-in-out" : "none"
+                            }}
+                          >
+                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                          </svg>
                         </button>
+
+                        {/* Image container with Sliding Quick Size Picker */}
+                        <div className="product-img relative overflow-hidden bg-bg-secondary w-full aspect-[1.15]">
+                          <Link href={`/products/${product.id}`} className="block w-full h-full">
+                            <img
+                              src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
+                              alt={product.name}
+                              onError={(e) => {
+                                e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
+                              }}
+                              className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
+                                }`}
+                            />
+                          </Link>
+
+                          {/* Sliding Quick Size Picker */}
+                          <div className="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-sm p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-1.5 items-center z-20">
+                            <span className="text-[10px] text-text-muted font-black tracking-wider uppercase">Chọn nhanh Size giày</span>
+                            <div className="flex flex-wrap gap-1.5 justify-center">
+                              {product.sizes.map((sz) => {
+                                const isSelected = selectedSizes[product.id] === sz;
+                                return (
+                                  <button
+                                    key={sz}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setSelectedSizes((prev) => ({ ...prev, [product.id]: sz }));
+                                      showToastNotification(`Đã chọn Size ${sz} cho ${product.name} 👟`);
+                                    }}
+                                    className={`w-8 h-8 rounded-lg text-xs font-black flex items-center justify-center transition-all duration-200 border ${isSelected
+                                        ? "bg-accent border-accent text-white"
+                                        : "bg-bg-secondary border-border-color text-text-muted hover:border-accent hover:text-accent"
+                                      }`}
+                                  >
+                                    {sz}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Product Details */}
+                        <div className="product-info p-6 flex-grow flex flex-col justify-between">
+                          <div>
+                            <Link href={`/products/${product.id}`} className="hover:text-accent transition-colors block group/title">
+                              <span className="product-brand text-xs font-bold text-accent uppercase tracking-wider block">{product.brand}</span>
+                              <h3 className="product-name text-lg font-extrabold text-foreground leading-snug mt-1 group-hover/title:text-accent transition-colors">{product.name}</h3>
+                            </Link>
+
+                            {/* Stars Rating */}
+                            <div className="product-rating flex items-center gap-1.5 mt-2">
+                              <i className="ti ti-star-filled text-amber-500 text-sm"></i>
+                              <span className="rating-value text-xs font-bold">{product.rating}</span>
+                              <span className="reviews-count text-xs text-text-muted">({product.reviews} đánh giá)</span>
+                            </div>
+                          </div>
+
+                          {/* Price & Cart CTA */}
+                          <div className="product-meta flex items-center justify-between mt-4">
+                            <div className="product-price flex flex-col">
+                              <span className="current-price text-xl font-black text-accent">{product.price}</span>
+                              {product.oldPrice && (
+                                <span className="old-price text-xs text-text-muted text-decoration-line-through">{product.oldPrice}</span>
+                              )}
+                            </div>
+
+                            {/* Add to Cart button with check micro-interaction */}
+                            <button
+                              onClick={() => addToCart(product)}
+                              className={`add-to-cart-btn shrink-0 ${isAdded ? "bg-accent text-white" : ""
+                                }`}
+                              aria-label="Thêm vào giỏ hàng"
+                            >
+                              {isAdded ? (
+                                <i className="ti ti-check animate-bounce"></i>
+                              ) : (
+                                <i className="ti ti-plus"></i>
+                              )}
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-16 border border-dashed border-border-color rounded-[32px] w-full">
+                  <p className="font-bold text-lg mt-4 text-text-muted">Không tìm thấy sản phẩm phù hợp!</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-16 border border-dashed border-border-color rounded-[32px]">
-              <p className="font-bold text-lg mt-4 text-text-muted">Không tìm thấy sản phẩm phù hợp!</p>
-            </div>
-          )}
+          </div>
         </section>
 
         {/* 4.1. INTERACTIVE STYLE FINDER QUIZ */}

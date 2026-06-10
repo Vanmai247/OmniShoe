@@ -1283,3 +1283,179 @@ body, html {
   }
 }
 
+/* --- FILTER SIDEBAR STYLING --- */
+.products-body-container {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  align-items: flex-start;
+  width: 100%;
+}
+.filter-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 100px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+}
+.products-grid-area {
+  flex-grow: 1;
+}
+.filter-group h4 {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  color: var(--foreground);
+}
+.filter-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+/* Scrollbar styling for filter-checkbox-list */
+.filter-checkbox-list::-webkit-scrollbar {
+  width: 4px;
+}
+.filter-checkbox-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.filter-checkbox-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+.filter-checkbox-label:hover {
+  color: var(--foreground);
+}
+.filter-checkbox-label input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.size-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.size-filter-btn {
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-muted);
+}
+.size-filter-btn.active, .size-filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background-color: rgba(255, 107, 0, 0.05);
+}
+.price-slider {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.price-display {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-top: 8px;
+}
+.clear-filters-btn {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  background: none;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.clear-filters-btn:hover {
+  background-color: var(--accent);
+  color: white;
+}
+
+.sidebar-header {
+  display: none;
+}
+
+.mobile-filter-trigger-btn {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  .mobile-filter-trigger-btn {
+    display: flex !important;
+  }
+  .products-body-container {
+    gap: 0;
+  }
+  .filter-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    z-index: 1000;
+    border-radius: 0;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+    background-color: var(--card-background);
+    border-left: 1px solid var(--border-color);
+  }
+  .filter-sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .sidebar-header h3 {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--foreground);
+  }
+  .sidebar-header button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
