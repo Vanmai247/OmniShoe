@@ -91,11 +91,14 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
           </motion.div>
 
           {/* Product Floating Tag */}
-          <div className="absolute bottom-2 left-4 bg-black/60 border border-border-color backdrop-blur-md py-2.5 px-4 rounded-2xl flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent animate-ping" />
+          <div className="absolute bottom-2 left-4 bg-black/80 border border-white/10 backdrop-blur-md py-2.5 px-4 rounded-2xl flex items-center gap-3 shadow-xl">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+            </span>
             <div className="text-left">
-              <p className="text-[10px] text-text-muted font-bold tracking-wider uppercase">Số lượng cực giới hạn</p>
-              <h4 className="text-sm font-bold text-foreground">85 đôi tại Việt Nam</h4>
+              <p className="text-[10px] text-zinc-400 font-bold tracking-wider uppercase">Số lượng cực giới hạn</p>
+              <h4 className="text-sm font-bold text-white">85 đôi tại Việt Nam</h4>
             </div>
           </div>
         </div>
