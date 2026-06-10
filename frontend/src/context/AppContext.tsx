@@ -120,7 +120,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       {children}
       {/* Toast Notification */}
       {toast.show && (
-        <div className="fixed bottom-6 right-6 z-[9999] bg-black/85 backdrop-blur-md border border-orange-500/30 text-foreground px-6 py-4 rounded-[20px] shadow-[0_12px_30px_rgba(255,87,34,0.15)] flex items-center gap-3 animate-bounce text-xs font-black tracking-wider uppercase">
+        <div className="fixed bottom-6 right-6 z-[9999] bg-black/85 backdrop-blur-md border border-orange-500/30 text-white px-6 py-4 rounded-[20px] shadow-[0_12px_30px_rgba(255,87,34,0.15)] flex items-center gap-3 animate-bounce text-xs font-black tracking-wider uppercase">
           <span className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
           {toast.message}
         </div>

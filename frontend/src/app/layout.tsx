@@ -17,13 +17,20 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
       </head>
       <body>
         <AppProvider>
           {children}
         </AppProvider>
+        <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }}>
+          <filter id="grunge-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="4" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feBlend mode="multiply" in="displaced" in2="noise" />
+          </filter>
+        </svg>
       </body>
     </html>
   );

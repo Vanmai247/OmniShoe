@@ -22,9 +22,6 @@ export default function ProductGallery({ product }: { product: Product }) {
   // Multi-angle mock shots using unsplash stock backgrounds or repeated values for demonstration
   const angles = [
     imageUrl,
-    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&q=90",
-    "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=1000&q=90",
-    "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=1000&q=90",
   ];
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -37,19 +34,21 @@ export default function ProductGallery({ product }: { product: Product }) {
   return (
     <div className="flex flex-col md:flex-row gap-6 w-full select-none">
       {/* Thumbnails list */}
-      <div className="flex md:flex-col gap-3 order-2 md:order-1 justify-center">
-        {angles.map((img, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveImgIndex(idx)}
-            className={`w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 bg-card-background transition-all duration-300 ${
-              activeImgIndex === idx ? "border-accent scale-95" : "border-border-color hover:border-accent/50"
-            }`}
-          >
-            <img src={img} alt="preview" className="w-full h-full object-contain p-2" />
-          </button>
-        ))}
-      </div>
+      {angles.length > 1 && (
+        <div className="flex md:flex-col gap-3 order-2 md:order-1 justify-center">
+          {angles.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveImgIndex(idx)}
+              className={`w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border-2 bg-card-background transition-all duration-300 ${
+                activeImgIndex === idx ? "border-accent scale-95" : "border-border-color hover:border-accent/50"
+              }`}
+            >
+              <img src={img} alt="preview" className="w-full h-full object-contain p-2" />
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Main interactive image view with zoom glass lens */}
       <div className="flex-1 order-1 md:order-2 relative aspect-[1.1] rounded-[32px] overflow-hidden bg-card-background border border-border-color group p-6 flex items-center justify-center">
