@@ -3,26 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #f8f9fa;
+  --foreground: #111111;
   --accent: #FF5722;
-  --bg-secondary: #161616;
-  --text-muted: #a0a0a0;
-  --border-color: #262626;
-  --card-background: #121212;
-  --bg-rgb: 10, 10, 10;
+  --bg-secondary: #f1f3f5;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --card-background: #ffffff;
+  --bg-rgb: 248, 249, 250;
   --shadow-color: 0, 0, 0;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html[data-dark] {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --bg-secondary: #161616;
-  --text-muted: #a0a0a0;
-  --border-color: #262626;
-  --card-background: #121212;
-  --bg-rgb: 10, 10, 10;
+  --background: #f8f9fa;
+  --foreground: #111111;
+  --bg-secondary: #f1f3f5;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+  --card-background: #ffffff;
+  --bg-rgb: 248, 249, 250;
 }
 
 * {
@@ -71,6 +71,118 @@ body, html {
 .logo span {
   color: var(--accent);
   margin-left: 2px;
+}
+
+/* --- NEW PREMIUM HEADER LOGO --- */
+.header-logo-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.header-logo-image {
+  height: 48px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.header-logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  background: transparent;
+  padding: 4px 0;
+  /* Tạo hiệu ứng hơi nhám bụi nhẹ lên toàn bộ logo bằng SVG Filter */
+  filter: url(#grunge-filter);
+  gap: 12px;
+}
+
+/* --- PHẦN HUY HIỆU (BADGE) --- */
+.header-logo-badge {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 0 2px #222222;
+  flex-shrink: 0;
+}
+
+/* Tạo viền răng cưa phía ngoài (24 đỉnh) */
+.header-logo-badge::before {
+  content: "";
+  position: absolute;
+  top: -3px; left: -3px; right: -3px; bottom: -3px;
+  background: #ffffff;
+  z-index: -1;
+  border-radius: 50%;
+  clip-path: polygon(
+      50% 0%, 55% 3%, 61% 1%, 65% 6%, 71% 5%, 75% 10%, 80% 11%, 83% 17%, 88% 19%, 90% 25%, 94% 28%, 95% 35%, 98% 39%, 97% 45%, 100% 50%,
+      97% 55%, 98% 61%, 95% 65%, 94% 72%, 90% 75%, 88% 81%, 83% 83%, 80% 89%, 75% 90%, 71% 95%, 65% 94%, 61% 99%, 55% 97%, 50% 100%,
+      45% 97%, 39% 99%, 35% 94%, 29% 95%, 25% 90%, 20% 89%, 17% 83%, 12% 81%, 10% 75%, 6% 72%, 5% 65%, 2% 61%, 3% 55%, 0% 50%,
+      3% 45%, 2% 39%, 5% 35%, 6% 28%, 10% 25%, 12% 19%, 17% 17%, 20% 11%, 25% 10%, 29% 5%, 35% 6%, 39% 1%, 45% 3%
+  );
+}
+
+/* Vòng tròn màu đen bên trong chứa các ngôi sao */
+.header-logo-inner-circle {
+  width: 38.5px;
+  height: 38.5px;
+  background: #222222;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Vòng tròn màu trắng trong cùng chứa chiếc giày */
+.header-logo-center-white {
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Biểu tượng chiếc giày (SVG) */
+.header-logo-shoe-icon {
+  width: 20px;
+  height: 20px;
+  fill: #222222;
+  transform: translate(-0.5px, 0.5px);
+}
+
+.header-logo-text-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- PHẦN CHỮ (TYPOGRAPHY) --- */
+.header-logo-brand-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.header-logo-tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-top: 1px;
 }
 .nav-links {
   display: flex;
@@ -171,7 +283,7 @@ body, html {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  background: linear-gradient(to right, rgba(248, 249, 250, 0.75) 0%, rgba(248, 249, 250, 0.25) 50%, transparent 100%);
   pointer-events: none;
 }
 .hero {
