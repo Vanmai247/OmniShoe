@@ -5,102 +5,39 @@ import ProductGallery from "@/components/ProductGallery";
 import ProductInfo from "@/components/ProductInfo";
 import ProductTabs from "@/components/ProductTabs";
 import RelatedProducts from "@/components/RelatedProducts";
+import fs from "fs/promises";
+import path from "path";
 
-// Shared mock database matching frontend/src/app/page.tsx
-const mockProducts = [
-  {
-    id: 1,
-    name: "Court Vision Low Next Nature",
-    brand: "Nike",
-    price: "1,909,000₫",
-    rating: 4.8,
-    reviews: 120,
-    badge: "Hot",
-    photoId: "/Nike_4-removebg-preview.png",
-    category: "Lifestyle",
-    glowColor: "rgba(255, 255, 255, 0.45)",
-    sizes: [39, 40, 41, 42, 43],
-    description: "Hòa quyện giữa nét cổ điển thập niên 80 và nhịp sống hiện đại. Phối màu thanh lịch mang tính biểu tượng.",
-    materials: "Da tổng hợp tái chế, Đế cao su chống trượt",
-  },
-  {
-    id: 2,
-    name: "Ultraboost 23",
-    brand: "Adidas",
-    price: "4,150,000₫",
-    oldPrice: "5,000,000₫",
-    rating: 4.7,
-    reviews: 95,
-    badge: "New Drop",
-    photoId: "photo-1587563871167-1ee9c731aefb",
-    category: "Running",
-    glowColor: "rgba(0, 150, 255, 0.45)",
-    sizes: [40, 41, 42, 43, 44],
-    description: "Công nghệ đế Boost êm ái đàn hồi đỉnh cao của Adidas, thân giày dệt sợi Primeknit thoáng mát.",
-    materials: "Primeknit dệt sợi, Đệm Boost hạt, Đế ngoài Continental",
-  },
-  {
-    id: 3,
-    name: "Air Jordan 11 Low 'Mother's Day'",
-    brand: "Jordan",
-    price: "5,589,000₫",
-    rating: 4.9,
-    reviews: 210,
-    badge: "Hot",
-    photoId: "/Air Jordan 11 Low 'Mother's Day'.png",
-    category: "Basketball",
-    glowColor: "rgba(244, 114, 182, 0.45)",
-    sizes: [39, 40, 41, 42, 43],
-    description: "Phối màu đặc biệt kỷ niệm ngày của mẹ với lớp phủ nhung vàng óng quyến rũ, cực kỳ sang chảnh.",
-    materials: "Da bóng patent leather cao cấp, Lớp đệm Air full-length",
-  },
-  {
-    id: 4,
-    name: "RS-X Bold",
-    brand: "Puma",
-    price: "2,290,000₫",
-    oldPrice: "2,800,000₫",
-    rating: 4.5,
-    reviews: 64,
-    badge: "-18%",
-    photoId: "photo-1608231387042-66d1773070a5",
-    category: "Lifestyle",
-    glowColor: "rgba(52, 211, 153, 0.45)",
-    sizes: [38, 39, 40, 41, 42],
-    description: "Thiết kế hầm hố retro-chunky cá tính với các mảng màu tương phản rực rỡ, ôm chân cực chuẩn.",
-    materials: "Lưới dệt Mesh thoáng khí, Lớp phủ Nubuck cá tính",
-  },
-  {
-    id: 5,
-    name: "ABZORB 2010 Grey Days",
-    brand: "New Balance",
-    price: "3,625,000₫",
-    rating: 4.8,
-    reviews: 43,
-    badge: "Limited",
-    photoId: "/ABZORB 2010 Grey Day's.png",
-    category: "Lifestyle",
-    glowColor: "rgba(163, 163, 163, 0.45)",
-    sizes: [40, 41, 42, 43, 44],
-    description: "Tôn vinh sắc xám trường tồn huyền thoại của New Balance kết hợp công nghệ Abzorb giảm xóc ấn tượng.",
-    materials: "Da lộn Premium Suede, Đệm giảm chấn ABZORB",
-  },
-  {
-    id: 6,
-    name: "Air Max 90 'Hypervenom'",
-    brand: "Nike",
-    price: "4,109,000₫",
-    rating: 4.8,
-    reviews: 150,
-    badge: "Limited",
-    photoId: "/Nike Air Max 90 'Hypervenom'.png",
-    category: "Lifestyle",
-    glowColor: "rgba(132, 204, 22, 0.45)",
-    sizes: [39, 40, 41, 42, 43, 44],
-    description: "Mẫu giày kỷ niệm dòng Hypervenom bóng đá nổi tiếng với tông xanh chuối sặc sỡ và lớp đệm khí Air max.",
-    materials: "Da lộn kết hợp lưới Mesh, Cửa sổ đệm khí Max Air",
-  },
-];
+export const dynamic = "force-dynamic";
+
+async function getProducts() {
+  try {
+    const cwd = process.cwd();
+    const dataPath = cwd.endsWith("frontend") 
+      ? path.join(cwd, "src/data/products.json") 
+      : path.join(cwd, "frontend/src/data/products.json");
+    const fileData = await fs.readFile(dataPath, "utf8");
+    return JSON.parse(fileData);
+  } catch (error) {
+    console.error("Failed to load products dynamically:", error);
+    return [];
+  }
+}
+
+async function getPageConfig(key: string) {
+  try {
+    const cwd = process.cwd();
+    const dataPath = cwd.endsWith("frontend") 
+      ? path.join(cwd, "src/data/pages.json") 
+      : path.join(cwd, "frontend/src/data/pages.json");
+    const fileData = await fs.readFile(dataPath, "utf8");
+    const pages = JSON.parse(fileData);
+    return pages.find((p: any) => p.key === key) || null;
+  } catch (error) {
+    console.error("Failed to load page config dynamically:", error);
+    return null;
+  }
+}
 
 const brands = [
   "Nike",
@@ -114,14 +51,14 @@ const brands = [
 ];
 
 const brandLogos: Record<string, string> = {
-  "Nike": "/Nike.png",
-  "Adidas": "/adidas.png",
-  "Jordan": "/puma-logo-3.jpg",
+  "Nike": "/Nike-logo.jpg",
+  "Adidas": "/adidas-logo.png",
+  "Jordan": "/Jordan-logo.jpg",
   "Puma": "/puma-logo-3.jpg",
-  "New Balance": "/new-balance-logo.png",
-  "Converse": "/logo-converse-vector.jpg",
-  "Vans": "/puma-logo-3.jpg",
-  "MLB": "/logo-mlb-korea-ruby-store.webp",
+  "New Balance": "/newbalance-logo.png",
+  "Converse": "/converse-logo.jpg",
+  "Vans": "/vanz-logo.jpg",
+  "MLB": "/mlb-logo.png",
 };
 
 interface PageProps {
@@ -130,18 +67,29 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const product = mockProducts.find((p) => p.id === parseInt(resolvedParams.id));
+  const products = await getProducts();
+  const product = products.find((p: any) => p.id === parseInt(resolvedParams.id));
   if (!product) return { title: "Không tìm thấy sản phẩm | OmniShoe" };
+
+  const pageConfig = await getPageConfig("product");
+  const titlePattern = pageConfig?.metadata?.seoTitlePattern || "{product_name} — {product_brand} | OmniShoe";
+  const seoTitle = titlePattern
+    .replace("{product_name}", product.name)
+    .replace("{product_brand}", product.brand);
+
   return {
-    title: `${product.name} — ${product.brand} | OmniShoe`,
-    description: `${product.description} Mua giày chính hãng 100% bảo hành uy tín tại Việt Nam.`,
+    title: seoTitle,
+    description: `${product.description || ""} Mua giày chính hãng 100% bảo hành uy tín tại Việt Nam.`,
   };
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const product = mockProducts.find((p) => p.id === parseInt(resolvedParams.id));
+  const products = await getProducts();
+  const product = products.find((p: any) => p.id === parseInt(resolvedParams.id));
   if (!product) notFound();
+
+  const pageConfig = await getPageConfig("product");
 
   // Structural JSON-LD
   const jsonLd = {
@@ -179,9 +127,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <header className="header w-full">
         <div className="header-container">
           <Link href="/" className="header-logo-link">
-            <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
+            <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="header-logo-image" />
           </Link>
           <nav className="nav-links">
+            <Link href="/#product-section">Sản phẩm</Link>
             <Link href="/">Nam</Link>
             <Link href="/">Nữ</Link>
             <div className="nav-item-has-submenu">
@@ -203,6 +152,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
             <Link href="/">Sale</Link>
             <Link href="/">Xu hướng</Link>
+            <Link href="/gioi-thieu">Về chúng tôi</Link>
           </nav>
           <div className="header-actions">
             <Link href="/" className="action-btn" aria-label="Home">
@@ -230,12 +180,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
         {/* Details & Specs Tabs */}
         <div className="mt-16 border-t border-border-color pt-12">
-          <ProductTabs product={product} />
+          <ProductTabs product={product} pageConfig={pageConfig} />
         </div>
 
         {/* Related Products Grid */}
         <div className="mt-16 border-t border-border-color pt-12">
-          <RelatedProducts currentProduct={product} allProducts={mockProducts} />
+          <RelatedProducts 
+            currentProduct={product} 
+            allProducts={products} 
+            limit={pageConfig?.content?.relatedCount || 3} 
+          />
         </div>
       </main>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import ShoeSlider from "@/components/ShoeSlider";
 import CountdownDrop from "@/components/CountdownDrop";
 import StyleQuiz from "@/components/StyleQuiz";
@@ -118,29 +119,55 @@ const brands = [
 ];
 
 const brandLogos: Record<string, string> = {
-  "Nike": "/Nike.png",
-  "Adidas": "/adidas.png",
-  "Jordan": "/puma-logo-3.jpg",
+  "Nike": "/Nike-logo.jpg",
+  "Adidas": "/adidas-logo.png",
+  "Jordan": "/Jordan-logo.jpg",
   "Puma": "/puma-logo-3.jpg",
-  "New Balance": "/new-balance-logo.png",
-  "Converse": "/logo-converse-vector.jpg",
-  "Vans": "/puma-logo-3.jpg",
-  "MLB": "/logo-mlb-korea-ruby-store.webp",
+  "New Balance": "/newbalance-logo.png",
+  "Converse": "/converse-logo.jpg",
+  "Vans": "/vanz-logo.jpg",
+  "MLB": "/mlb-logo.png",
 };
 
 const categories = ["Tất cả", "Lifestyle", "Running", "Basketball"];
+
+// Premium Shimmer Skeleton Card Loader for smooth UX transitions
+function ProductSkeleton() {
+  return (
+    <div className="bg-white/80 border border-zinc-200/50 rounded-[24px] overflow-hidden flex flex-col animate-pulse w-full">
+      <div className="w-full aspect-[1.15] bg-zinc-200/80" />
+      <div className="p-6 flex flex-col gap-3 flex-grow">
+        <div className="h-3 w-16 bg-zinc-200/80 rounded-full" />
+        <div className="h-5 w-4/5 bg-zinc-200/80 rounded-full" />
+        <div className="flex items-center gap-1 mt-1">
+          <div className="h-3.5 w-24 bg-zinc-200/80 rounded-full" />
+        </div>
+        <div className="flex items-center justify-between mt-4 pt-4 border-t border-zinc-100/50">
+          <div className="h-5 w-20 bg-zinc-200/80 rounded-full" />
+          <div className="h-9 w-9 bg-zinc-200/80 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   const {
     cart,
     wishlist,
     addToCart: globalAddToCart,
+    removeFromCart,
     toggleWishlist,
     showToast: globalShowToast,
+    updateCartQuantity,
+    updateCartItemSize,
   } = useAppContext();
 
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<string>("Tất cả");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [pageConfig, setPageConfig] = useState<any>(null);
 
   // Custom interactive states
   const [selectedSizes, setSelectedSizes] = useState<Record<number, number>>({});
@@ -152,6 +179,78 @@ export default function Home() {
   const [filterSizes, setFilterSizes] = useState<number[]>([]);
   const [maxPrice, setMaxPrice] = useState<number>(6000000);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
+
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(8);
+
+  // Dynamic products count per page based on window size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setItemsPerPage(4);
+      } else {
+        setItemsPerPage(8);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFilter, selectedBrands, filterSizes, maxPrice]);
+
+  // Cart Dropdown states & logic
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const cartDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cartDropdownRef.current && !cartDropdownRef.current.contains(event.target as Node)) {
+        setIsCartOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const calculateTotal = (cartItems: any[]) => {
+    const total = cartItems.reduce((sum, item) => {
+      const priceVal = parseInt(item.price.replace(/[^\d]/g, ""));
+      return sum + priceVal * item.quantity;
+    }, 0);
+    return total.toLocaleString("vi-VN") + "₫";
+  };
+
+  // Load products and page config from API
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading products:", err);
+        setLoading(false);
+      });
+
+    fetch("/api/pages/home")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load page config");
+        return res.json();
+      })
+      .then((data) => {
+        setPageConfig(data);
+      })
+      .catch((err) => {
+        console.error("Error loading page config:", err);
+      });
+  }, []);
 
   // Dark Mode Sync and Query Params safely on mount
   useEffect(() => {
@@ -171,6 +270,13 @@ export default function Home() {
     }
   }, []);
 
+  // Sync SEO Metadata Title
+  useEffect(() => {
+    if (pageConfig?.metadata?.seoTitle) {
+      document.title = pageConfig.metadata.seoTitle;
+    }
+  }, [pageConfig]);
+
   // Helper for Toast Notifications
   const showToastNotification = (msg: string) => {
     globalShowToast(msg);
@@ -189,7 +295,7 @@ export default function Home() {
   };
 
   // Filter products
-  const filteredProducts = mockProducts.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const matchCategory = activeFilter === "Tất cả" || p.category === activeFilter;
     const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
     const matchSize = filterSizes.length === 0 || p.sizes.some((sz) => filterSizes.includes(sz));
@@ -204,7 +310,7 @@ export default function Home() {
       <div
         className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
         style={{
-          backgroundImage: `url('/studio_light_bg.png')`,
+          backgroundImage: `url('${pageConfig?.content?.heroBg || "/studio_light_bg.png"}')`,
           backgroundBlendMode: 'overlay',
         }}
       />
@@ -215,10 +321,20 @@ export default function Home() {
 
           {/* Logo */}
           <Link href="/" className="header-logo-link">
-            <img src="/logo.png" alt="OmniShoe Logo" className="header-logo-image" />
+            <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="header-logo-image" />
           </Link>
 
           <nav className="nav-links">
+            <a 
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                const element = document.getElementById("product-section");
+                element?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Sản phẩm
+            </a>
             <a href="#">Nam</a>
             <a href="#">Nữ</a>
             <div className="nav-item-has-submenu">
@@ -246,6 +362,9 @@ export default function Home() {
             </div>
             <a href="#">Sale</a>
             <a href="#">Xu hướng</a>
+            <Link href="/gioi-thieu">
+              Về chúng tôi
+            </Link>
           </nav>
 
           {/* Search bar & Icons (Desktop) */}
@@ -270,18 +389,160 @@ export default function Home() {
               )}
             </button>
 
-            <button
-              onClick={() => showToastNotification(`Giỏ hàng của bạn đang có ${cart.length} sản phẩm`)}
-              className="action-btn"
-              aria-label="Giỏ hàng"
-            >
-              <i className="ti ti-shopping-bag"></i>
-              {cart.length > 0 && (
-                <span className="badge">
-                  {cart.length}
-                </span>
-              )}
-            </button>
+            <div className="relative" ref={cartDropdownRef}>
+              <button
+                onClick={() => setIsCartOpen(!isCartOpen)}
+                className={`action-btn ${isCartOpen ? "bg-white/10 text-accent" : ""}`}
+                aria-label="Giỏ hàng"
+              >
+                <i className="ti ti-shopping-bag"></i>
+                {cart.reduce((sum, item) => sum + item.quantity, 0) > 0 && (
+                  <span className="badge">
+                    {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {isCartOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute right-0 mt-3 w-[360px] md:w-[400px] bg-white/95 backdrop-blur-xl border border-zinc-200/80 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden z-[100] flex flex-col text-left"
+                  >
+                    {/* Header */}
+                    <div className="p-4 border-b border-zinc-100 flex items-center justify-between">
+                      <span className="text-xs font-black tracking-wider uppercase text-zinc-500">Giỏ hàng của bạn</span>
+                      <span className="text-[10px] bg-accent/10 border border-accent/20 text-accent font-black px-2 py-0.5 rounded-full">
+                        {cart.length} dòng
+                      </span>
+                    </div>
+
+                    {/* Cart Items list */}
+                    <div className="max-h-[300px] overflow-y-auto divide-y divide-zinc-100 custom-scrollbar">
+                      {cart.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10 px-4 text-center gap-3">
+                          <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400">
+                            <i className="ti ti-shopping-bag text-2xl"></i>
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-zinc-700">Giỏ hàng trống</p>
+                            <p className="text-xs text-zinc-400 mt-1">Hãy thêm sản phẩm yêu thích của bạn vào giỏ!</p>
+                          </div>
+                        </div>
+                      ) : (
+                        cart.map((item) => (
+                          <div key={`${item.id}-${item.selectedSize}`} className="p-4 flex gap-3 hover:bg-zinc-50 transition-colors group">
+                            {/* Product Image */}
+                            <div className="w-16 h-16 rounded-xl bg-zinc-100/80 border border-zinc-200/50 overflow-hidden shrink-0 flex items-center justify-center relative">
+                              <img
+                                src={item.photoId.startsWith("/") || item.photoId.startsWith("http") ? item.photoId : `https://images.unsplash.com/${item.photoId}?w=150&q=80`}
+                                alt={item.name}
+                                onError={(e) => {
+                                  e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=150&q=80";
+                                }}
+                                className={`w-full h-full ${item.photoId.startsWith("/") ? "object-contain p-1.5" : "object-cover"}`}
+                              />
+                            </div>
+
+                            {/* Product Info */}
+                            <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                              <div>
+                                <span className="text-[10px] font-bold text-accent uppercase tracking-wider block leading-none">{item.brand}</span>
+                                <h4 className="text-xs font-bold text-zinc-800 truncate mt-1 group-hover:text-accent transition-colors leading-tight">
+                                  {item.name}
+                                </h4>
+                              </div>
+                              <div className="flex items-center gap-2 text-[11px] text-zinc-500 font-semibold mt-1">
+                                <div className="relative flex items-center bg-zinc-100 rounded border border-zinc-200/50 px-1 py-0.5 text-zinc-600 gap-1">
+                                  <span className="select-none">Size:</span>
+                                  <select
+                                    value={item.selectedSize}
+                                    onChange={(e) => {
+                                      updateCartItemSize(item.id, item.selectedSize, parseInt(e.target.value));
+                                    }}
+                                    className="bg-transparent text-zinc-800 font-black focus:outline-none cursor-pointer text-[11px] pr-1"
+                                  >
+                                    {(item.sizes || [38, 39, 40, 41, 42, 43, 44]).map((sz) => (
+                                      <option key={sz} value={sz}>
+                                        {sz}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="flex items-center bg-zinc-100 rounded border border-zinc-200/50 overflow-hidden">
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      updateCartQuantity(item.id, item.selectedSize, -1);
+                                    }}
+                                    className="px-1.5 py-0.5 hover:bg-zinc-200 text-zinc-600 transition-colors font-black select-none"
+                                    title="Giảm số lượng"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="px-1 text-zinc-800 font-black min-w-[14px] text-center select-none">
+                                    {item.quantity}
+                                  </span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      updateCartQuantity(item.id, item.selectedSize, 1);
+                                    }}
+                                    className="px-1.5 py-0.5 hover:bg-zinc-200 text-zinc-600 transition-colors font-black select-none"
+                                    title="Tăng số lượng"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Price and Delete */}
+                            <div className="flex flex-col items-end justify-between shrink-0 py-0.5">
+                              <span className="text-xs font-black text-zinc-900">{item.price}</span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeFromCart(item.id, item.selectedSize);
+                                }}
+                                className="w-6 h-6 rounded-lg flex items-center justify-center text-zinc-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                                title="Xóa sản phẩm"
+                              >
+                                <i className="ti ti-trash text-sm"></i>
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    {cart.length > 0 && (
+                      <div className="p-4 bg-zinc-50/50 border-t border-zinc-100 flex flex-col gap-3">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-semibold text-zinc-500">Tổng tạm tính:</span>
+                          <span className="text-base font-black text-accent">{calculateTotal(cart)}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setIsCartOpen(false);
+                            showToastNotification("Tiến hành thanh toán đơn hàng!");
+                          }}
+                          className="w-full bg-accent text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-accent/90 transition-all flex items-center justify-center gap-1.5 shadow-[0_4px_12px_rgba(255,107,0,0.2)] hover:shadow-[0_4px_20px_rgba(255,107,0,0.3)]"
+                        >
+                          Thanh toán ngay <i className="ti ti-arrow-right"></i>
+                        </button>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             <button className="action-btn" aria-label="Tài khoản">
               <i className="ti ti-user"></i>
@@ -324,16 +585,28 @@ export default function Home() {
               <div>
                 <span className="hero-badge">
                   <span className="badge-dot"></span>
-                  Drop mới
+                  {pageConfig?.content?.heroBadge || "Drop mới"}
                 </span>
               </div>
 
               <h1 className="hero-title">
-                NÂNG TẦM PHONG CÁCH <span>SNEAKER</span> CỦA BẠN
+                {pageConfig?.content?.heroTitle ? (
+                  (() => {
+                    const titleText = pageConfig.content.heroTitle;
+                    const parts = titleText.split(/(SNEAKER)/i);
+                    return parts.map((part: string, index: number) => 
+                      part.toUpperCase() === "SNEAKER" 
+                        ? <span key={index}>{part}</span> 
+                        : part
+                    );
+                  })()
+                ) : (
+                  <>NÂNG TẦM PHONG CÁCH <span>SNEAKER</span> CỦA BẠN</>
+                )}
               </h1>
 
               <p className="hero-desc">
-                Đón đầu xu hướng sneaker culture tại Việt Nam. Khám phá những phối màu giới hạn độc nhất dành riêng cho thế hệ Gen Z.
+                {pageConfig?.content?.heroDesc || "Đón đầu xu hướng sneaker culture tại Việt Nam. Khám phá những phối màu giới hạn độc nhất dành riêng cho thế hệ Gen Z."}
               </p>
 
               <div className="hero-ctas">
@@ -417,7 +690,7 @@ export default function Home() {
         </section>
 
         {/* 3.1. EXCLUSIVE SNEAKER COUNTDOWN EVENT */}
-        <CountdownDrop onShowToast={showToastNotification} />
+        <CountdownDrop onShowToast={showToastNotification} config={pageConfig?.content} />
 
         {/* 4. PRODUCT GRID & FILTERS */}
         <section id="product-section" className="products-section">
@@ -540,10 +813,25 @@ export default function Home() {
 
             {/* Product Area */}
             <div className="products-grid-area">
-              {filteredProducts.length > 0 ? (
+              {loading ? (
                 <div className="product-grid">
-                  {filteredProducts.map((product) => {
-                    const isAdded = addedProducts.includes(product.id);
+                  {[...Array(itemsPerPage)].map((_, i) => (
+                    <ProductSkeleton key={i} />
+                  ))}
+                </div>
+              ) : filteredProducts.length > 0 ? (
+                <>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentPage}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="product-grid"
+                    >
+                      {filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((product) => {
+                        const isAdded = addedProducts.includes(product.id);
 
                     return (
                       <div
@@ -673,7 +961,55 @@ export default function Home() {
                       </div>
                     );
                   })}
-                </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Pagination Controls */}
+                {Math.ceil(filteredProducts.length / itemsPerPage) > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-12">
+                    <button
+                      onClick={() => {
+                        setCurrentPage((prev) => Math.max(prev - 1, 1));
+                        document.getElementById("product-section")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      disabled={currentPage === 1}
+                      className="w-10 h-10 rounded-xl border border-border-color bg-card-background hover:border-accent hover:text-accent disabled:opacity-30 disabled:pointer-events-none transition-all flex items-center justify-center text-lg font-bold"
+                      aria-label="Trang trước"
+                    >
+                      <i className="ti ti-chevron-left"></i>
+                    </button>
+                    
+                    {Array.from({ length: Math.ceil(filteredProducts.length / itemsPerPage) }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => {
+                          setCurrentPage(page);
+                          document.getElementById("product-section")?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        className={`w-10 h-10 rounded-xl font-black text-sm flex items-center justify-center transition-all ${
+                          currentPage === page
+                            ? "bg-accent text-white shadow-[0_4px_12px_rgba(255,107,0,0.35)]"
+                            : "border border-border-color bg-card-background hover:border-accent hover:text-accent"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    
+                    <button
+                      onClick={() => {
+                        setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(filteredProducts.length / itemsPerPage)));
+                        document.getElementById("product-section")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      disabled={currentPage === Math.ceil(filteredProducts.length / itemsPerPage)}
+                      className="w-10 h-10 rounded-xl border border-border-color bg-card-background hover:border-accent hover:text-accent disabled:opacity-30 disabled:pointer-events-none transition-all flex items-center justify-center text-lg font-bold"
+                      aria-label="Trang sau"
+                    >
+                      <i className="ti ti-chevron-right"></i>
+                    </button>
+                  </div>
+                )}
+              </>
               ) : (
                 <div className="text-center py-16 border border-dashed border-border-color rounded-[32px] w-full">
                   <p className="font-bold text-lg mt-4 text-text-muted">Không tìm thấy sản phẩm phù hợp!</p>
@@ -952,7 +1288,7 @@ export default function Home() {
               </li>
               <li>
                 <i className="ti ti-mail"></i>
-                <span>Email: support@omnishoe.vn</span>
+                <span>Email: {"vanmai756"}{"@"}{"gmail.com"}</span>
               </li>
             </ul>
           </div>

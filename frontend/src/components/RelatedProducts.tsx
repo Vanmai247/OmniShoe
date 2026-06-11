@@ -15,13 +15,15 @@ interface Product {
 export default function RelatedProducts({
   currentProduct,
   allProducts,
+  limit = 3,
 }: {
   currentProduct: Product;
   allProducts: Product[];
+  limit?: number;
 }) {
   const related = allProducts
     .filter((p) => p.id !== currentProduct.id)
-    .slice(0, 3); // Display top 3 alternatives
+    .slice(0, limit);
 
   return (
     <div className="w-full text-left">

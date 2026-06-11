@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface CartItem {
   id: number;
@@ -11,6 +12,7 @@ export interface CartItem {
   selectedSize: number;
   quantity: number;
   glowColor: string;
+  sizes?: number[];
 }
 
 interface AppContextType {
@@ -21,6 +23,8 @@ interface AppContextType {
   toggleWishlist: (productId: number) => void;
   toast: { show: boolean; message: string };
   showToast: (msg: string) => void;
+  updateCartQuantity: (productId: number, size: number, change: number) => void;
+  updateCartItemSize: (productId: number, oldSize: number, newSize: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -89,6 +93,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           selectedSize: size,
           quantity,
           glowColor: product.glowColor,
+          sizes: product.sizes,
         },
       ];
     });
@@ -98,6 +103,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const removeFromCart = (productId: number, size: number) => {
     setCart((prev) => prev.filter((item) => !(item.id === productId && item.selectedSize === size)));
     showToast("Đã xóa sản phẩm khỏi giỏ hàng 💔");
+  };
+
+  const updateCartQuantity = (productId: number, size: number, change: number) => {
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.id === productId && item.selectedSize === size) {
+          const newQty = item.quantity + change;
+          return { ...item, quantity: newQty > 0 ? newQty : 1 };
+        }
+        return item;
+      })
+    );
+  };
+
+  const updateCartItemSize = (productId: number, oldSize: number, newSize: number) => {
+    setCart((prev) => {
+      const targetIndex = prev.findIndex(
+        (item) => item.id === productId && item.selectedSize === newSize
+      );
+      const currentIndex = prev.findIndex(
+        (item) => item.id === productId && item.selectedSize === oldSize
+      );
+
+      if (currentIndex === -1) return prev;
+
+      const updated = [...prev];
+
+      if (targetIndex > -1 && targetIndex !== currentIndex) {
+        updated[targetIndex].quantity += updated[currentIndex].quantity;
+        return updated.filter((_, idx) => idx !== currentIndex);
+      } else {
+        updated[currentIndex].selectedSize = newSize;
+        return updated;
+      }
+    });
+    showToast("Đã cập nhật size giày! 👟");
   };
 
   const toggleWishlist = (productId: number) => {
@@ -115,16 +156,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AppContext.Provider
-      value={{ cart, wishlist, addToCart, removeFromCart, toggleWishlist, toast, showToast }}
+      value={{
+        cart,
+        wishlist,
+        addToCart,
+        removeFromCart,
+        toggleWishlist,
+        toast,
+        showToast,
+        updateCartQuantity,
+        updateCartItemSize,
+      }}
     >
       {children}
       {/* Toast Notification */}
-      {toast.show && (
-        <div className="fixed bottom-6 right-6 z-[9999] bg-black/85 backdrop-blur-md border border-orange-500/30 text-white px-6 py-4 rounded-[20px] shadow-[0_12px_30px_rgba(255,87,34,0.15)] flex items-center gap-3 animate-bounce text-xs font-black tracking-wider uppercase">
-          <span className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
-          {toast.message}
-        </div>
-      )}
+      <AnimatePresence>
+        {toast.show && (
+          <motion.div
+            initial={{ opacity: 0, x: 150 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 150 }}
+            transition={{ type: "spring", stiffness: 350, damping: 25 }}
+            className="fixed top-24 right-6 z-[9999] bg-white/95 backdrop-blur-md border border-zinc-200/80 text-zinc-800 px-6 py-4 rounded-[20px] shadow-[0_12px_30px_rgba(0,0,0,0.08)] flex items-center gap-3 text-xs font-black tracking-wider uppercase"
+          >
+            <span className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AppContext.Provider>
   );
 }

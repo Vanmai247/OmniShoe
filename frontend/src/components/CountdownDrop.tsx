@@ -5,31 +5,46 @@ import { motion } from "framer-motion";
 
 interface CountdownDropProps {
   onShowToast: (msg: string) => void;
+  config?: {
+    countdownActive?: boolean;
+    countdownBadge?: string;
+    countdownTitle?: string;
+    countdownDesc?: string;
+    countdownImage?: string;
+    countdownSneakerName?: string;
+    countdownLimitTag?: string;
+    countdownTargetDate?: string;
+  };
 }
 
-export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
+export default function CountdownDrop({ onShowToast, config }: CountdownDropProps) {
   const [email, setEmail] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
 
-  // Set the countdown target to exactly 3 days, 4 hours, and 15 minutes from now for demonstration
+  // Set the countdown target
   const [timeLeft, setTimeLeft] = useState({
-    days: 3,
-    hours: 4,
-    minutes: 15,
-    seconds: 30,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   useEffect(() => {
-    // Target date: 3 days from now
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 3);
-    targetDate.setHours(targetDate.getHours() + 4);
+    let targetDate: Date;
+    
+    if (config?.countdownTargetDate) {
+      targetDate = new Date(config.countdownTargetDate);
+    } else {
+      // Fallback target date: 3 days from now
+      targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + 3);
+      targetDate.setHours(targetDate.getHours() + 4);
+    }
 
-    const interval = setInterval(() => {
+    const updateTimer = () => {
       const difference = +targetDate - +new Date();
       
       if (difference <= 0) {
-        clearInterval(interval);
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       } else {
         setTimeLeft({
@@ -39,10 +54,13 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
           seconds: Math.floor((difference / 1000) % 60),
         });
       }
-    }, 1000);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [config?.countdownTargetDate]);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +74,17 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
   const formatNumber = (num: number) => {
     return num.toString().padStart(2, "0");
   };
+
+  if (config?.countdownActive === false) {
+    return null;
+  }
+
+  const badgeText = config?.countdownBadge || "Limited Drop";
+  const titleText = config?.countdownTitle || "AIR JORDAN 1 RETRO CHICAGO";
+  const descText = config?.countdownDesc || "Phiên bản tái hiện trọn vẹn phối màu huyền thoại năm 1985 với lớp chất liệu da nứt cổ điển kết hợp đế vintage ngả vàng. Mẫu sneaker mang giá trị lịch sử cao nhất của nền văn hóa sát mặt đất sắp có mặt tại OmniShoe.";
+  const productImage = config?.countdownImage || "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&q=80";
+  const sneakerName = config?.countdownSneakerName || "Jordan 1 Retro High Chicago";
+  const limitTag = config?.countdownLimitTag || "85 đôi tại Việt Nam";
 
   return (
     <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-black to-card-background p-5 md:p-12 my-16 max-w-[1440px] mx-auto">
@@ -83,8 +112,8 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
             className="w-full max-w-[380px] drop-shadow-[0_35px_35px_rgba(255,87,34,0.3)] cursor-pointer"
           >
             <img
-              src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&q=80"
-              alt="Jordan 1 Retro High Chicago"
+              src={productImage}
+              alt={sneakerName}
               className="w-full h-auto object-contain transform scale-110"
               style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.5))" }}
             />
@@ -98,7 +127,7 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
             </span>
             <div className="text-left">
               <p className="text-[10px] text-zinc-400 font-bold tracking-wider uppercase">Số lượng cực giới hạn</p>
-              <h4 className="text-sm font-bold text-white">85 đôi tại Việt Nam</h4>
+              <h4 className="text-sm font-bold text-white">{limitTag}</h4>
             </div>
           </div>
         </div>
@@ -107,15 +136,23 @@ export default function CountdownDrop({ onShowToast }: CountdownDropProps) {
         <div className="lg:col-span-7 flex flex-col text-left justify-center gap-6">
           <div className="flex flex-col gap-2">
             <span className="inline-flex items-center gap-2 self-start py-1 px-3.5 rounded-full bg-accent/15 border border-accent/30 text-accent text-xs font-black tracking-wider uppercase">
-              <i className="ti ti-flame animate-bounce"></i> Limited Drop
+              <i className="ti ti-flame animate-bounce"></i> {badgeText}
             </span>
             <h2 className="text-3xl md:text-5xl font-black leading-none tracking-tight">
-              AIR JORDAN 1 RETRO <span className="text-accent">"CHICAGO"</span>
+              {/* Support highlighting text enclosed in double quotes dynamically */}
+              {(() => {
+                const parts = titleText.split(/("[^"]*")/);
+                return parts.map((part, index) => 
+                  part.startsWith("\"") && part.endsWith("\"")
+                    ? <span key={index} className="text-accent">{part}</span>
+                    : part
+                );
+              })()}
             </h2>
           </div>
 
           <p className="text-text-muted leading-relaxed max-w-[620px] text-sm md:text-base">
-            Phiên bản tái hiện trọn vẹn phối màu huyền thoại năm 1985 với lớp chất liệu da nứt cổ điển kết hợp đế vintage ngả vàng. Mẫu sneaker mang giá trị lịch sử cao nhất của nền văn hóa sát mặt đất sắp có mặt tại OmniShoe.
+            {descText}
           </p>
 
           {/* Countdown Clock Container */}

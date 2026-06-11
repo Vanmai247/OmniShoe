@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "key": "home",
+    "title": "Trang chủ",
+    "type": "home",
+    "status": "published",
+    "metadata": {
+      "seoTitle": "OmniShoe — Cửa hàng Sneaker chính hãng hàng đầu",
+      "seoDescription": "Đón đầu xu hướng sneaker culture tại Việt Nam. Khám phá những phối màu giới hạn độc nhất dành riêng cho thế hệ Gen Z."
+    },
+    "content": {
+      "heroBadge": "Drop mới",
+      "heroTitle": "NÂNG TẦM PHONG CÁCH SNEAKER CỦA BẠN",
+      "heroDesc": "Đón đầu xu hướng sneaker culture tại Việt Nam. Khám phá những phối màu giới hạn độc nhất dành riêng cho thế hệ Gen Z.",
+      "heroBg": "/studio_light_bg.png",
+      "countdownActive": true,
+      "countdownBadge": "Limited Drop",
+      "countdownTitle": "AIR JORDAN 1 RETRO \"CHICAGO\"",
+      "countdownDesc": "Phiên bản tái hiện trọn vẹn phối màu huyền thoại năm 1985 với lớp chất liệu da nứt cổ điển kết hợp đế vintage ngả vàng. Mẫu sneaker mang giá trị lịch sử cao nhất của nền văn hóa sát mặt đất sắp có mặt tại OmniShoe.",
+      "countdownImage": "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&q=80",
+      "countdownSneakerName": "Jordan 1 Retro High Chicago",
+      "countdownLimitTag": "85 đôi tại Việt Nam",
+      "countdownTargetDate": "2026-06-30T23:59:59"
+    }
+  },
+  {
+    "id": 2,
+    "key": "product",
+    "title": "Trang chi tiết sản phẩm",
+    "type": "product",
+    "status": "published",
+    "metadata": {
+      "seoTitlePattern": "{product_name} — {product_brand} | OmniShoe"
+    },
+    "content": {
+      "relatedCount": 4,
+      "policyShippingTitle": "Giao hàng miễn phí",
+      "policyShippingDesc": "Giao hàng miễn phí toàn quốc cho hóa đơn từ 2.000.000đ",
+      "policyReturnTitle": "Đổi trả 30 ngày",
+      "policyReturnDesc": "Đổi trả dễ dàng trong vòng 30 ngày kể từ ngày nhận hàng",
+      "policyWarrantyTitle": "Chính hãng 100%",
+      "policyWarrantyDesc": "Đền gấp 10 lần giá trị sản phẩm nếu phát hiện hàng giả hàng nhái"
+    }
+  },
+  {
+    "id": 3,
+    "key": "gioi-thieu",
+    "title": "Về chúng tôi",
+    "type": "standard",
+    "status": "published",
+    "metadata": {
+      "seoTitle": "Về chúng tôi — Câu chuyện thương hiệu OmniShoe",
+      "seoDescription": "Khám phá câu chuyện hình thành và sứ mệnh mang văn hóa sneaker chính hãng đến thế hệ trẻ Việt Nam của OmniShoe."
+    },
+    "content": {
+      "bannerBg": "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=1600&q=80",
+      "subtitle": "CÂU CHUYỆN SNEAKER CULTURE",
+      "body": "## Hành Trình Của Chúng Tôi\n\nĐược thành lập từ năm 2024 bởi những người trẻ đam mê giày thể thao, **OmniShoe** không đơn thuần là một cửa hàng bán giày, mà là nơi nuôi dưỡng tinh thần và kết nối cộng đồng yêu sneaker tại Việt Nam.\n\n### Sứ mệnh\n\nChúng tôi mang đến giải pháp sở hữu các mẫu giày thể thao chính hãng 100% với chính sách bảo hành rõ ràng, đáng tin cậy nhất. OmniShoe tin rằng mỗi đôi giày đều mang trong mình một câu chuyện lịch sử đặc biệt.\n\n### Cam kết từ OmniShoe\n\n- **100% Authentic:** Tất cả sản phẩm được phân phối qua OmniShoe đều được kiểm tra nghiêm ngặt về chất lượng trước khi gửi tới khách hàng.\n- **Dịch vụ khách hàng xuất sắc:** Hỗ trợ tư vấn size chính xác và đổi size miễn phí trong 30 ngày.\n- **Cộng đồng năng động:** Chúng tôi thường xuyên tổ chức các sự kiện kết nối cộng đồng sneakerhead, chia sẻ xu hướng mới nhất."
+    }
+  }
+]
