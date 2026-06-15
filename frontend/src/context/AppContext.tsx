@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { SessionProvider, signOut, useSession } from "next-auth/react";
+
 export interface CartItem {
   id: number;
   name: string;
@@ -15,9 +17,16 @@ export interface CartItem {
   sizes?: number[];
 }
 
+export interface User {
+  email: string;
+  name: string;
+  avatar?: string;
+}
+
 interface AppContextType {
   cart: CartItem[];
   wishlist: number[];
+  user: User | null;
   addToCart: (product: any, size: number, quantity: number) => void;
   removeFromCart: (productId: number, size: number) => void;
   toggleWishlist: (productId: number) => void;
@@ -25,20 +34,49 @@ interface AppContextType {
   showToast: (msg: string) => void;
   updateCartQuantity: (productId: number, size: number, change: number) => void;
   updateCartItemSize: (productId: number, oldSize: number, newSize: number) => void;
+  login: (email: string, name: string) => void;
+  logout: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      <AppContextProviderWrapper>{children}</AppContextProviderWrapper>
+    </SessionProvider>
+  );
+}
+
+function AppContextProviderWrapper({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [toast, setToast] = useState({ show: false, message: "" });
   const [mounted, setMounted] = useState(false);
+
+  const { data: session, status } = useSession();
+
+  // Sync NextAuth session with local context user state
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      if (!user || user.email !== session.user.email) {
+        setUser({
+          email: session.user.email || "",
+          name: session.user.name || "",
+          avatar: session.user.image || "",
+        });
+      }
+    } else if (status === "unauthenticated" && user) {
+      setUser(null);
+    }
+  }, [session, status, user]);
 
   useEffect(() => {
     setMounted(true);
     const savedCart = localStorage.getItem("omni_cart");
     const savedWishlist = localStorage.getItem("omni_wishlist");
+    const savedUser = localStorage.getItem("omni_user");
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
@@ -51,6 +89,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setWishlist(JSON.parse(savedWishlist));
       } catch (e) {
         console.error("Failed to parse wishlist", e);
+      }
+    }
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.error("Failed to parse user", e);
       }
     }
   }, []);
@@ -66,6 +111,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("omni_wishlist", JSON.stringify(wishlist));
     }
   }, [wishlist, mounted]);
+
+  useEffect(() => {
+    if (mounted) {
+      if (user) {
+        localStorage.setItem("omni_user", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("omni_user");
+      }
+    }
+  }, [user, mounted]);
 
   const showToast = (message: string) => {
     setToast({ show: true, message });
@@ -154,11 +209,36 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const login = (email: string, name: string) => {
+    // Generate avatar initials from name
+    const initials = name
+      .split(" ")
+      .filter(Boolean)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+    
+    setUser({
+      email,
+      name,
+      avatar: initials || "US",
+    });
+    showToast(`Chào mừng quay trở lại, ${name}! ⚡`);
+  };
+
+  const logout = () => {
+    signOut({ redirect: false });
+    setUser(null);
+    showToast("Đã đăng xuất tài khoản thành công! 👋");
+  };
+
   return (
     <AppContext.Provider
       value={{
         cart,
         wishlist,
+        user,
         addToCart,
         removeFromCart,
         toggleWishlist,
@@ -166,6 +246,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         showToast,
         updateCartQuantity,
         updateCartItemSize,
+        login,
+        logout,
       }}
     >
       {children}

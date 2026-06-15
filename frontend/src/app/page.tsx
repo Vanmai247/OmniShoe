@@ -157,12 +157,14 @@ export default function Home() {
   const {
     cart,
     wishlist,
+    user,
     addToCart: globalAddToCart,
     removeFromCart,
     toggleWishlist,
     showToast: globalShowToast,
     updateCartQuantity,
     updateCartItemSize,
+    logout,
   } = useAppContext();
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -545,9 +547,98 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            <button className="action-btn" aria-label="Tài khoản">
-              <i className="ti ti-user"></i>
-            </button>
+            {user ? (
+              <div className="relative group/user-menu">
+                <button
+                  className="flex items-center justify-center p-0 w-9 h-9 rounded-full overflow-hidden bg-gradient-to-tr from-orange-500 to-amber-500 text-white font-black text-xs border border-orange-500/30 shadow-sm transition-all hover:shadow-[0_0_12px_rgba(255,107,0,0.3)] select-none cursor-pointer"
+                  aria-label="Tài khoản"
+                >
+                  {user.avatar && (user.avatar.startsWith("http") || user.avatar.includes("/")) ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  ) : (
+                    user.avatar || "US"
+                  )}
+                </button>
+
+                {/* User Dropdown Menu */}
+                <div className="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-xl border border-zinc-200/80 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-5 z-[100] transition-all duration-200 scale-95 opacity-0 pointer-events-none group-hover/user-menu:scale-100 group-hover/user-menu:opacity-100 group-hover/user-menu:pointer-events-auto flex flex-col text-left">
+                  {/* Arrow indicator pointing up */}
+                  <div className="absolute -top-[7px] right-[12px] w-3 h-3 bg-white border-t border-l border-zinc-200/80 rotate-45 z-10 pointer-events-none" />
+
+                  {/* User Info Header */}
+                  <div className="flex items-center gap-4 mb-4">
+                    {/* User Avatar Circle */}
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden border border-orange-500/80 shadow-[0_0_12px_rgba(255,107,0,0.2)] flex items-center justify-center shrink-0">
+                      {user.avatar && (user.avatar.startsWith("http") || user.avatar.includes("/")) ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <span className="text-white font-black text-lg bg-gradient-to-tr from-orange-500 to-amber-500 w-full h-full flex items-center justify-center">
+                          {user.avatar || "US"}
+                        </span>
+                      )}
+                    </div>
+                    {/* User Text Details */}
+                    <div className="flex flex-col justify-center min-w-0">
+                      <span className="text-sm font-black text-zinc-850 truncate leading-tight">{user.name}</span>
+                      <span className="text-[10px] text-zinc-500 truncate mt-0.5">{user.email}</span>
+                    </div>
+                  </div>
+                  
+                  {/* Links / Navigation */}
+                  <div className="flex flex-col">
+                    <button
+                      type="button"
+                      onClick={() => showToastNotification("Tính năng Hồ sơ cá nhân đang phát triển!")}
+                      className="w-full py-3 border-b border-zinc-100 hover:text-orange-500 text-zinc-750 transition-colors flex items-center justify-between text-xs font-bold group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <i className="ti ti-user text-base text-orange-500" />
+                        Hồ sơ cá nhân
+                      </div>
+                      <i className="ti ti-chevron-right text-xs text-zinc-400 group-hover:translate-x-1 group-hover:text-orange-500 transition-all" />
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => showToastNotification("Lịch sử đơn hàng đang tải...")}
+                      className="w-full py-3 border-b border-zinc-100 hover:text-orange-500 text-zinc-750 transition-colors flex items-center justify-between text-xs font-bold group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <i className="ti ti-package text-base text-orange-500" />
+                        Đơn hàng của tôi
+                      </div>
+                      <i className="ti ti-chevron-right text-xs text-zinc-400 group-hover:translate-x-1 group-hover:text-orange-500 transition-all" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => showToastNotification("Danh sách yêu thích đang mở...")}
+                      className="w-full py-3 hover:text-orange-500 text-zinc-750 transition-colors flex items-center justify-between text-xs font-bold group cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-3">
+                        <i className="ti ti-heart text-base text-orange-500" />
+                        Danh sách yêu thích
+                      </div>
+                      <i className="ti ti-chevron-right text-xs text-zinc-400 group-hover:translate-x-1 group-hover:text-orange-500 transition-all" />
+                    </button>
+                    
+                    {/* Logout Action */}
+                    <button
+                      type="button"
+                      onClick={() => logout()}
+                      className="w-full mt-4 py-3 rounded-2xl border border-orange-500/25 hover:border-orange-500 bg-orange-500/5 hover:bg-orange-500/10 text-orange-500 hover:text-orange-650 font-extrabold text-xs tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-[0_4px_12px_rgba(255,107,0,0.02)]"
+                    >
+                      <i className="ti ti-logout text-base" />
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login" className="action-btn flex items-center justify-center" aria-label="Tài khoản">
+                <i className="ti ti-user"></i>
+              </Link>
+            )}
           </div>
 
           {/* Hamburger Mobile Toggle */}
