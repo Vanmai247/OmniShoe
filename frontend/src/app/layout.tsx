@@ -24,13 +24,6 @@ export default function RootLayout({
         <AppProvider>
           {children}
         </AppProvider>
-        <svg width="0" height="0" style={{ position: "absolute", pointerEvents: "none" }}>
-          <filter id="grunge-filter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.15" numOctaves="4" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            <feBlend mode="multiply" in="displaced" in2="noise" />
-          </filter>
-        </svg>
       </body>
     </html>
   );

@@ -134,4 +134,35 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast("Kích hoạt Menu di động thành công! 📱");
     });
   }
+
+  // Hiệu ứng đếm số cho Banner Hero (Stats Count-up)
+  function animateValue(id, start, end, duration) {
+    const obj = document.getElementById(id);
+    if (!obj) return;
+    
+    // Fallback cho môi trường test (như JSDOM) không hỗ trợ requestAnimationFrame
+    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') {
+      obj.textContent = end.toLocaleString('vi-VN') + '+';
+      return;
+    }
+
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Easing: easeOutQuad
+      const easedProgress = progress * (2 - progress);
+      const current = Math.floor(easedProgress * (end - start) + start);
+      obj.textContent = current.toLocaleString('vi-VN') + '+';
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  // Khởi chạy đếm số khi tải trang
+  animateValue('stat-products', 0, 20000, 2000);
+  animateValue('stat-brands', 0, 15, 2000);
+  animateValue('stat-customers', 0, 50000, 2000);
 });

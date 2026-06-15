@@ -121,8 +121,6 @@ body {
   text-align: left;
   background: transparent;
   padding: 4px 0;
-  /* Tạo hiệu ứng hơi nhám bụi nhẹ lên toàn bộ logo bằng SVG Filter */
-  filter: url(#grunge-filter);
   gap: 12px;
 }
 

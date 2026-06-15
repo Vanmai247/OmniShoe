@@ -7,6 +7,8 @@ import CountdownDrop from "@/components/CountdownDrop";
 import StyleQuiz from "@/components/StyleQuiz";
 import { useAppContext } from "@/context/AppContext";
 import Link from "next/link";
+import Image from "next/image";
+import CountUp from "@/components/CountUp";
 
 // Mock products data with dynamic glow colors and sizes
 interface Product {
@@ -60,7 +62,7 @@ const mockProducts: Product[] = [
     rating: 4.9,
     reviews: 210,
     badge: "Hot",
-    photoId: "/Air Jordan 11 Low 'Mother's Day'.png",
+    photoId: "/Air Jordan 11 Low 'Mother's Day'.webp",
     category: "Basketball",
     glowColor: "rgba(244, 114, 182, 0.45)",
     sizes: [39, 40, 41, 42, 43],
@@ -87,7 +89,7 @@ const mockProducts: Product[] = [
     rating: 4.8,
     reviews: 43,
     badge: "Limited",
-    photoId: "/ABZORB 2010 Grey Day's.png",
+    photoId: "/ABZORB 2010 Grey Day's.webp",
     category: "Lifestyle",
     glowColor: "rgba(163, 163, 163, 0.45)",
     sizes: [40, 41, 42, 43, 44],
@@ -100,7 +102,7 @@ const mockProducts: Product[] = [
     rating: 4.8,
     reviews: 150,
     badge: "Limited",
-    photoId: "/Nike Air Max 90 'Hypervenom'.png",
+    photoId: "/Nike Air Max 90 'Hypervenom'.webp",
     category: "Lifestyle",
     glowColor: "rgba(132, 204, 22, 0.45)",
     sizes: [39, 40, 41, 42, 43, 44],
@@ -437,12 +439,11 @@ export default function Home() {
                           <div key={`${item.id}-${item.selectedSize}`} className="p-4 flex gap-3 hover:bg-zinc-50 transition-colors group">
                             {/* Product Image */}
                             <div className="w-16 h-16 rounded-xl bg-zinc-100/80 border border-zinc-200/50 overflow-hidden shrink-0 flex items-center justify-center relative">
-                              <img
+                              <Image
                                 src={item.photoId.startsWith("/") || item.photoId.startsWith("http") ? item.photoId : `https://images.unsplash.com/${item.photoId}?w=150&q=80`}
                                 alt={item.name}
-                                onError={(e) => {
-                                  e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=150&q=80";
-                                }}
+                                fill
+                                sizes="64px"
                                 className={`w-full h-full ${item.photoId.startsWith("/") ? "object-contain p-1.5" : "object-cover"}`}
                               />
                             </div>
@@ -631,15 +632,15 @@ export default function Home() {
               {/* Stats Bar */}
               <div className="hero-stats">
                 <div className="stat-item">
-                  <h4>12K+</h4>
+                  <h4><CountUp end={20000} /></h4>
                   <p>Sản phẩm</p>
                 </div>
                 <div className="stat-item">
-                  <h4>15+</h4>
+                  <h4><CountUp end={15} /></h4>
                   <p>Thương hiệu</p>
                 </div>
                 <div className="stat-item">
-                  <h4>50K+</h4>
+                  <h4><CountUp end={50000} /></h4>
                   <p>Khách hàng</p>
                 </div>
               </div>
@@ -878,14 +879,14 @@ export default function Home() {
 
                         {/* Image container with Sliding Quick Size Picker */}
                         <div className="product-img relative overflow-hidden bg-bg-secondary w-full aspect-[1.15]">
-                          <Link href={`/products/${product.id}`} className="block w-full h-full">
-                            <img
+                          <Link href={`/products/${product.id}`} className="block w-full h-full relative">
+                            <Image
                               src={product.photoId.startsWith("/") || product.photoId.startsWith("http") ? product.photoId : `https://images.unsplash.com/${product.photoId}?w=480&q=80`}
                               alt={product.name}
-                              onError={(e) => {
-                                e.currentTarget.src = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=480&q=80";
-                              }}
-                              className={`w-full h-full transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
+                              fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                              priority={product.id <= 4}
+                              className={`transition-transform duration-500 group-hover:scale-105 ${product.photoId.startsWith("/") ? "object-contain p-4" : "object-cover"
                                 }`}
                             />
                           </Link>
