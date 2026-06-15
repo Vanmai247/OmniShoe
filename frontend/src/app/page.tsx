@@ -561,7 +561,7 @@ export default function Home() {
                 </button>
 
                 {/* User Dropdown Menu */}
-                <div className="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-xl border border-zinc-200/80 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-5 z-[100] transition-all duration-200 scale-95 opacity-0 pointer-events-none group-hover/user-menu:scale-100 group-hover/user-menu:opacity-100 group-hover/user-menu:pointer-events-auto flex flex-col text-left">
+                <div className="absolute right-0 mt-3 w-72 bg-white/95 backdrop-blur-xl border border-zinc-200/80 rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-5 z-[100] transition-all duration-200 scale-95 opacity-0 pointer-events-none group-hover/user-menu:scale-100 group-hover/user-menu:opacity-100 group-hover/user-menu:pointer-events-auto flex flex-col text-left before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3">
                   {/* Arrow indicator pointing up */}
                   <div className="absolute -top-[7px] right-[12px] w-3 h-3 bg-white border-t border-l border-zinc-200/80 rotate-45 z-10 pointer-events-none" />
 
