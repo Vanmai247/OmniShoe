@@ -34,7 +34,8 @@ interface AppContextType {
   showToast: (msg: string) => void;
   updateCartQuantity: (productId: number, size: number, change: number) => void;
   updateCartItemSize: (productId: number, oldSize: number, newSize: number) => void;
-  login: (email: string, name: string) => void;
+  login: (email: string, password: string) => Promise<User>;
+  register: (email: string, password: string, name: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -209,22 +210,38 @@ function AppContextProviderWrapper({ children }: { children: React.ReactNode }) 
     });
   };
 
-  const login = (email: string, name: string) => {
-    // Generate avatar initials from name
-    const initials = name
-      .split(" ")
-      .filter(Boolean)
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-    
-    setUser({
-      email,
-      name,
-      avatar: initials || "US",
+  const login = async (email: string, password: string): Promise<User> => {
+    const res = await fetch("/api/user/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
-    showToast(`Chào mừng quay trở lại, ${name}! ⚡`);
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Đăng nhập thất bại");
+    }
+
+    setUser(data.user);
+    showToast(`Chào mừng quay trở lại, ${data.user.name}! ⚡`);
+    return data.user;
+  };
+
+  const register = async (email: string, password: string, name: string): Promise<User> => {
+    const res = await fetch("/api/user/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, name }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Đăng ký thất bại");
+    }
+
+    setUser(data.user);
+    showToast(`Đăng ký thành công! Chào mừng, ${data.user.name}! ⚡`);
+    return data.user;
   };
 
   const logout = () => {
@@ -247,6 +264,7 @@ function AppContextProviderWrapper({ children }: { children: React.ReactNode }) 
         updateCartQuantity,
         updateCartItemSize,
         login,
+        register,
         logout,
       }}
     >
