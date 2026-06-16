@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
+import fs from 'fs/promises';
+import path from 'path';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -58,50 +60,54 @@ app.post('/api/seed', async (req, res) => {
     await prisma.product.deleteMany({});
     await prisma.category.deleteMany({});
 
-    // Seed Categories
-    const running = await prisma.category.create({ data: { name: 'Running' } });
-    const lifestyle = await prisma.category.create({ data: { name: 'Lifestyle' } });
-    const basketball = await prisma.category.create({ data: { name: 'Basketball' } });
+    // Read products from json file
+    const jsonPath = path.join(process.cwd(), 'products.json');
+    const fileData = await fs.readFile(jsonPath, 'utf8');
+    const originalProducts = JSON.parse(fileData);
 
-    // Seed Products
-    await prisma.product.createMany({
-      data: [
-        {
-          name: 'Nike Air Max 270',
-          price: 1890000,
-          originalPrice: 2200000,
-          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-          brand: 'Nike',
-          badge: 'Bestseller',
-          description: 'Giày chạy bộ êm ái với đệm khí Air Max cực lớn.',
-          categoryId: running.id
-        },
-        {
-          name: 'Adidas Ultraboost Light',
-          price: 3200000,
-          image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a',
-          brand: 'Adidas',
-          badge: 'New Drop',
-          description: 'Thế hệ giày chạy bộ hoàn trả năng lượng tối ưu.',
-          categoryId: running.id
-        },
-        {
-          name: 'Air Jordan 1 Retro High',
-          price: 4500000,
-          originalPrice: 5000000,
-          image: 'https://images.unsplash.com/photo-1556906781-9a412961c28c',
-          brand: 'Jordan',
-          badge: 'Limited',
-          description: 'Huyền thoại bóng rổ đường phố với thiết kế cổ điển.',
-          categoryId: basketball.id
-        }
-      ]
+    // Dynamic Categories Set
+    const categoryNames = new Set<string>();
+    originalProducts.forEach((item: any) => {
+      if (item.category) {
+        categoryNames.add(item.category);
+      }
     });
 
-    res.json({ message: 'Database seeded successfully' });
+    // Seed Categories
+    const categoriesMap: Record<string, number> = {};
+    for (const catName of Array.from(categoryNames)) {
+      const createdCategory = await prisma.category.upsert({
+        where: { name: catName },
+        update: {},
+        create: { name: catName }
+      });
+      categoriesMap[catName] = createdCategory.id;
+    }
+
+    // Seed Products
+    for (const item of originalProducts) {
+      const parsedPrice = parseFloat(String(item.price).replace(/[^\d]/g, ''));
+      const parsedOriginalPrice = item.oldPrice ? parseFloat(String(item.oldPrice).replace(/[^\d]/g, '')) : null;
+      const catId = categoriesMap[item.category] || Object.values(categoriesMap)[0];
+
+      await prisma.product.create({
+        data: {
+          name: item.name,
+          price: parsedPrice,
+          originalPrice: parsedOriginalPrice,
+          image: item.photoId || '',
+          brand: item.brand || '',
+          badge: item.badge || null,
+          description: item.description || null,
+          categoryId: catId
+        }
+      });
+    }
+
+    res.json({ message: `Database seeded successfully with ${originalProducts.length} products.` });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to seed database' });
+    res.status(500).json({ error: 'Failed to seed database from JSON file' });
   }
 });
 
