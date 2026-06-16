@@ -47,6 +47,7 @@
     "name": "Chuck 70",
     "brand": "Converse",
     "price": "2,200,000₫",
+    "originalPrice": "3,000,000₫",
     "rating": 4.9,
     "reviews": 210,
     "badge": "Hot",

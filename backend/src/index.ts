@@ -86,7 +86,9 @@ app.post('/api/seed', async (req, res) => {
     // Seed Products
     for (const item of originalProducts) {
       const parsedPrice = parseFloat(String(item.price).replace(/[^\d]/g, ''));
-      const parsedOriginalPrice = item.oldPrice ? parseFloat(String(item.oldPrice).replace(/[^\d]/g, '')) : null;
+      const parsedOriginalPrice = (item.oldPrice || item.originalPrice) 
+        ? parseFloat(String(item.oldPrice || item.originalPrice).replace(/[^\d]/g, '')) 
+        : null;
       const catId = categoriesMap[item.category] || Object.values(categoriesMap)[0];
 
       await prisma.product.create({
