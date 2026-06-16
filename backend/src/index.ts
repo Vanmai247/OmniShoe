@@ -3,6 +3,7 @@ import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
+import bcrypt from 'bcryptjs';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -14,6 +15,92 @@ app.use(express.json());
 // Base checking endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'OmniShoe Backend' });
+});
+
+// Register endpoint
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin!' });
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email này đã được đăng ký!' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Generate avatar initials from name
+    const initials = name
+      .split(' ')
+      .filter(Boolean)
+      .map((n: string) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        avatar: initials || 'US',
+        role: 'USER'
+      }
+    });
+
+    res.status(201).json({
+      message: 'Đăng ký thành công',
+      user: {
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Lỗi máy chủ trong quá trình đăng ký!' });
+  }
+});
+
+// Login endpoint
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Vui lòng nhập email và mật khẩu!' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Email hoặc mật khẩu không chính xác!' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Email hoặc mật khẩu không chính xác!' });
+    }
+
+    res.json({
+      message: 'Đăng nhập thành công',
+      user: {
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Lỗi máy chủ trong quá trình đăng nhập!' });
+  }
 });
 
 // Products endpoint
@@ -57,7 +144,7 @@ app.post('/api/products', async (req, res) => {
 app.post('/api/seed', async (req, res) => {
   try {
     // Clear existing data and reset autoincrement sequences to 1
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE "Product", "Category" RESTART IDENTITY CASCADE;');
+    await prisma.$executeRawUnsafe('TRUNCATE TABLE "Product", "Category", "User" RESTART IDENTITY CASCADE;');
 
     // Read products from json file
     const jsonPath = path.join(process.cwd(), 'products.json');
@@ -105,7 +192,19 @@ app.post('/api/seed', async (req, res) => {
       });
     }
 
-    res.json({ message: `Database seeded successfully with ${originalProducts.length} products.` });
+    // Seed Default Admin User
+    const adminHashedPassword = await bcrypt.hash('admin123', 10);
+    await prisma.user.create({
+      data: {
+        email: 'admin@gmail.com',
+        password: adminHashedPassword,
+        name: 'Nguyễn Minh Đức',
+        avatar: 'NĐ',
+        role: 'ADMIN'
+      }
+    });
+
+    res.json({ message: `Database seeded successfully with ${originalProducts.length} products and 1 admin user.` });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to seed database from JSON file' });

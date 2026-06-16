@@ -70,7 +70,7 @@ function Magnetic({ children, range = 60 }: MagneticProps) {
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, user, showToast } = useAppContext();
+  const { login, register, user, showToast } = useAppContext();
 
   // Redirect if already logged in
   useEffect(() => {
@@ -374,7 +374,7 @@ export default function LoginPage() {
   };
 
   // Submit Handler
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -401,38 +401,20 @@ export default function LoginPage() {
     setLoading(true);
 
     if (isLogin) {
-      // Mock Login process
-      setTimeout(() => {
-        // Mock default credentials or any correct ones
-        if (password === "admin123" && email === "admin@gmail.com") {
-          setLoading(false);
-          setSuccess(true);
-          login(email, "Nguyễn Minh Đức");
-          fireConfetti();
-          setTimeout(() => {
-            router.push("/");
-          }, 1800);
-        } else {
-          // Accept any mock user for preview purposes to make testing simple, except if they typed incorrect admin credentials
-          if (email !== "admin@gmail.com") {
-            setLoading(false);
-            setSuccess(true);
-            const userNickname = email.split("@")[0];
-            const capitalizedNickname = userNickname.charAt(0).toUpperCase() + userNickname.slice(1);
-            login(email, capitalizedNickname);
-            fireConfetti();
-            setTimeout(() => {
-              router.push("/");
-            }, 1800);
-          } else {
-            setLoading(false);
-            setError("Sai mật khẩu cho tài khoản quản trị viên!");
-            triggerShake();
-          }
-        }
-      }, 1000);
+      try {
+        await login(email, password);
+        setLoading(false);
+        setSuccess(true);
+        fireConfetti();
+        setTimeout(() => {
+          router.push("/");
+        }, 1800);
+      } catch (err: any) {
+        setLoading(false);
+        setError(err.message || "Đăng nhập thất bại!");
+        triggerShake();
+      }
     } else {
-      // Mock Register process
       if (!name) {
         setLoading(false);
         setError("Vui lòng nhập họ và tên của bạn!");
@@ -446,15 +428,19 @@ export default function LoginPage() {
         return;
       }
 
-      setTimeout(() => {
+      try {
+        await register(email, password, name);
         setLoading(false);
         setSuccess(true);
-        login(email, name);
         fireConfetti();
         setTimeout(() => {
           router.push("/");
         }, 1800);
-      }, 1200);
+      } catch (err: any) {
+        setLoading(false);
+        setError(err.message || "Đăng ký thất bại!");
+        triggerShake();
+      }
     }
   };
 
