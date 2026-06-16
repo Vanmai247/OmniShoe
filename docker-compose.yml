@@ -1,5 +1,47 @@
 services:
-  # 1. Môi trường phát triển cục bộ (Development)
+  # 1. Database (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: omnishoe-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: omni_user
+      POSTGRES_PASSWORD: omni_password
+      POSTGRES_DB: omnishoe
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. Database GUI Manager (Adminer)
+  adminer:
+    image: adminer:latest
+    container_name: omnishoe-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  # 3. Backend development (Node.js/Express)
+  backend-dev:
+    image: node:20-alpine
+    container_name: omnishoe-backend-dev
+    working_dir: /app/backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app/backend
+      - backend_node_modules:/app/backend/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - DATABASE_URL=postgresql://omni_user:omni_password@db:5432/omnishoe?schema=public
+    depends_on:
+      - db
+    command: sh -c "npm install && npx prisma db push && npm run dev"
+
+  # 4. Frontend development (Next.js)
   frontend-dev:
     image: node:20-alpine
     container_name: omnishoe-frontend-dev
@@ -8,27 +50,16 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app/frontend
-      # Tránh mount đè node_modules và build cache từ máy host vào container
       - frontend_node_modules:/app/frontend/node_modules
       - frontend_next_cache:/app/frontend/.next
     environment:
       - NODE_ENV=development
       - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
     command: sh -c "npm install && npm run dev"
 
-  # 2. Môi trường chạy thử nghiệm production (Production)
-  frontend-prod:
-    image: omnishoe-frontend-prod
-    container_name: omnishoe-frontend-prod
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
-
 volumes:
+  postgres_data:
+  backend_node_modules:
   frontend_node_modules:
   frontend_next_cache:
