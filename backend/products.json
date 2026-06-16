@@ -179,25 +179,6 @@
     ]
   },
   {
-    "name": "Nike Air Force 1",
-    "brand": "Nike",
-    "price": "4.300.000₫",
-    "category": "Lifestyle",
-    "badge": "HOT",
-    "photoId": "https://sneakerdaily.vn/wp-content/uploads/2026/04/1-26.jpg",
-    "glowColor": "rgba(0, 150, 255, 0.45)",
-    "description": "",
-    "materials": "",
-    "sizes": [
-      40,
-      41,
-      42
-    ],
-    "id": 9,
-    "rating": 5,
-    "reviews": 0
-  },
-  {
     "name": "Puma Rebound Joy",
     "brand": "Puma",
     "price": "2,190,000₫",
@@ -216,18 +197,17 @@
   {
     "name": "MLB Chunky Runner NY Yankees Metallic Silver",
     "brand": "MLB",
-    "price": "3,200,000₫",
-    "oldPrice": "3,800,000₫",
-    "category": "Running",
-    "badge": "New",
+    "price": "3.200.000₫",
+    "oldPrice": "3.800.000₫",
     "photoId": "/mlb.webp",
-    "description": "Giày thể thao MLB Chunky Runner với phối màu bạc Metallic trẻ trung cùng biểu tượng New York Yankees nổi bật.",
+    "category": "Running",
+    "glowColor": "rgba(255, 255, 255, 0.45)",
     "sizes": [
-      39,
       40,
       41,
       42,
-      43
+      43,
+      44
     ]
   }
 ]
