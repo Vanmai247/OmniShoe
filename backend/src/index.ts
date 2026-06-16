@@ -84,6 +84,10 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'Email hoặc mật khẩu không chính xác!' });
     }
 
+    if (!user.password) {
+      return res.status(400).json({ error: 'Tài khoản này được đăng ký bằng Google. Vui lòng đăng nhập bằng Google!' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: 'Email hoặc mật khẩu không chính xác!' });
@@ -100,6 +104,43 @@ app.post('/api/auth/login', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Lỗi máy chủ trong quá trình đăng nhập!' });
+  }
+});
+
+// Google Login / Auto-Registration endpoint
+app.post('/api/auth/google-login', async (req, res) => {
+  try {
+    const { email, name, avatar } = req.body;
+    if (!email || !name) {
+      return res.status(400).json({ error: 'Thông tin đăng nhập Google thiếu email hoặc tên!' });
+    }
+
+    // Upsert user in PostgreSQL (create if not exist, update profile details if exist)
+    const user = await prisma.user.upsert({
+      where: { email },
+      update: {
+        name,
+        avatar: avatar || null
+      },
+      create: {
+        email,
+        name,
+        avatar: avatar || null,
+        role: 'USER'
+      }
+    });
+
+    res.json({
+      message: 'Đồng bộ tài khoản Google thành công',
+      user: {
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Lỗi đồng bộ tài khoản Google ở máy chủ!' });
   }
 });
 
