@@ -1,54 +1,98 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 
-const getDataPath = () => {
-  const cwd = process.cwd();
-  // Next.js standard execution directory is the frontend directory
-  if (cwd.endsWith("frontend")) {
-    return path.join(cwd, "src/data/products.json");
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
+function mapDbProductToFrontend(dbProduct: any) {
+  let glowColor = "rgba(255, 255, 255, 0.45)";
+  if (dbProduct.brand === "Adidas") {
+    glowColor = "rgba(0, 150, 255, 0.45)";
+  } else if (dbProduct.brand === "Jordan") {
+    glowColor = "rgba(244, 114, 182, 0.45)";
+  } else if (dbProduct.brand === "Puma") {
+    glowColor = "rgba(52, 211, 153, 0.45)";
   }
-  return path.join(cwd, "frontend/src/data/products.json");
-};
+
+  const sizes = dbProduct.category?.name === "Running" 
+    ? [40, 41, 42, 43, 44] 
+    : [39, 40, 41, 42, 43];
+
+  return {
+    id: dbProduct.id,
+    name: dbProduct.name,
+    brand: dbProduct.brand,
+    price: dbProduct.price.toLocaleString("vi-VN") + "₫",
+    oldPrice: dbProduct.originalPrice ? dbProduct.originalPrice.toLocaleString("vi-VN") + "₫" : undefined,
+    rating: 4.8,
+    reviews: 120,
+    badge: dbProduct.badge || "",
+    photoId: dbProduct.image,
+    category: dbProduct.category?.name || "Lifestyle",
+    glowColor,
+    sizes
+  };
+}
 
 export async function GET() {
   try {
-    const dataPath = getDataPath();
-    const fileData = await fs.readFile(dataPath, "utf8");
-    const products = JSON.parse(fileData);
-    return NextResponse.json(products);
+    const res = await fetch(`${BACKEND_URL}/api/products`, { cache: 'no-store' });
+    if (!res.ok) {
+      throw new Error(`Backend responded with status: ${res.status}`);
+    }
+    const products = await res.json();
+    const mappedProducts = products.map(mapDbProductToFrontend);
+    return NextResponse.json(mappedProducts);
   } catch (error) {
     console.error("API GET products error:", error);
-    return NextResponse.json({ error: "Failed to read products" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch products from backend" }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const dataPath = getDataPath();
-    const fileData = await fs.readFile(dataPath, "utf8");
-    const products = JSON.parse(fileData);
-
     const body = await request.json();
     
     if (!body.name || !body.brand || !body.price) {
       return NextResponse.json({ error: "Name, Brand, and Price are required" }, { status: 400 });
     }
 
-    // Generate new ID or use the one provided (useful for restoring deleted product)
-    const maxId = products.reduce((max: number, p: any) => p.id > max ? p.id : max, 0);
-    const newProduct = {
-      ...body,
-      id: body.id || (maxId + 1),
-      rating: body.rating ? parseFloat(body.rating) : 5.0,
-      reviews: body.reviews ? parseInt(body.reviews) : 0,
-      sizes: body.sizes || [39, 40, 41, 42, 43],
-    };
+    // Clean up price (remove non-digits to get raw float value)
+    const cleanPrice = parseFloat(String(body.price).replace(/[^\d]/g, ""));
+    const cleanOriginalPrice = body.oldPrice ? parseFloat(String(body.oldPrice).replace(/[^\d]/g, "")) : null;
 
-    products.push(newProduct);
-    await fs.writeFile(dataPath, JSON.stringify(products, null, 2), "utf8");
+    // Map category name to database ID (1: Running, 2: Lifestyle, 3: Basketball)
+    let categoryId = 2; // default to Lifestyle
+    const catName = String(body.category).toLowerCase();
+    if (catName === "running") {
+      categoryId = 1;
+    } else if (catName === "basketball") {
+      categoryId = 3;
+    }
 
-    return NextResponse.json(newProduct, { status: 201 });
+    // Send payload to backend
+    const res = await fetch(`${BACKEND_URL}/api/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: body.name,
+        brand: body.brand,
+        price: cleanPrice,
+        originalPrice: cleanOriginalPrice,
+        image: body.photoId || "",
+        badge: body.badge || null,
+        description: body.description || null,
+        categoryId: categoryId
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error(`Backend responded with status: ${res.status}`);
+    }
+
+    const newDbProduct = await res.json();
+    const mappedProduct = mapDbProductToFrontend(newDbProduct);
+    return NextResponse.json(mappedProduct, { status: 201 });
   } catch (error) {
     console.error("API POST product error:", error);
     return NextResponse.json({ error: "Failed to add product" }, { status: 500 });

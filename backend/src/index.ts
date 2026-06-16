@@ -27,6 +27,30 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+// Create product endpoint
+app.post('/api/products', async (req, res) => {
+  try {
+    const { name, price, originalPrice, image, brand, badge, description, categoryId } = req.body;
+    const product = await prisma.product.create({
+      data: {
+        name,
+        price: parseFloat(price),
+        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+        image,
+        brand,
+        badge,
+        description,
+        categoryId: parseInt(categoryId)
+      },
+      include: { category: true }
+    });
+    res.status(201).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
+});
+
 // Seed endpoint to populate test data
 app.post('/api/seed', async (req, res) => {
   try {
