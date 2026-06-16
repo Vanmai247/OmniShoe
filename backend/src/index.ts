@@ -56,8 +56,9 @@ app.post('/api/products', async (req, res) => {
 // Seed endpoint to populate test data
 app.post('/api/seed', async (req, res) => {
   try {
-    // Clear existing data and reset autoincrement sequences to 1
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE "Product", "Category" RESTART IDENTITY CASCADE;');
+    // Clear existing data
+    await prisma.product.deleteMany({});
+    await prisma.category.deleteMany({});
 
     // Read products from json file
     const jsonPath = path.join(process.cwd(), 'products.json');
