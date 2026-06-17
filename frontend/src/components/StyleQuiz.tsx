@@ -145,7 +145,7 @@ export default function StyleQuiz({ products, onAddToCart, onShowToast }: StyleQ
   };
 
   return (
-    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-bg-secondary/40 to-card-background p-5 md:p-12 my-16 max-w-[1440px] mx-auto text-center">
+    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-bg-secondary/40 to-card-background p-5 md:p-12 my-16 mx-4 lg:mx-auto max-w-[1440px] text-center">
       {/* Absolute Glow Lights */}
       <div className="absolute -top-1/4 -right-1/4 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute -bottom-1/4 -left-1/4 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none" />

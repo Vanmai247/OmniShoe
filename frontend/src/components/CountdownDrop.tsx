@@ -87,7 +87,7 @@ export default function CountdownDrop({ onShowToast, config }: CountdownDropProp
   const limitTag = config?.countdownLimitTag || "85 đôi tại Việt Nam";
 
   return (
-    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-black to-card-background p-5 md:p-12 my-16 max-w-[1440px] mx-auto">
+    <section className="relative overflow-hidden rounded-2xl md:rounded-[32px] border border-border-color bg-gradient-to-br from-card-background via-black to-card-background p-5 md:p-12 my-16 mx-4 lg:mx-auto max-w-[1440px]">
       {/* Background Neon Glowing Spot */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[350px] h-[350px] bg-accent/10 rounded-full blur-[100px] pointer-events-none -z-10 animate-pulse" />
 
@@ -156,7 +156,7 @@ export default function CountdownDrop({ onShowToast, config }: CountdownDropProp
           </p>
 
           {/* Countdown Clock Container */}
-          <div className="flex flex-wrap gap-2.5 sm:gap-4 my-2">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4 my-2 max-w-[360px] sm:max-w-[400px]">
             {[
               { label: "Ngày", value: timeLeft.days },
               { label: "Giờ", value: timeLeft.hours },
@@ -165,7 +165,7 @@ export default function CountdownDrop({ onShowToast, config }: CountdownDropProp
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="flex flex-col items-center justify-center bg-bg-secondary/60 border border-border-color backdrop-blur-sm min-w-[62px] sm:min-w-[85px] py-2.5 sm:py-3.5 px-1 sm:px-2 rounded-xl sm:rounded-2xl"
+                className="flex flex-col items-center justify-center bg-bg-secondary/60 border border-border-color backdrop-blur-sm py-2.5 sm:py-3.5 px-1 sm:px-2 rounded-xl sm:rounded-2xl w-full min-w-0"
               >
                 <span className="text-xl sm:text-3xl font-black text-foreground font-mono leading-none tracking-tight">
                   {formatNumber(item.value)}
