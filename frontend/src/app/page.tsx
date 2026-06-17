@@ -1329,9 +1329,9 @@ export default function Home() {
 
           {/* Brand Column */}
           <div className="footer-col brand-col">
-            <a href="#" className="logo">
-              OMNI<span>SHOE</span>
-            </a>
+            <Link href="/" className="footer-logo-link">
+              <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="footer-logo-image" />
+            </Link>
             <p>Dẫn đầu xu hướng, khẳng định chất riêng. OmniShoe mang văn hóa sneaker thực thụ đến cộng đồng Gen Z Việt Nam.</p>
             <div className="social-links">
               {["instagram", "tiktok", "facebook", "youtube"].map((social) => (

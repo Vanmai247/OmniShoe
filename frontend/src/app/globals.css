@@ -38,7 +38,7 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Outfit', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   transition: var(--transition);
   overflow-x: clip;
   min-height: 100vh;
@@ -192,7 +192,7 @@ body {
 
 /* --- PHẦN CHỮ (TYPOGRAPHY) --- */
 .header-logo-brand-name {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Archivo', sans-serif;
   font-size: 20px;
   font-weight: 800;
   color: var(--foreground);
@@ -202,7 +202,7 @@ body {
 }
 
 .header-logo-tagline {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Archivo', sans-serif;
   font-size: 8px;
   font-weight: 700;
   color: var(--text-muted);
@@ -215,17 +215,19 @@ body {
   gap: 32px;
   align-items: center;
 }
-.nav-links a {
-  font-family: 'Montserrat', sans-serif;
+.nav-links a,
+.nav-links .nav-link-trigger {
+  font-family: 'Archivo', sans-serif;
   text-decoration: none;
   color: var(--foreground);
   font-weight: 700;
-  font-size: 15px;
+  font-size: 18px;
   transition: var(--transition);
   position: relative;
   padding: 8px 0;
 }
-.nav-links a::after {
+.nav-links a::after,
+.nav-links .nav-link-trigger::after {
   content: '';
   position: absolute;
   bottom: 0;
