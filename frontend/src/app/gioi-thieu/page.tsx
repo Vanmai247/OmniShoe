@@ -125,8 +125,103 @@ export default function AboutUsPage() {
           {/* Navigation Links */}
           <nav className="nav-links">
             <Link href="/#product-section">Sản phẩm</Link>
-            <Link href="/">Nam</Link>
-            <Link href="/">Nữ</Link>
+            <div className="nav-item-has-submenu">
+              <Link href="/" className="nav-link-trigger">Nam</Link>
+              <div className="mega-menu !w-[480px]">
+                <div className="grid grid-cols-2 gap-6 text-left">
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-accent mb-3">Dòng sản phẩm</h4>
+                    <ul className="flex flex-col gap-2.5">
+                      {["Lifestyle Sneaker", "Running / Performance", "Basketball / Cổ cao", "Classic Canvas", "Chunky Sneaker", "Sandal & Dép"].map((item) => (
+                        <li key={item}>
+                          <Link 
+                            href="/" 
+                            onClick={() => {
+                              showToastNotification(`Đang lọc sản phẩm Nam: ${item}`);
+                            }}
+                            className="text-xs font-bold text-zinc-500 hover:text-accent transition-colors block py-0.5"
+                          >
+                            {item}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div 
+                    className="flex flex-col justify-between p-4 rounded-2xl relative overflow-hidden min-h-[170px] group/banner text-white border border-zinc-200/10"
+                    style={{
+                      backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 60%, rgba(0, 0, 0, 0.4) 100%), url('https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    <div className="relative z-10 text-left">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-accent bg-accent/15 px-2.5 py-1 rounded-full border border-accent/30">Hot Drop</span>
+                      <h5 className="text-xs font-black text-white mt-3 leading-tight uppercase">Men's Sneaker</h5>
+                      <p className="text-[10px] !text-zinc-200 mt-1.5 leading-normal font-semibold">Những phối màu và thiết kế độc quyền dành riêng cho Nam.</p>
+                    </div>
+                    <Link 
+                      href="/" 
+                      onClick={() => {
+                        showToastNotification("Đang hiển thị toàn bộ sản phẩm Nam");
+                      }}
+                      className="relative z-10 text-[10px] font-black uppercase tracking-wider !text-white hover:!text-accent transition-all flex items-center gap-1 mt-3 group-hover/banner:translate-x-1"
+                    >
+                      Xem tất cả <i className="ti ti-arrow-right"></i>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="nav-item-has-submenu">
+              <Link href="/" className="nav-link-trigger">Nữ</Link>
+              <div className="mega-menu !w-[480px]">
+                <div className="grid grid-cols-2 gap-6 text-left">
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-accent mb-3">Dòng sản phẩm</h4>
+                    <ul className="flex flex-col gap-2.5">
+                      {["Lifestyle Sneaker", "Running / Performance", "Chunky / Platform", "Classic Canvas", "Sandal & Dép"].map((item) => (
+                        <li key={item}>
+                          <Link 
+                            href="/" 
+                            onClick={() => {
+                              showToastNotification(`Đang lọc sản phẩm Nữ: ${item}`);
+                            }}
+                            className="text-xs font-bold text-zinc-500 hover:text-accent transition-colors block py-0.5"
+                          >
+                            {item}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div 
+                    className="flex flex-col justify-between p-4 rounded-2xl relative overflow-hidden min-h-[170px] group/banner text-white border border-zinc-200/10"
+                    style={{
+                      backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 60%, rgba(0, 0, 0, 0.4) 100%), url('https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    <div className="relative z-10 text-left">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-accent bg-accent/15 px-2.5 py-1 rounded-full border border-accent/30">Sporty Chic</span>
+                      <h5 className="text-xs font-black text-white mt-3 leading-tight uppercase">Women's Sneaker</h5>
+                      <p className="text-[10px] !text-zinc-200 mt-1.5 leading-normal font-semibold">Những phối màu tinh tế và êm ái dành riêng cho Nữ.</p>
+                    </div>
+                    <Link 
+                      href="/" 
+                      onClick={() => {
+                        showToastNotification("Đang hiển thị toàn bộ sản phẩm Nữ");
+                      }}
+                      className="relative z-10 text-[10px] font-black uppercase tracking-wider !text-white hover:!text-accent transition-all flex items-center gap-1 mt-3 group-hover/banner:translate-x-1"
+                    >
+                      Xem tất cả <i className="ti ti-arrow-right"></i>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
             
             <div className="nav-item-has-submenu">
               <a href="#" className="nav-link-trigger">Thương hiệu</a>
