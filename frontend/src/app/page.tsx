@@ -752,17 +752,72 @@ export default function Home() {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden w-full bg-background border-b border-border-color py-6 px-6 z-40 transition-all duration-300 flex flex-col gap-4">
-            {["Nam", "Nữ", "Thương hiệu", "Sale", "Xu hướng"].map((link) => (
+          <div className="md:hidden w-full bg-background border-b border-border-color py-6 px-6 z-40 transition-all duration-300 flex flex-col gap-4 text-left">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                document.getElementById("product-section")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-lg font-semibold hover:text-accent py-1"
+            >
+              Sản phẩm
+            </a>
+            {["Nam", "Nữ"].map((link) => (
               <a
                 key={link}
                 href="#"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsMobileMenuOpen(false);
+                  showToastNotification(`Đang hiển thị toàn bộ sản phẩm ${link}`);
+                }}
                 className="text-lg font-semibold hover:text-accent py-1"
               >
                 {link}
               </a>
             ))}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                showToastNotification("Đang hiển thị danh sách thương hiệu");
+              }}
+              className="text-lg font-semibold hover:text-accent py-1"
+            >
+              Thương hiệu
+            </a>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                showToastNotification("Đang lọc các sản phẩm khuyến mãi");
+              }}
+              className="text-lg font-semibold hover:text-accent py-1"
+            >
+              Sale
+            </a>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                document.getElementById("product-section")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-lg font-semibold hover:text-accent py-1"
+            >
+              Xu hướng
+            </a>
+            <Link
+              href="/gioi-thieu"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-lg font-semibold hover:text-accent py-1"
+            >
+              Về chúng tôi
+            </Link>
           </div>
         )}
       </header>
@@ -1218,7 +1273,7 @@ export default function Home() {
         />
 
         {/* 4.2. SOCIAL PROOF WALL: #OMNISHOESTYLE */}
-        <section className="max-w-[1440px] mx-auto px-8 md:px-12 my-16 text-center">
+        <section className="max-w-[1440px] mx-auto px-4 md:px-12 my-16 text-center">
           <div className="mb-10">
             <span className="text-accent text-xs font-black tracking-wider uppercase">Cộng đồng Streetwear</span>
             <h2 className="text-2xl md:text-4xl font-black mt-1 uppercase tracking-tight">NHỊP ĐẬP SNEAKER #OMNISHOESTYLE</h2>
@@ -1250,7 +1305,7 @@ export default function Home() {
         </section>
 
         {/* 4.3. CUSTOMER TESTIMONIALS */}
-        <section className="bg-bg-secondary/40 border-t border-b border-border-color py-16 px-8 md:px-12 my-16">
+        <section className="bg-bg-secondary/40 border-t border-b border-border-color py-16 px-4 md:px-12 my-16">
           <div className="max-w-[1440px] mx-auto">
             <div className="text-center mb-12">
               <span className="text-accent text-xs font-black tracking-wider uppercase">Được tin tưởng bởi các Sneakerhead</span>
@@ -1340,7 +1395,7 @@ export default function Home() {
       </section>
 
       {/* 5.1. FAQ ACCORDION SECTION */}
-      <section className="max-w-[800px] mx-auto px-8 my-16 text-left w-full">
+      <section className="max-w-[800px] mx-auto px-4 md:px-8 my-16 text-left w-full">
         <div className="text-center mb-10">
           <span className="text-accent text-xs font-black tracking-wider uppercase">Giải đáp thắc mắc</span>
           <h2 className="text-2xl md:text-4xl font-black mt-1 uppercase tracking-tight text-center">CÂU HỎI THƯỜNG GẶP</h2>
