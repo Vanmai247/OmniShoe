@@ -1450,7 +1450,7 @@ body {
   .social-card-overlay .font-extrabold {
     font-size: 12px;
   }
-  .social-card-overlay .text-[10px] {
+  .social-card-overlay span:nth-child(2) {
     font-size: 8px;
   }
 
