@@ -177,8 +177,8 @@ export default async function DynamicCMSPage({ params }: PageProps) {
       <footer className="footer border-t border-border-color">
         <div className="footer-container">
           <div className="footer-col brand-col">
-            <Link href="/" className="logo">
-              OMNI<span>SHOE</span>
+            <Link href="/" className="footer-logo-link">
+              <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="footer-logo-image" />
             </Link>
             <p>Dẫn đầu xu hướng, khẳng định chất riêng. OmniShoe mang văn hóa sneaker thực thụ đến cộng đồng Gen Z Việt Nam.</p>
             <div className="social-links">
