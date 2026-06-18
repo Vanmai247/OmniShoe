@@ -34,6 +34,7 @@ interface AppContextType {
   showToast: (msg: string) => void;
   updateCartQuantity: (productId: number, size: number, change: number) => void;
   updateCartItemSize: (productId: number, oldSize: number, newSize: number) => void;
+  clearCart: () => void;
   login: (email: string, password: string) => Promise<User>;
   register: (email: string, password: string, name: string) => Promise<User>;
   logout: () => void;
@@ -197,6 +198,10 @@ function AppContextProviderWrapper({ children }: { children: React.ReactNode }) 
     showToast("Đã cập nhật size giày! 👟");
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const toggleWishlist = (productId: number) => {
     setWishlist((prev) => {
       const exists = prev.includes(productId);
@@ -263,6 +268,7 @@ function AppContextProviderWrapper({ children }: { children: React.ReactNode }) 
         showToast,
         updateCartQuantity,
         updateCartItemSize,
+        clearCart,
         login,
         register,
         logout,

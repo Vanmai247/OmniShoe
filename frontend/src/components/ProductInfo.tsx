@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context/AppContext";
 
 interface Product {
@@ -17,6 +18,7 @@ interface Product {
 }
 
 export default function ProductInfo({ product }: { product: Product }) {
+  const router = useRouter();
   const { addToCart, wishlist, toggleWishlist } = useAppContext();
   const [selectedSize, setSelectedSize] = useState<number>(product.sizes[2] || 41);
   const [quantity, setQuantity] = useState(1);
@@ -29,6 +31,10 @@ export default function ProductInfo({ product }: { product: Product }) {
     addToCart(product, selectedSize, quantity);
     setAddedEffect(true);
     setTimeout(() => setAddedEffect(false), 1500);
+  };
+
+  const handleBuyNow = () => {
+    router.push(`/checkout?productId=${product.id}&size=${selectedSize}&qty=${quantity}`);
   };
 
   return (
@@ -140,7 +146,7 @@ export default function ProductInfo({ product }: { product: Product }) {
         </button>
 
         <button
-          onClick={handleAddToCart}
+          onClick={handleBuyNow}
           className="flex-[1.5] h-14 bg-gradient-to-r from-orange-500 to-amber-500 hover:shadow-[0_4px_20px_rgba(255,87,34,0.35)] hover:-translate-y-0.5 transition-all text-white font-black text-sm uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 active:translate-y-0"
         >
           Mua ngay
