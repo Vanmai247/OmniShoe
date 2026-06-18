@@ -210,5 +210,21 @@
       43,
       44
     ]
+  },
+  {
+    "name": "Adidas Samba OG",
+    "brand": "Adidas",
+    "price": "2.700.000₫",
+    "category": "Lifestyle",
+    "badge": "New Drop",
+    "photoId": "/Samba_OG.webp",
+    "description": "Giày thể thao Adidas Samba OG mang tính biểu tượng với phối màu cổ điển, thiết kế da mềm mại và đế cao su gum bám đường tốt.",
+    "sizes": [
+      39,
+      40,
+      41,
+      42,
+      43
+    ]
   }
 ]
