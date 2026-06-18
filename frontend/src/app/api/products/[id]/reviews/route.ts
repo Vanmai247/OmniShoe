@@ -20,9 +20,30 @@ export async function POST(
     const fileData = await fs.readFile(dataPath, "utf8");
     const products = JSON.parse(fileData);
 
-    const productIndex = products.findIndex((p: any) => p.id === id);
+    let productIndex = products.findIndex((p: any) => p.id === id);
     if (productIndex === -1) {
-      return NextResponse.json({ error: "Không tìm thấy sản phẩm này ⚠️" }, { status: 404 });
+      const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/products/${id}`);
+        if (!res.ok) {
+          return NextResponse.json({ error: "Không tìm thấy sản phẩm này ⚠️" }, { status: 404 });
+        }
+        const dbProduct = await res.json();
+        const newProductEntry = {
+          id: id,
+          name: dbProduct.name,
+          brand: dbProduct.brand,
+          price: dbProduct.price.toLocaleString("vi-VN") + "₫",
+          rating: 5,
+          reviews: 0,
+          reviewsList: []
+        };
+        products.push(newProductEntry);
+        productIndex = products.length - 1;
+      } catch (err) {
+        console.error("Failed to verify product existence from backend in reviews API:", err);
+        return NextResponse.json({ error: "Lỗi kết nối máy chủ để kiểm tra sản phẩm ⚠️" }, { status: 500 });
+      }
     }
 
     const body = await request.json();

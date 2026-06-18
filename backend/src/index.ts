@@ -181,6 +181,66 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
+// Get single product by ID
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: { category: true }
+    });
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to retrieve product' });
+  }
+});
+
+// Update single product by ID
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { name, price, originalPrice, image, brand, badge, description, categoryId } = req.body;
+    
+    const updateData: any = {};
+    if (name !== undefined) updateData.name = name;
+    if (price !== undefined) updateData.price = parseFloat(price);
+    if (originalPrice !== undefined) updateData.originalPrice = originalPrice ? parseFloat(originalPrice) : null;
+    if (image !== undefined) updateData.image = image;
+    if (brand !== undefined) updateData.brand = brand;
+    if (badge !== undefined) updateData.badge = badge;
+    if (description !== undefined) updateData.description = description;
+    if (categoryId !== undefined) updateData.categoryId = parseInt(categoryId);
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: updateData,
+      include: { category: true }
+    });
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// Delete single product by ID
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const product = await prisma.product.delete({
+      where: { id }
+    });
+    res.json({ message: 'Product deleted successfully', product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
 // Seed endpoint to populate test data
 app.post('/api/seed', async (req, res) => {
   try {
