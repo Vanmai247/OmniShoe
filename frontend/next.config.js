@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'sneakerdaily.vn',
       },
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+      },
     ],
   },
   webpack: (config, { dev }) => {
