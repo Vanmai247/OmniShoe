@@ -3,6 +3,7 @@ import { put } from "@vercel/blob";
 import fs from "fs/promises";
 import path from "path";
 
+// Trigger deploy to apply Vercel Blob environment variables
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
