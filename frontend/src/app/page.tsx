@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+
 import ShoeSlider from "@/components/ShoeSlider";
 import CountdownDrop from "@/components/CountdownDrop";
 import StyleQuiz from "@/components/StyleQuiz";

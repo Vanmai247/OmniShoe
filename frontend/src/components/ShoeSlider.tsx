@@ -14,31 +14,24 @@ interface SlideItem {
 const slides: SlideItem[] = [
   {
     id: 1,
-    name: "Nike Air Edition",
-    color: "#ff3e00",
-    glowColor: "rgba(255, 62, 0, 0.2)",
-    image: "/Nike_air-removebg-preview.png",
+    name: "Puma GV Special",
+    color: "#e5a93c",
+    glowColor: "rgba(229, 169, 60, 0.25)",
+    image: "/Puma_GV-Special.webp",
   },
   {
     id: 2,
-    name: "Cosmic Purple Edition",
-    color: "#b026ff",
-    glowColor: "rgba(176, 38, 255, 0.2)",
-    image: "/Nike_air.png",
+    name: "Air Jordan",
+    color: "#ef4444",
+    glowColor: "rgba(239, 68, 68, 0.25)",
+    image: "/Air-jordan.webp",
   },
   {
     id: 3,
-    name: "Neon Green Edition",
-    color: "#00ff88",
-    glowColor: "rgba(0, 255, 136, 0.2)",
-    image: "/Nike_3-removebg-preview.png",
-  },
-  {
-    id: 4,
-    name: "Sky Blue Edition",
-    color: "#00bfff",
-    glowColor: "rgba(0, 191, 255, 0.2)",
-    image: "/Nike_4-removebg-preview.png",
+    name: "Adidas Samba OG",
+    color: "#a3a3a3",
+    glowColor: "rgba(163, 163, 163, 0.25)",
+    image: "/Samba_OG-removebg-preview.webp",
   },
 ];
 
