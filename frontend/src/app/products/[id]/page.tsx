@@ -10,14 +10,73 @@ import path from "path";
 
 export const dynamic = "force-dynamic";
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
+function mapDbProductToFrontend(dbProduct: any) {
+  let glowColor = "rgba(255, 255, 255, 0.45)";
+  if (dbProduct.brand === "Adidas") {
+    glowColor = "rgba(0, 150, 255, 0.45)";
+  } else if (dbProduct.brand === "Jordan") {
+    glowColor = "rgba(244, 114, 182, 0.45)";
+  } else if (dbProduct.brand === "Puma") {
+    glowColor = "rgba(52, 211, 153, 0.45)";
+  }
+
+  const sizes = dbProduct.category?.name === "Running" 
+    ? [40, 41, 42, 43, 44] 
+    : [39, 40, 41, 42, 43];
+
+  return {
+    id: dbProduct.id,
+    name: dbProduct.name,
+    brand: dbProduct.brand,
+    price: dbProduct.price.toLocaleString("vi-VN") + "₫",
+    oldPrice: dbProduct.originalPrice ? dbProduct.originalPrice.toLocaleString("vi-VN") + "₫" : undefined,
+    rating: 4.8,
+    reviews: 120,
+    badge: dbProduct.badge || "",
+    photoId: dbProduct.image,
+    category: dbProduct.category?.name || "Lifestyle",
+    glowColor,
+    sizes
+  };
+}
+
 async function getProducts() {
   try {
-    const cwd = process.cwd();
-    const dataPath = cwd.endsWith("frontend") 
-      ? path.join(cwd, "src/data/products.json") 
-      : path.join(cwd, "frontend/src/data/products.json");
-    const fileData = await fs.readFile(dataPath, "utf8");
-    return JSON.parse(fileData);
+    const res = await fetch(`${BACKEND_URL}/api/products`, { cache: 'no-store' });
+    if (!res.ok) {
+      throw new Error(`Backend responded with status: ${res.status}`);
+    }
+    const dbProducts = await res.json();
+    const mappedProducts = dbProducts.map(mapDbProductToFrontend);
+
+    // Merge reviews and ratings from local products.json if they exist
+    try {
+      const cwd = process.cwd();
+      const dataPath = cwd.endsWith("frontend") 
+        ? path.join(cwd, "src/data/products.json") 
+        : path.join(cwd, "frontend/src/data/products.json");
+      const fileData = await fs.readFile(dataPath, "utf8");
+      const jsonProducts = JSON.parse(fileData);
+
+      return mappedProducts.map((p: any) => {
+        const jsonProduct = jsonProducts.find((jp: any) => jp.id === p.id);
+        if (jsonProduct) {
+          return {
+            ...p,
+            rating: jsonProduct.rating ?? p.rating,
+            reviews: jsonProduct.reviews ?? p.reviews,
+            reviewsList: jsonProduct.reviewsList ?? []
+          };
+        }
+        return p;
+      });
+    } catch (err) {
+      // If reading products.json fails, just return mapped products
+    }
+
+    return mappedProducts;
   } catch (error) {
     console.error("Failed to load products dynamically:", error);
     return [];
