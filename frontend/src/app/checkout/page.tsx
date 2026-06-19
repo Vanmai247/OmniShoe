@@ -1197,6 +1197,13 @@ function CheckoutContent() {
                     </span>
                   </h3>
 
+                  {currentStep === 3 && createdOrderId && (
+                    <div className="flex justify-between items-center bg-zinc-50 border border-zinc-150 px-4 py-2.5 rounded-xl text-xs -mt-2">
+                      <span className="text-zinc-500 font-bold uppercase tracking-wider text-[10px]">Mã đơn hàng:</span>
+                      <span className="font-extrabold text-zinc-800 tracking-wide">{createdOrderId}</span>
+                    </div>
+                  )}
+
                   {/* Items List */}
                   <div className="max-h-[300px] overflow-y-auto divide-y divide-zinc-100 pr-1.5 custom-scrollbar">
                     {checkoutItems.map((item) => (
