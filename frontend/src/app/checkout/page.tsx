@@ -152,6 +152,9 @@ function CheckoutContent() {
   // Confetti effect hook when orderSuccess is active
   useEffect(() => {
     if (!orderSuccess) return;
+    if (orderSuccess.paymentMethod === "bank" && orderSuccess.status === "Chờ thanh toán") {
+      return;
+    }
 
     // Inject CSS styles dynamically
     const style = document.createElement("style");
