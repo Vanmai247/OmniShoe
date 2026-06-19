@@ -1313,20 +1313,34 @@ function CheckoutContent() {
               `}} />
 
               {/* Success Icon */}
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[#00d084] to-[#00b86c] text-white flex items-center justify-center text-5xl mb-6 shadow-xl shadow-[rgba(0,208,132,0.25)] animate-scale-in">
-                ✓
+              <div className={`w-28 h-28 rounded-full bg-gradient-to-br ${
+                orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                  ? "from-amber-400 to-amber-550 text-white shadow-amber-500/25"
+                  : "from-[#00d084] to-[#00b86c] text-white shadow-[rgba(0,208,132,0.25)]"
+              } flex items-center justify-center text-5xl mb-6 shadow-xl animate-scale-in`}>
+                {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank" ? "⏳" : "✓"}
               </div>
 
               {/* Success Content */}
               <div className="text-center mb-10">
-                <div className="text-[10px] font-black uppercase tracking-widest text-[#00d084] bg-[#00d084]/10 border border-[#00d084]/25 px-4 py-1.5 rounded-full w-fit mx-auto mb-4">
-                  ✨ Đặt hàng thành công
+                <div className={`text-[10px] font-black uppercase tracking-widest ${
+                  orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "text-amber-700 bg-amber-50 border border-amber-250/30"
+                    : "text-[#00d084] bg-[#00d084]/10 border border-[#00d084]/25"
+                } px-4 py-1.5 rounded-full w-fit mx-auto mb-4`}>
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "⏳ Chờ thanh toán"
+                    : "✨ Đặt hàng thành công"}
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black mb-4 bg-gradient-to-r from-zinc-900 via-zinc-800 to-[#FF8C00] bg-clip-text text-transparent font-sans uppercase tracking-tight">
-                  Cảm ơn bạn đã mua sắm!
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "Đơn hàng đang chờ thanh toán"
+                    : "Cảm ơn bạn đã mua sắm!"}
                 </h1>
                 <p className="text-zinc-550 text-sm max-w-md mx-auto leading-relaxed font-semibold">
-                  Đơn hàng của bạn đã được xác nhận. Chúng tôi sẽ chuẩn bị và giao hàng cho bạn trong thời gian sớm nhất.
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "Vui lòng hoàn tất chuyển khoản theo thông tin bên dưới để đơn hàng được xác nhận và giao đi sớm nhất."
+                    : "Đơn hàng của bạn đã được xác nhận. Chúng tôi sẽ chuẩn bị và giao hàng cho bạn trong thời gian sớm nhất."}
                 </p>
               </div>
 
