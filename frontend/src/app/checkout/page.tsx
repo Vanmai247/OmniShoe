@@ -614,7 +614,7 @@ function CheckoutContent() {
             >
               {/* Left Column: Dynamic Step Content */}
               <div className="lg:col-span-7">
-                <form onSubmit={handleSubmitOrder} className="flex flex-col gap-8">
+                <form id="checkout-form" onSubmit={handleSubmitOrder} className="flex flex-col gap-8">
                   <AnimatePresence mode="wait">
                     {currentStep === 1 && (
                       <motion.div
@@ -1165,34 +1165,13 @@ function CheckoutContent() {
                         </div>
 
                         {/* Navigation buttons Step 3 */}
-                        <div className="pt-4 flex justify-between items-center gap-4">
+                        <div className="pt-4 flex justify-start items-center gap-4">
                           <button
                             type="button"
                             onClick={() => setCurrentStep(2)}
                             className="px-6 py-3.5 border border-zinc-200 hover:border-zinc-350 text-zinc-750 font-black text-xs uppercase tracking-widest rounded-xl transition-all duration-300 hover:bg-zinc-100 cursor-pointer font-sans"
                           >
                             ← Quay lại
-                          </button>
-                          <button
-                            type="submit"
-                            disabled={isSubmitting || (paymentMethod === "bank" && isCreatingOrder && !createdOrderId)}
-                            className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#FF8C00] to-[#ff9f1c] text-white font-black text-xs uppercase tracking-widest hover:shadow-[0_8px_30px_rgba(255,140,0,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[rgba(255,140,0,0.25)] font-sans"
-                          >
-                            {isSubmitting ? (
-                              <>
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Đang kết nối cổng thanh toán...
-                              </>
-                            ) : paymentMethod === "bank" && isCreatingOrder && !createdOrderId ? (
-                              <>
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Đang tạo mã QR...
-                              </>
-                            ) : (
-                              <>
-                                ✓ Xác nhận đặt hàng
-                              </>
-                            )}
                           </button>
                         </div>
                       </motion.div>
@@ -1276,6 +1255,34 @@ function CheckoutContent() {
                     </div>
                   </div>
                 </motion.div>
+
+                {/* Submit button below order summary card, only shown in Step 3 */}
+                {currentStep === 3 && (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      type="submit"
+                      form="checkout-form"
+                      disabled={isSubmitting || (paymentMethod === "bank" && isCreatingOrder && !createdOrderId)}
+                      className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#FF8C00] to-[#ff9f1c] text-white font-black text-xs uppercase tracking-widest hover:shadow-[0_8px_30px_rgba(255,140,0,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[rgba(255,140,0,0.25)] font-sans"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Đang kết nối cổng thanh toán...
+                        </>
+                      ) : paymentMethod === "bank" && isCreatingOrder && !createdOrderId ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Đang tạo mã QR...
+                        </>
+                      ) : (
+                        <>
+                          ✓ Xác nhận đặt hàng
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             </motion.div>
           ) : (
