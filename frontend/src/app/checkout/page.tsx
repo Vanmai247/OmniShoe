@@ -74,6 +74,57 @@ function CheckoutContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
 
+  const bankId = process.env.NEXT_PUBLIC_BANK_ID || "VCB";
+  const bankAcc = process.env.NEXT_PUBLIC_BANK_ACC || "0000000001";
+  const bankName = process.env.NEXT_PUBLIC_BANK_NAME || "OMNISHOE";
+
+  const getBankDisplayName = () => {
+    const b = bankId.toUpperCase();
+    if (b === "VCB" || b === "VIETCOMBANK") return "Vietcombank";
+    if (b === "TCB" || b === "TECHCOMBANK") return "Techcombank";
+    if (b === "MB" || b === "MBBANK") return "MB Bank (Quân đội)";
+    return bankId;
+  };
+
+  // Polling order status for QR bank transfer
+  useEffect(() => {
+    if (!orderSuccess || orderSuccess.paymentMethod !== 'bank' || orderSuccess.status === 'Đã thanh toán') {
+      return;
+    }
+
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders/${orderSuccess.orderId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === 'Đã thanh toán') {
+            setOrderSuccess((prev: any) => ({ ...prev, status: 'Đã thanh toán' }));
+            showToast("Thanh toán thành công! 🎉");
+            
+            // Trigger extra confetti
+            const colors = ["#FF8C00", "#00d084", "#00a8ff"];
+            for (let i = 0; i < 50; i++) {
+              const p = document.createElement("div");
+              p.className = "confetti-particle";
+              p.style.left = Math.random() * 100 + "vw";
+              p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+              p.style.borderRadius = Math.random() > 0.5 ? "50%" : "0px";
+              p.style.animationDelay = Math.random() * 0.8 + "s";
+              p.style.animationDuration = (Math.random() * 2 + 2) + "s";
+              document.body.appendChild(p);
+              setTimeout(() => p.remove(), 5000);
+            }
+            clearInterval(intervalId);
+          }
+        }
+      } catch (err) {
+        console.error("Error checking order status:", err);
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [orderSuccess]);
+
   // Confetti effect hook when orderSuccess is active
   useEffect(() => {
     if (!orderSuccess) return;
@@ -252,9 +303,6 @@ function CheckoutContent() {
 
     setIsSubmitting(true);
 
-    // Simulate API network call delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
     const orderId = `OMN-${Math.floor(100000 + Math.random() * 900000)}`;
     const newOrder = {
       orderId,
@@ -269,25 +317,42 @@ function CheckoutContent() {
       status: paymentMethod === "cod" ? "Chờ xác nhận" : "Chờ thanh toán",
     };
 
-    // Save order details to localStorage mock history
     try {
-      const savedOrders = localStorage.getItem("omni_orders");
-      const ordersList = savedOrders ? JSON.parse(savedOrders) : [];
-      ordersList.unshift(newOrder);
-      localStorage.setItem("omni_orders", JSON.stringify(ordersList));
-    } catch (err) {
-      console.error("Failed to save mock order history:", err);
-    }
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newOrder)
+      });
 
-    setOrderSuccess(newOrder);
-    
-    // ONLY clear global cart if it was checkout from cart (not single-item Buy Now)
-    if (!buyNowProductId) {
-      clearCart();
+      if (!response.ok) {
+        throw new Error('Failed to create order on server');
+      }
+
+      // Save order details to localStorage mock history (keep legacy fallback)
+      try {
+        const savedOrders = localStorage.getItem("omni_orders");
+        const ordersList = savedOrders ? JSON.parse(savedOrders) : [];
+        ordersList.unshift(newOrder);
+        localStorage.setItem("omni_orders", JSON.stringify(ordersList));
+      } catch (err) {
+        console.error("Failed to save mock order history:", err);
+      }
+
+      setOrderSuccess(newOrder);
+      
+      // ONLY clear global cart if it was checkout from cart (not single-item Buy Now)
+      if (!buyNowProductId) {
+        clearCart();
+      }
+      showToast("Đặt hàng thành công! 🎉 Cảm ơn bạn.");
+    } catch (err) {
+      console.error(err);
+      showToast("Có lỗi xảy ra khi tạo đơn hàng! ❌");
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
-    showToast("Đặt hàng thành công! 🎉 Cảm ơn bạn.");
   };
 
   if (!mounted || loadingProduct) {
@@ -839,16 +904,16 @@ function CheckoutContent() {
                                   <div className="flex flex-col gap-3 text-xs font-semibold text-zinc-700 w-full md:w-auto text-left font-sans">
                                     <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2">
                                       <span className="text-zinc-500 w-24">Ngân hàng:</span>
-                                      <span className="font-extrabold text-zinc-900 text-right">MB BANK (Quân đội)</span>
+                                      <span className="font-extrabold text-zinc-900 text-right">{getBankDisplayName()}</span>
                                     </div>
                                     
                                     <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2 items-center">
                                       <span className="text-zinc-500 w-24">Số tài khoản:</span>
                                       <div className="flex items-center gap-2">
-                                        <span className="font-extrabold text-[#FF8C00]">09876543210</span>
+                                        <span className="font-extrabold text-[#FF8C00]">{bankAcc}</span>
                                         <button
                                           type="button"
-                                          onClick={() => handleCopyText("09876543210", "Số tài khoản")}
+                                          onClick={() => handleCopyText(bankAcc, "Số tài khoản")}
                                           className="px-2 py-0.5 bg-zinc-200 hover:bg-[#FF8C00] hover:text-white rounded text-[10px] text-zinc-700 transition-colors"
                                         >
                                           {copiedType === "Số tài khoản" ? "Đã chép" : "Sao chép"}
@@ -858,7 +923,7 @@ function CheckoutContent() {
 
                                     <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2">
                                       <span className="text-zinc-500 w-24">Tên thụ hưởng:</span>
-                                      <span className="font-extrabold text-zinc-900 uppercase text-right">CÔNG TY SNEAKER OMNISHOE</span>
+                                      <span className="font-extrabold text-zinc-900 uppercase text-right">{bankName}</span>
                                     </div>
 
                                     <div className="flex justify-between md:justify-start gap-6 items-center font-sans">
@@ -876,20 +941,15 @@ function CheckoutContent() {
                                     </div>
                                   </div>
 
-                                  {/* Simulated Banking QR Code Card Layout */}
+                                  {/* Banking QR Code Card Layout */}
                                   <div className="flex flex-col items-center gap-2 shrink-0 bg-white p-4 rounded-2xl shadow-xl w-40 text-center border border-zinc-200">
                                     {/* QR Box */}
-                                    <div className="w-32 h-32 bg-zinc-100 rounded-lg relative overflow-hidden flex items-center justify-center p-2 border border-zinc-200">
-                                      <div className="absolute inset-2 grid grid-cols-5 gap-1 opacity-95">
-                                        {[...Array(25)].map((_, i) => {
-                                          const randColor = i === 0 || i === 4 || i === 20 || i === 24 || Math.random() > 0.45 ? "bg-zinc-800" : "bg-transparent";
-                                          return <div key={i} className={`rounded-sm ${randColor}`} />;
-                                        })}
-                                      </div>
-                                      {/* Center Brand Logo inside QR */}
-                                      <div className="w-6 h-6 rounded-md bg-[#FF8C00] border-2 border-white flex items-center justify-center text-[7px] text-white font-black z-10">
-                                        OMN
-                                      </div>
+                                    <div className="w-32 h-32 rounded-lg relative overflow-hidden flex items-center justify-center border border-zinc-200">
+                                      <img
+                                        src={`https://img.vietqr.io/image/${bankId}-${bankAcc}-compact2.jpg?amount=${calculateTotal()}&addInfo=${encodeURIComponent("OMNISHOE THANH TOAN")}&accountName=${encodeURIComponent(bankName)}`}
+                                        alt="QR Code thanh toán"
+                                        className="w-full h-full object-contain"
+                                      />
                                     </div>
                                     <span className="text-[8px] text-zinc-650 font-black tracking-tight uppercase font-sans">QUÉT QR ĐỂ THANH TOÁN</span>
                                   </div>
@@ -1110,14 +1170,26 @@ function CheckoutContent() {
                     <div className="text-[10px] font-black uppercase tracking-wider text-zinc-400 mb-1">Số điện thoại</div>
                     <div className="text-base font-extrabold text-zinc-900">{orderSuccess.customer.phone}</div>
                   </div>
+                  {/* Show Payment Status Badge */}
                   <div>
                     <div className="text-[10px] font-black uppercase tracking-wider text-zinc-400 mb-1">Phương thức thanh toán</div>
-                    <div className="text-base font-extrabold text-zinc-900">
-                      {orderSuccess.paymentMethod === "cod"
-                        ? "Tiền mặt (COD)"
-                        : orderSuccess.paymentMethod === "bank"
-                        ? "Chuyển khoản (QR)"
-                        : "Ví điện tử"}
+                    <div className="text-base font-extrabold text-zinc-900 flex items-center gap-2">
+                      <span>
+                        {orderSuccess.paymentMethod === "cod"
+                          ? "Tiền mặt (COD)"
+                          : orderSuccess.paymentMethod === "bank"
+                          ? "Chuyển khoản (QR)"
+                          : "Ví điện tử"}
+                      </span>
+                      {orderSuccess.paymentMethod === "bank" && (
+                        <span className={`text-[9px] px-2.5 py-0.5 rounded-full font-black uppercase tracking-wider ${
+                          orderSuccess.status === "Đã thanh toán"
+                            ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                            : "bg-amber-100 text-amber-700 border border-amber-200 animate-pulse"
+                        }`}>
+                          {orderSuccess.status}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1138,50 +1210,62 @@ function CheckoutContent() {
 
               {/* Show Bank Transfer Instruction in success screen if QR Bank transfer was selected */}
               {orderSuccess.paymentMethod === "bank" && (
-                <div className="w-full bg-zinc-50 border border-zinc-200 rounded-[2rem] p-6 flex flex-col md:flex-row gap-6 items-center justify-between shadow-inner mb-8">
-                  <div className="flex flex-col gap-3 text-xs font-semibold text-zinc-700 w-full md:w-auto text-left font-sans">
-                    <span className="text-[10px] font-black uppercase text-[#FF8C00] tracking-widest">Thông tin chuyển khoản</span>
-                    
-                    <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2">
-                      <span className="text-zinc-500 w-24">Ngân hàng:</span>
-                      <span className="font-extrabold text-zinc-800">MB BANK (Quân đội)</span>
+                orderSuccess.status === "Đã thanh toán" ? (
+                  <div className="w-full bg-emerald-50 border border-emerald-200 rounded-[2rem] p-6 flex items-center gap-4 shadow-inner mb-8 text-left">
+                    <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xl shrink-0 shadow-md">
+                      ✓
                     </div>
-                    <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2 items-center">
-                      <span className="text-zinc-500 w-24">Số tài khoản:</span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-[#FF8C00]">09876543210</span>
-                        <button
-                          type="button"
-                          onClick={() => handleCopyText("09876543210", "Số tài khoản")}
-                          className="px-2 py-0.5 bg-zinc-200 hover:bg-[#FF8C00] hover:text-white rounded text-[10px] text-zinc-700 transition-colors"
-                        >
-                          {copiedType === "Số tài khoản" ? "Đã chép" : "Sao chép"}
-                        </button>
-                      </div>
+                    <div>
+                      <h4 className="text-sm font-black uppercase text-emerald-800 tracking-wider">Thanh toán thành công!</h4>
+                      <p className="text-xs text-emerald-650 mt-1 font-semibold">Chúng tôi đã nhận được khoản thanh toán chuyển khoản của bạn. Đơn hàng đang được chuẩn bị để giao đi.</p>
                     </div>
-                    <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2">
-                      <span className="text-zinc-500 w-24">Số tiền:</span>
-                      <span className="font-extrabold text-zinc-800">{formatPrice(orderSuccess.total)}</span>
-                    </div>
-                    <p className="text-[10px] text-zinc-500 mt-1 italic">Vui lòng quét mã QR hoặc chuyển đúng số tài khoản bên cạnh để hoàn tất đơn hàng.</p>
                   </div>
+                ) : (
+                  <div className="w-full bg-zinc-50 border border-zinc-200 rounded-[2rem] p-6 flex flex-col md:flex-row gap-6 items-center justify-between shadow-inner mb-8">
+                    <div className="flex flex-col gap-3 text-xs font-semibold text-zinc-700 w-full md:w-auto text-left font-sans">
+                      <span className="text-[10px] font-black uppercase text-[#FF8C00] tracking-widest">Thông tin chuyển khoản</span>
+                      
+                      <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2">
+                        <span className="text-zinc-500 w-24">Ngân hàng:</span>
+                        <span className="font-extrabold text-zinc-800">{getBankDisplayName()}</span>
+                      </div>
+                      <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2 items-center">
+                        <span className="text-zinc-500 w-24">Số tài khoản:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-extrabold text-[#FF8C00]">{bankAcc}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyText(bankAcc, "Số tài khoản")}
+                            className="px-2 py-0.5 bg-zinc-200 hover:bg-[#FF8C00] hover:text-white rounded text-[10px] text-zinc-700 transition-colors"
+                          >
+                            {copiedType === "Số tài khoản" ? "Đã chép" : "Sao chép"}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2">
+                        <span className="text-zinc-500 w-24">Tên thụ hưởng:</span>
+                        <span className="font-extrabold text-zinc-800 uppercase">{bankName}</span>
+                      </div>
+                      <div className="flex justify-between md:justify-start gap-4 border-b border-zinc-200/60 pb-2">
+                        <span className="text-zinc-500 w-24">Số tiền:</span>
+                        <span className="font-extrabold text-zinc-800">{formatPrice(orderSuccess.total)}</span>
+                      </div>
+                      <p className="text-[10px] text-zinc-500 mt-1 italic">Vui lòng quét mã QR hoặc chuyển đúng số tài khoản bên cạnh để hoàn tất đơn hàng.</p>
+                    </div>
 
-                  {/* QR Box */}
-                  <div className="flex flex-col items-center gap-2 shrink-0 bg-white p-4 rounded-2xl shadow-xl w-40 text-center border border-zinc-200">
-                    <div className="w-32 h-32 bg-zinc-100 rounded-lg relative overflow-hidden flex items-center justify-center p-2 border border-zinc-200">
-                      <div className="absolute inset-2 grid grid-cols-5 gap-1 opacity-95">
-                        {[...Array(25)].map((_, i) => {
-                          const randColor = i === 0 || i === 4 || i === 20 || i === 24 || Math.random() > 0.45 ? "bg-zinc-800" : "bg-transparent";
-                          return <div key={i} className={`rounded-sm ${randColor}`} />;
-                        })}
+                    {/* QR Box */}
+                    <div className="flex flex-col items-center gap-2 shrink-0 bg-white p-4 rounded-2xl shadow-xl w-40 text-center border border-zinc-200">
+                      <div className="w-32 h-32 rounded-lg relative overflow-hidden flex items-center justify-center border border-zinc-200">
+                        <img
+                          src={`https://img.vietqr.io/image/${bankId}-${bankAcc}-compact2.jpg?amount=${orderSuccess.total}&addInfo=${encodeURIComponent("OMNISHOE " + orderSuccess.orderId)}&accountName=${encodeURIComponent(bankName)}`}
+                          alt="QR Code thanh toán"
+                          className="w-full h-full object-contain"
+                        />
                       </div>
-                      <div className="w-6 h-6 rounded-md bg-[#FF8C00] border-2 border-white flex items-center justify-center text-[7px] text-white font-black z-10">
-                        OMN
-                      </div>
+                      <span className="text-[8px] text-zinc-650 font-black tracking-tight uppercase font-sans">QUÉT QR THANH TOÁN</span>
                     </div>
-                    <span className="text-[8px] text-zinc-650 font-black tracking-tight uppercase font-sans">QUÉT QR THANH TOÁN</span>
                   </div>
-                </div>
+                )
               )}
 
               {/* Delivery Timeline Card */}
