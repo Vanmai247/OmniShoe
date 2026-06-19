@@ -614,7 +614,7 @@ function CheckoutContent() {
             >
               {/* Left Column: Dynamic Step Content */}
               <div className="lg:col-span-7">
-                <form onSubmit={handleSubmitOrder} className="flex flex-col gap-8">
+                <form id="checkout-form" onSubmit={handleSubmitOrder} className="flex flex-col gap-8">
                   <AnimatePresence mode="wait">
                     {currentStep === 1 && (
                       <motion.div
@@ -1036,7 +1036,7 @@ function CheckoutContent() {
                                   className="overflow-hidden bg-white border border-zinc-200/80 rounded-2xl p-6 ml-0 md:ml-8 mt-2 flex flex-col lg:flex-row gap-8 items-center justify-between shadow-sm"
                                 >
                                   {/* Left: 3-step visualization */}
-                                  <div className="flex-1 flex items-center justify-around w-full gap-4 py-2 border-b lg:border-b-0 lg:border-r border-zinc-100 lg:pr-8">
+                                  <div className="flex-1 flex items-start justify-around w-full gap-4 py-2 border-b lg:border-b-0 lg:border-r border-zinc-100 lg:pr-8">
                                     {/* Step 1 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
                                       <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
@@ -1058,7 +1058,7 @@ function CheckoutContent() {
                                     </div>
 
                                     {/* Arrow */}
-                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block mt-3">➔</div>
 
                                     {/* Step 2 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
@@ -1078,15 +1078,14 @@ function CheckoutContent() {
                                     </div>
 
                                     {/* Arrow */}
-                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block mt-3">➔</div>
 
-                                    {/* Step 3 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
-                                      <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 border border-emerald-500/25">
+                                      <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                                          <circle cx="12" cy="12" r="10" stroke="#10B981" strokeWidth={1.5} fill="currentColor" fillOpacity="0.05" />
-                                          <circle cx="12" cy="12" r="7" stroke="#10B981" strokeWidth={1} strokeDasharray="2 2" />
-                                          <path d="m9 12 2 2 4-4" stroke="#10B981" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+                                          <circle cx="12" cy="12" r="10" stroke="#FF8C00" strokeWidth={1.5} fill="currentColor" fillOpacity="0.05" />
+                                          <circle cx="12" cy="12" r="7" stroke="#FF8C00" strokeWidth={1} strokeDasharray="2 2" />
+                                          <path d="m9 12 2 2 4-4" stroke="#FF8C00" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                       </div>
                                       <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none">Bước 3</span>
@@ -1166,34 +1165,13 @@ function CheckoutContent() {
                         </div>
 
                         {/* Navigation buttons Step 3 */}
-                        <div className="pt-4 flex justify-between items-center gap-4">
+                        <div className="pt-4 flex justify-start items-center gap-4">
                           <button
                             type="button"
                             onClick={() => setCurrentStep(2)}
                             className="px-6 py-3.5 border border-zinc-200 hover:border-zinc-350 text-zinc-750 font-black text-xs uppercase tracking-widest rounded-xl transition-all duration-300 hover:bg-zinc-100 cursor-pointer font-sans"
                           >
                             ← Quay lại
-                          </button>
-                          <button
-                            type="submit"
-                            disabled={isSubmitting || (paymentMethod === "bank" && isCreatingOrder && !createdOrderId)}
-                            className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#FF8C00] to-[#ff9f1c] text-white font-black text-xs uppercase tracking-widest hover:shadow-[0_8px_30px_rgba(255,140,0,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[rgba(255,140,0,0.25)] font-sans"
-                          >
-                            {isSubmitting ? (
-                              <>
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Đang kết nối cổng thanh toán...
-                              </>
-                            ) : paymentMethod === "bank" && isCreatingOrder && !createdOrderId ? (
-                              <>
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Đang tạo mã QR...
-                              </>
-                            ) : (
-                              <>
-                                ✓ Xác nhận đặt hàng
-                              </>
-                            )}
                           </button>
                         </div>
                       </motion.div>
@@ -1277,6 +1255,34 @@ function CheckoutContent() {
                     </div>
                   </div>
                 </motion.div>
+
+                {/* Submit button below order summary card, only shown in Step 3 */}
+                {currentStep === 3 && (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      type="submit"
+                      form="checkout-form"
+                      disabled={isSubmitting || (paymentMethod === "bank" && isCreatingOrder && !createdOrderId)}
+                      className="px-10 py-4 rounded-xl bg-gradient-to-r from-[#FF8C00] to-[#ff9f1c] text-white font-black text-xs uppercase tracking-widest hover:shadow-[0_8px_30px_rgba(255,140,0,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[rgba(255,140,0,0.25)] font-sans"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Đang kết nối cổng thanh toán...
+                        </>
+                      ) : paymentMethod === "bank" && isCreatingOrder && !createdOrderId ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Đang tạo mã QR...
+                        </>
+                      ) : (
+                        <>
+                          ✓ Xác nhận đặt hàng
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             </motion.div>
           ) : (
@@ -1307,20 +1313,34 @@ function CheckoutContent() {
               `}} />
 
               {/* Success Icon */}
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[#00d084] to-[#00b86c] text-white flex items-center justify-center text-5xl mb-6 shadow-xl shadow-[rgba(0,208,132,0.25)] animate-scale-in">
-                ✓
+              <div className={`w-28 h-28 rounded-full bg-gradient-to-br ${
+                orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                  ? "from-amber-400 to-amber-550 text-white shadow-amber-500/25"
+                  : "from-[#00d084] to-[#00b86c] text-white shadow-[rgba(0,208,132,0.25)]"
+              } flex items-center justify-center text-5xl mb-6 shadow-xl animate-scale-in`}>
+                {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank" ? "⏳" : "✓"}
               </div>
 
               {/* Success Content */}
               <div className="text-center mb-10">
-                <div className="text-[10px] font-black uppercase tracking-widest text-[#00d084] bg-[#00d084]/10 border border-[#00d084]/25 px-4 py-1.5 rounded-full w-fit mx-auto mb-4">
-                  ✨ Đặt hàng thành công
+                <div className={`text-[10px] font-black uppercase tracking-widest ${
+                  orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "text-amber-700 bg-amber-50 border border-amber-250/30"
+                    : "text-[#00d084] bg-[#00d084]/10 border border-[#00d084]/25"
+                } px-4 py-1.5 rounded-full w-fit mx-auto mb-4`}>
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "⏳ Chờ thanh toán"
+                    : "✨ Đặt hàng thành công"}
                 </div>
                 <h1 className="text-3xl md:text-4xl font-black mb-4 bg-gradient-to-r from-zinc-900 via-zinc-800 to-[#FF8C00] bg-clip-text text-transparent font-sans uppercase tracking-tight">
-                  Cảm ơn bạn đã mua sắm!
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "Đơn hàng đang chờ thanh toán"
+                    : "Cảm ơn bạn đã mua sắm!"}
                 </h1>
                 <p className="text-zinc-550 text-sm max-w-md mx-auto leading-relaxed font-semibold">
-                  Đơn hàng của bạn đã được xác nhận. Chúng tôi sẽ chuẩn bị và giao hàng cho bạn trong thời gian sớm nhất.
+                  {orderSuccess.status === "Chờ thanh toán" && orderSuccess.paymentMethod === "bank"
+                    ? "Vui lòng hoàn tất chuyển khoản theo thông tin bên dưới để đơn hàng được xác nhận và giao đi sớm nhất."
+                    : "Đơn hàng của bạn đã được xác nhận. Chúng tôi sẽ chuẩn bị và giao hàng cho bạn trong thời gian sớm nhất."}
                 </p>
               </div>
 
