@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
 
 export async function GET(
@@ -10,7 +12,9 @@ export async function GET(
     const resolvedParams = await params;
     const { id } = resolvedParams;
 
-    const res = await fetch(`${BACKEND_URL}/api/orders/${id}`);
+    const res = await fetch(`${BACKEND_URL}/api/orders/${id}`, {
+      cache: "no-store"
+    });
     if (!res.ok) {
       if (res.status === 404) {
         return NextResponse.json({ error: "Order not found" }, { status: 404 });
