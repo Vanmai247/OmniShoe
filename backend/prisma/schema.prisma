@@ -38,3 +38,23 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Order {
+  id               String   @id // OMN-XXXXXX format
+  customerName     String
+  customerPhone    String
+  customerEmail    String
+  customerCity     String
+  customerDistrict String
+  customerAddress  String
+  customerNotes    String?
+  items            Json     // Storing array of items as JSON
+  subtotal         Float
+  shippingFee      Float
+  total            Float
+  paymentMethod    String
+  shippingMethod   String
+  status           String   @default("Chờ thanh toán")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
