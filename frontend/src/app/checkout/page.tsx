@@ -118,7 +118,9 @@ function CheckoutContent() {
 
     const intervalId = setInterval(async () => {
       try {
-        const res = await fetch(`/api/orders/${orderSuccess.orderId}`);
+         const res = await fetch(`/api/orders/${orderSuccess.orderId}?t=${Date.now()}`, {
+           cache: "no-store"
+         });
         if (res.ok) {
           const data = await res.json();
           if (data.status === 'Đã thanh toán') {
@@ -337,7 +339,9 @@ function CheckoutContent() {
 
     const intervalId = setInterval(async () => {
       try {
-        const res = await fetch(`/api/orders/${createdOrderId}`);
+         const res = await fetch(`/api/orders/${createdOrderId}?t=${Date.now()}`, {
+           cache: "no-store"
+         });
         if (res.ok) {
           const data = await res.json();
           if (data.status === 'Đã thanh toán') {
