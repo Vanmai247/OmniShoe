@@ -73,10 +73,34 @@ function CheckoutContent() {
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "bank" | "wallet">("cod");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const bankId = process.env.NEXT_PUBLIC_BANK_ID || "VCB";
   const bankAcc = process.env.NEXT_PUBLIC_BANK_ACC || "0000000001";
   const bankName = process.env.NEXT_PUBLIC_BANK_NAME || "OMNISHOE";
+
+  // Determine items to check out (single product bypass OR cart items)
+  const checkoutItems = buyNowProduct ? [buyNowProduct] : cart;
+
+  const calculateSubtotal = () => {
+    return checkoutItems.reduce((sum, item) => {
+      const priceVal = parseInt(item.price.replace(/[^\d]/g, ""));
+      return sum + priceVal * item.quantity;
+    }, 0);
+  };
+
+  const getShippingFee = () => {
+    return shippingMethod === "express" ? 50000 : 20000;
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + getShippingFee();
+  };
+
+  const formatPrice = (amount: number) => {
+    return amount.toLocaleString("vi-VN") + "₫";
+  };
 
   const getBankDisplayName = () => {
     const b = bankId.toUpperCase();
@@ -250,8 +274,102 @@ function CheckoutContent() {
     }
   }, [user]);
 
-  // Determine items to check out (single product bypass OR cart items)
-  const checkoutItems = buyNowProduct ? [buyNowProduct] : cart;
+  // Pre-create order for Bank Transfer QR code when entering Step 3
+  useEffect(() => {
+    if (currentStep === 3 && paymentMethod === "bank" && !createdOrderId && !isCreatingOrder && checkoutItems.length > 0) {
+      const createDraftOrder = async () => {
+        setIsCreatingOrder(true);
+        const orderId = `OMN-${Math.floor(100000 + Math.random() * 900000)}`;
+        const newOrder = {
+          orderId,
+          customer: form,
+          items: checkoutItems,
+          subtotal: calculateSubtotal(),
+          shippingFee: getShippingFee(),
+          total: calculateTotal(),
+          paymentMethod,
+          shippingMethod,
+          date: new Date().toISOString(),
+          status: "Chờ thanh toán",
+        };
+
+        try {
+          const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newOrder)
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to pre-create order');
+          }
+
+          setCreatedOrderId(orderId);
+        } catch (err) {
+          console.error("Error pre-creating order for QR code:", err);
+          showToast("Không thể tạo mã thanh toán QR, vui lòng thử lại! ⚠️");
+        } finally {
+          setIsCreatingOrder(false);
+        }
+      };
+
+      createDraftOrder();
+    }
+  }, [currentStep, paymentMethod, createdOrderId, isCreatingOrder, checkoutItems, form, shippingMethod]);
+
+  // Reset pre-created order if they go back to previous steps to edit information
+  useEffect(() => {
+    if (currentStep < 3 && createdOrderId) {
+      setCreatedOrderId(null);
+    }
+  }, [currentStep, createdOrderId]);
+
+  // Polling order status for automatic redirection during Step 3
+  useEffect(() => {
+    if (!createdOrderId || paymentMethod !== 'bank' || orderSuccess) {
+      return;
+    }
+
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders/${createdOrderId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === 'Đã thanh toán') {
+            const completedOrder = {
+              orderId: createdOrderId,
+              customer: form,
+              items: checkoutItems,
+              subtotal: calculateSubtotal(),
+              shippingFee: getShippingFee(),
+              total: calculateTotal(),
+              paymentMethod,
+              shippingMethod,
+              date: new Date().toISOString(),
+              status: 'Đã thanh toán',
+            };
+
+            // Clear cart
+            if (!buyNowProductId) {
+              clearCart();
+            }
+
+            setOrderSuccess(completedOrder);
+            showToast("Thanh toán thành công! 🎉 Cảm ơn bạn.");
+            clearInterval(intervalId);
+          }
+        }
+      } catch (err) {
+        console.error("Error polling draft order status:", err);
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [createdOrderId, paymentMethod, orderSuccess, form, checkoutItems, shippingMethod, buyNowProductId]);
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -275,24 +393,7 @@ function CheckoutContent() {
     setTimeout(() => setCopiedType(null), 2000);
   };
 
-  const calculateSubtotal = () => {
-    return checkoutItems.reduce((sum, item) => {
-      const priceVal = parseInt(item.price.replace(/[^\d]/g, ""));
-      return sum + priceVal * item.quantity;
-    }, 0);
-  };
 
-  const getShippingFee = () => {
-    return shippingMethod === "express" ? 50000 : 20000;
-  };
-
-  const calculateTotal = () => {
-    return calculateSubtotal() + getShippingFee();
-  };
-
-  const formatPrice = (amount: number) => {
-    return amount.toLocaleString("vi-VN") + "₫";
-  };
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -302,6 +403,39 @@ function CheckoutContent() {
     }
 
     setIsSubmitting(true);
+
+    // If order was already pre-created (for Bank QR code), just transition to success screen
+    if (paymentMethod === "bank" && createdOrderId) {
+      const existingOrder = {
+        orderId: createdOrderId,
+        customer: form,
+        items: checkoutItems,
+        subtotal: calculateSubtotal(),
+        shippingFee: getShippingFee(),
+        total: calculateTotal(),
+        paymentMethod,
+        shippingMethod,
+        date: new Date().toISOString(),
+        status: "Chờ thanh toán",
+      };
+
+      // Save order details to localStorage mock history
+      try {
+        const savedOrders = localStorage.getItem("omni_orders");
+        const ordersList = savedOrders ? JSON.parse(savedOrders) : [];
+        ordersList.unshift(existingOrder);
+        localStorage.setItem("omni_orders", JSON.stringify(ordersList));
+      } catch (err) {
+        console.error("Failed to save mock order history:", err);
+      }
+
+      setOrderSuccess(existingOrder);
+      if (!buyNowProductId) {
+        clearCart();
+      }
+      setIsSubmitting(false);
+      return;
+    }
 
     const orderId = `OMN-${Math.floor(100000 + Math.random() * 900000)}`;
     const newOrder = {
@@ -899,22 +1033,92 @@ function CheckoutContent() {
                                   animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
                                   transition={{ duration: 0.3 }}
-                                  className="overflow-hidden bg-orange-50/40 border border-orange-200/60 rounded-2xl p-5 ml-0 md:ml-8 mt-2 flex gap-4 items-start shadow-inner text-left font-sans"
+                                  className="overflow-hidden bg-white border border-zinc-200/80 rounded-2xl p-6 ml-0 md:ml-8 mt-2 flex flex-col lg:flex-row gap-8 items-center justify-between shadow-sm"
                                 >
-                                  <div className="w-8 h-8 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center text-sm shrink-0 border border-[#FF8C00]/25">
-                                    ℹ️
+                                  {/* Left: 3-step visualization */}
+                                  <div className="flex-1 flex items-center justify-around w-full gap-4 py-2 border-b lg:border-b-0 lg:border-r border-zinc-100 lg:pr-8">
+                                    {/* Step 1 */}
+                                    <div className="flex flex-col items-center text-center max-w-[120px]">
+                                      <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                          <path d="M4 9V5a2 2 0 0 1 2-2h4" />
+                                          <path d="M20 9V5a2 2 0 0 0-2-2h-4" />
+                                          <path d="M4 15v4a2 2 0 0 0 2 2h4" />
+                                          <path d="M20 15v4a2 2 0 0 1-2 2h-4" />
+                                          <rect x="7" y="7" width="3" height="3" rx="0.5" fill="currentColor" fillOpacity="0.2" />
+                                          <rect x="14" y="7" width="3" height="3" rx="0.5" fill="currentColor" fillOpacity="0.2" />
+                                          <rect x="7" y="14" width="3" height="3" rx="0.5" fill="currentColor" fillOpacity="0.2" />
+                                          <path d="M14 14h2v2h-2zm2 2h2v2h-2zm0-2h2v2h-2zm-2 2h2v2h-2z" fill="currentColor" />
+                                          <line x1="3" y1="12" x2="21" y2="12" stroke="#FF8C00" strokeWidth={1.5} strokeDasharray="3 2" />
+                                        </svg>
+                                      </div>
+                                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none">Bước 1</span>
+                                      <h5 className="text-[11px] font-black text-zinc-800 mt-1">Quét mã QR</h5>
+                                      <p className="text-[9px] text-zinc-500 mt-1 font-semibold leading-tight">Mở app ngân hàng quét mã VietQR</p>
+                                    </div>
+
+                                    {/* Arrow */}
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+
+                                    {/* Step 2 */}
+                                    <div className="flex flex-col items-center text-center max-w-[120px]">
+                                      <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fillOpacity="0.05" />
+                                          <polyline points="14 2 14 8 20 8" />
+                                          <line x1="8" y1="12" x2="16" y2="12" strokeOpacity="0.4" />
+                                          <line x1="8" y1="16" x2="12" y2="16" strokeOpacity="0.4" />
+                                          <circle cx="16" cy="16" r="4" fill="#FF8C00" stroke="#FF8C00" />
+                                          <path d="m14.5 16 1 1 2-2" stroke="white" strokeWidth={1.2} />
+                                        </svg>
+                                      </div>
+                                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none">Bước 2</span>
+                                      <h5 className="text-[11px] font-black text-zinc-800 mt-1">Kiểm tra thông tin</h5>
+                                      <p className="text-[9px] text-zinc-500 mt-1 font-semibold leading-tight">Xác nhận đúng số tiền & nội dung</p>
+                                    </div>
+
+                                    {/* Arrow */}
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+
+                                    {/* Step 3 */}
+                                    <div className="flex flex-col items-center text-center max-w-[120px]">
+                                      <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 border border-emerald-500/25">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+                                          <circle cx="12" cy="12" r="10" stroke="#10B981" strokeWidth={1.5} fill="currentColor" fillOpacity="0.05" />
+                                          <circle cx="12" cy="12" r="7" stroke="#10B981" strokeWidth={1} strokeDasharray="2 2" />
+                                          <path d="m9 12 2 2 4-4" stroke="#10B981" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                      </div>
+                                      <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none">Bước 3</span>
+                                      <h5 className="text-[11px] font-black text-zinc-800 mt-1">Hoàn tất</h5>
+                                      <p className="text-[9px] text-zinc-500 mt-1 font-semibold leading-tight">Đơn hàng tự động duyệt thành công</p>
+                                    </div>
                                   </div>
-                                  <div className="flex-1 text-xs">
-                                    <h4 className="font-extrabold text-zinc-800 uppercase tracking-wider">Thông tin thanh toán chuyển khoản:</h4>
-                                    <p className="text-zinc-550 mt-1.5 font-semibold leading-relaxed">
-                                      Mã QR chuyển khoản tự động kèm **Nội dung chuyển khoản chứa Mã đơn hàng** sẽ được hiển thị ở bước tiếp theo (sau khi bạn xác nhận đặt hàng).
-                                    </p>
-                                    <p className="text-zinc-550 mt-1 font-semibold leading-relaxed">
-                                      Hệ thống sẽ dựa vào Mã đơn hàng đó để tự động kiểm tra giao dịch và xác nhận đơn hàng đã thanh toán cho bạn ngay lập tức.
-                                    </p>
-                                    <p className="text-[#FF8C00] font-black uppercase tracking-wider text-[10px] mt-2">
-                                      👉 Vui lòng nhấn nút "Xác nhận đặt hàng" ở bên dưới để tạo đơn hàng trước.
-                                    </p>
+
+                                  {/* Right: QR Code & Status */}
+                                  <div className="flex flex-col items-center gap-2 shrink-0 bg-zinc-50 border border-zinc-150 p-4 rounded-2xl w-48 text-center relative">
+                                    <span className="text-[9px] font-black text-zinc-700 tracking-wide uppercase font-sans mb-1">Quét mã để thanh toán</span>
+                                    
+                                    <div className="w-36 h-36 rounded-xl bg-white relative overflow-hidden flex items-center justify-center border border-zinc-200 shadow-inner">
+                                      {isCreatingOrder || !createdOrderId ? (
+                                        <div className="flex flex-col items-center gap-2 p-2">
+                                          <div className="w-6 h-6 border-2 border-[#FF8C00] border-t-transparent rounded-full animate-spin" />
+                                          <span className="text-[8px] font-extrabold text-zinc-400 uppercase tracking-wider">Đang tạo đơn...</span>
+                                        </div>
+                                      ) : (
+                                        <img
+                                          src={`https://img.vietqr.io/image/${bankId}-${bankAcc}-compact2.jpg?amount=${calculateTotal()}&addInfo=${encodeURIComponent("OMNISHOE " + createdOrderId)}&accountName=${encodeURIComponent(bankName)}`}
+                                          alt="QR Code thanh toán"
+                                          className="w-full h-full object-contain p-1"
+                                        />
+                                      )}
+                                    </div>
+
+                                    {/* Green badge indicator */}
+                                    <div className="mt-2 flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full text-emerald-600">
+                                      <span className="text-[10px]">🛡️</span>
+                                      <span className="text-[8px] font-black uppercase tracking-wider">Tự động xác nhận ngay</span>
+                                    </div>
                                   </div>
                                 </motion.div>
                               )}
@@ -972,13 +1176,18 @@ function CheckoutContent() {
                           </button>
                           <button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || (paymentMethod === "bank" && isCreatingOrder && !createdOrderId)}
                             className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#FF8C00] to-[#ff9f1c] text-white font-black text-xs uppercase tracking-widest hover:shadow-[0_8px_30px_rgba(255,140,0,0.4)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[rgba(255,140,0,0.25)] font-sans"
                           >
                             {isSubmitting ? (
                               <>
                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                 Đang kết nối cổng thanh toán...
+                              </>
+                            ) : paymentMethod === "bank" && isCreatingOrder && !createdOrderId ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                Đang tạo mã QR...
                               </>
                             ) : (
                               <>
