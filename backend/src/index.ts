@@ -4,6 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
@@ -403,7 +406,7 @@ app.post('/api/sepay/webhook', async (req, res) => {
     // Match OMN-XXXXXX (with or without hyphen) in content
     const match = content.match(/OMN-?\d+/i);
     if (!match) {
-      return res.json({ success: false, message: 'No Order ID found in memo' });
+      return res.json({ success: true, message: 'No Order ID found in memo (ignored)' });
     }
 
     // Normalize matched order ID to OMN-XXXXXX format
@@ -417,7 +420,7 @@ app.post('/api/sepay/webhook', async (req, res) => {
     });
 
     if (!order) {
-      return res.json({ success: false, message: `Order ${orderId} not found` });
+      return res.json({ success: true, message: `Order ${orderId} not found` });
     }
 
     // Verify that the amount is sufficient
@@ -429,7 +432,7 @@ app.post('/api/sepay/webhook', async (req, res) => {
       console.log(`Order ${orderId} marked as PAID via SePay webhook`);
       return res.json({ success: true, message: 'Order marked as paid' });
     } else {
-      return res.json({ success: false, message: 'Amount mismatched' });
+      return res.json({ success: true, message: 'Amount mismatched' });
     }
   } catch (error) {
     console.error('Webhook error:', error);
