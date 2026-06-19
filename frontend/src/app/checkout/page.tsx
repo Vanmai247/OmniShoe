@@ -1036,7 +1036,7 @@ function CheckoutContent() {
                                   className="overflow-hidden bg-white border border-zinc-200/80 rounded-2xl p-6 ml-0 md:ml-8 mt-2 flex flex-col lg:flex-row gap-8 items-center justify-between shadow-sm"
                                 >
                                   {/* Left: 3-step visualization */}
-                                  <div className="flex-1 flex items-center justify-around w-full gap-4 py-2 border-b lg:border-b-0 lg:border-r border-zinc-100 lg:pr-8">
+                                  <div className="flex-1 flex items-start justify-around w-full gap-4 py-2 border-b lg:border-b-0 lg:border-r border-zinc-100 lg:pr-8">
                                     {/* Step 1 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
                                       <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
@@ -1058,7 +1058,7 @@ function CheckoutContent() {
                                     </div>
 
                                     {/* Arrow */}
-                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block mt-3">➔</div>
 
                                     {/* Step 2 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
@@ -1078,15 +1078,14 @@ function CheckoutContent() {
                                     </div>
 
                                     {/* Arrow */}
-                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block">➔</div>
+                                    <div className="text-zinc-300 font-bold text-lg hidden sm:block mt-3">➔</div>
 
-                                    {/* Step 3 */}
                                     <div className="flex flex-col items-center text-center max-w-[120px]">
-                                      <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-3 border border-emerald-500/25">
+                                      <div className="w-12 h-12 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center mb-3 border border-[#FF8C00]/25">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-                                          <circle cx="12" cy="12" r="10" stroke="#10B981" strokeWidth={1.5} fill="currentColor" fillOpacity="0.05" />
-                                          <circle cx="12" cy="12" r="7" stroke="#10B981" strokeWidth={1} strokeDasharray="2 2" />
-                                          <path d="m9 12 2 2 4-4" stroke="#10B981" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
+                                          <circle cx="12" cy="12" r="10" stroke="#FF8C00" strokeWidth={1.5} fill="currentColor" fillOpacity="0.05" />
+                                          <circle cx="12" cy="12" r="7" stroke="#FF8C00" strokeWidth={1} strokeDasharray="2 2" />
+                                          <path d="m9 12 2 2 4-4" stroke="#FF8C00" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                       </div>
                                       <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest leading-none">Bước 3</span>
