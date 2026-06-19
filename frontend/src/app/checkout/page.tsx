@@ -899,59 +899,22 @@ function CheckoutContent() {
                                   animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
                                   transition={{ duration: 0.3 }}
-                                  className="overflow-hidden bg-zinc-50 border border-zinc-200/80 rounded-2xl p-5 ml-0 md:ml-8 mt-2 flex flex-col md:flex-row gap-6 items-center justify-between shadow-inner"
+                                  className="overflow-hidden bg-orange-50/40 border border-orange-200/60 rounded-2xl p-5 ml-0 md:ml-8 mt-2 flex gap-4 items-start shadow-inner text-left font-sans"
                                 >
-                                  <div className="flex flex-col gap-3 text-xs font-semibold text-zinc-700 w-full md:w-auto text-left font-sans">
-                                    <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2">
-                                      <span className="text-zinc-500 w-24">Ngân hàng:</span>
-                                      <span className="font-extrabold text-zinc-900 text-right">{getBankDisplayName()}</span>
-                                    </div>
-                                    
-                                    <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2 items-center">
-                                      <span className="text-zinc-500 w-24">Số tài khoản:</span>
-                                      <div className="flex items-center gap-2">
-                                        <span className="font-extrabold text-[#FF8C00]">{bankAcc}</span>
-                                        <button
-                                          type="button"
-                                          onClick={() => handleCopyText(bankAcc, "Số tài khoản")}
-                                          className="px-2 py-0.5 bg-zinc-200 hover:bg-[#FF8C00] hover:text-white rounded text-[10px] text-zinc-700 transition-colors"
-                                        >
-                                          {copiedType === "Số tài khoản" ? "Đã chép" : "Sao chép"}
-                                        </button>
-                                      </div>
-                                    </div>
-
-                                    <div className="flex justify-between md:justify-start gap-6 border-b border-zinc-200/60 pb-2">
-                                      <span className="text-zinc-500 w-24">Tên thụ hưởng:</span>
-                                      <span className="font-extrabold text-zinc-900 uppercase text-right">{bankName}</span>
-                                    </div>
-
-                                    <div className="flex justify-between md:justify-start gap-6 items-center font-sans">
-                                      <span className="text-zinc-500 w-24">Số tiền:</span>
-                                      <div className="flex items-center gap-2">
-                                        <span className="font-extrabold text-zinc-900">{formatPrice(calculateTotal())}</span>
-                                        <button
-                                          type="button"
-                                          onClick={() => handleCopyText(calculateTotal().toString(), "Số tiền")}
-                                          className="px-2 py-0.5 bg-zinc-200 hover:bg-[#FF8C00] hover:text-white rounded text-[10px] text-zinc-700 transition-colors"
-                                        >
-                                          {copiedType === "Số tiền" ? "Đã chép" : "Sao chép"}
-                                        </button>
-                                      </div>
-                                    </div>
+                                  <div className="w-8 h-8 rounded-full bg-[#FF8C00]/10 text-[#FF8C00] flex items-center justify-center text-sm shrink-0 border border-[#FF8C00]/25">
+                                    ℹ️
                                   </div>
-
-                                  {/* Banking QR Code Card Layout */}
-                                  <div className="flex flex-col items-center gap-2 shrink-0 bg-white p-4 rounded-2xl shadow-xl w-40 text-center border border-zinc-200">
-                                    {/* QR Box */}
-                                    <div className="w-32 h-32 rounded-lg relative overflow-hidden flex items-center justify-center border border-zinc-200">
-                                      <img
-                                        src={`https://img.vietqr.io/image/${bankId}-${bankAcc}-compact2.jpg?amount=${calculateTotal()}&addInfo=${encodeURIComponent("OMNISHOE THANH TOAN")}&accountName=${encodeURIComponent(bankName)}`}
-                                        alt="QR Code thanh toán"
-                                        className="w-full h-full object-contain"
-                                      />
-                                    </div>
-                                    <span className="text-[8px] text-zinc-650 font-black tracking-tight uppercase font-sans">QUÉT QR ĐỂ THANH TOÁN</span>
+                                  <div className="flex-1 text-xs">
+                                    <h4 className="font-extrabold text-zinc-800 uppercase tracking-wider">Thông tin thanh toán chuyển khoản:</h4>
+                                    <p className="text-zinc-550 mt-1.5 font-semibold leading-relaxed">
+                                      Mã QR chuyển khoản tự động kèm **Nội dung chuyển khoản chứa Mã đơn hàng** sẽ được hiển thị ở bước tiếp theo (sau khi bạn xác nhận đặt hàng).
+                                    </p>
+                                    <p className="text-zinc-550 mt-1 font-semibold leading-relaxed">
+                                      Hệ thống sẽ dựa vào Mã đơn hàng đó để tự động kiểm tra giao dịch và xác nhận đơn hàng đã thanh toán cho bạn ngay lập tức.
+                                    </p>
+                                    <p className="text-[#FF8C00] font-black uppercase tracking-wider text-[10px] mt-2">
+                                      👉 Vui lòng nhấn nút "Xác nhận đặt hàng" ở bên dưới để tạo đơn hàng trước.
+                                    </p>
                                   </div>
                                 </motion.div>
                               )}
