@@ -4,6 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const prisma = new PrismaClient();
@@ -309,6 +312,131 @@ app.post('/api/seed', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to seed database from JSON file' });
+  }
+});
+
+// Create Order API
+app.post('/api/orders', async (req, res) => {
+  try {
+    const {
+      orderId,
+      customer,
+      items,
+      subtotal,
+      shippingFee,
+      total,
+      paymentMethod,
+      shippingMethod,
+      status
+    } = req.body;
+
+    const order = await prisma.order.create({
+      data: {
+        id: orderId,
+        customerName: customer.fullName,
+        customerPhone: customer.phone,
+        customerEmail: customer.email,
+        customerCity: customer.city,
+        customerDistrict: customer.district,
+        customerAddress: customer.address,
+        customerNotes: customer.notes || null,
+        items: JSON.stringify(items),
+        subtotal,
+        shippingFee,
+        total,
+        paymentMethod,
+        shippingMethod,
+        status: status || 'Chờ thanh toán'
+      }
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ error: 'Lỗi tạo đơn hàng ở server' });
+  }
+});
+
+// Get Order Status API
+app.get('/api/orders/:id', async (req, res) => {
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id: req.params.id }
+    });
+    if (!order) {
+      return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
+    }
+    res.json({
+      orderId: order.id,
+      status: order.status,
+      total: order.total,
+      paymentMethod: order.paymentMethod,
+      customer: {
+        fullName: order.customerName,
+        phone: order.customerPhone,
+        email: order.customerEmail,
+        city: order.customerCity,
+        district: order.customerDistrict,
+        address: order.customerAddress,
+        notes: order.customerNotes
+      }
+    });
+  } catch (error) {
+    console.error('Error getting order:', error);
+    res.status(500).json({ error: 'Lỗi lấy thông tin đơn hàng' });
+  }
+});
+
+// SePay Webhook Endpoint
+app.post('/api/sepay/webhook', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const expectedToken = `Apikey ${process.env.SEPAY_API_KEY}`;
+    
+    if (!authHeader || authHeader !== expectedToken) {
+      console.warn('Unauthorized webhook request received');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const { content, transferAmount } = req.body;
+    if (!content || !transferAmount) {
+      return res.status(400).json({ error: 'Missing content or transferAmount' });
+    }
+
+    // Match OMN-XXXXXX (with or without hyphen) in content
+    const match = content.match(/OMN-?\d+/i);
+    if (!match) {
+      return res.json({ success: true, message: 'No Order ID found in memo (ignored)' });
+    }
+
+    // Normalize matched order ID to OMN-XXXXXX format
+    let orderId = match[0].toUpperCase();
+    if (!orderId.includes('-')) {
+      orderId = orderId.replace('OMN', 'OMN-');
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { id: orderId }
+    });
+
+    if (!order) {
+      return res.json({ success: true, message: `Order ${orderId} not found` });
+    }
+
+    // Verify that the amount is sufficient
+    if (transferAmount >= order.total) {
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status: 'Đã thanh toán' }
+      });
+      console.log(`Order ${orderId} marked as PAID via SePay webhook`);
+      return res.json({ success: true, message: 'Order marked as paid' });
+    } else {
+      return res.json({ success: true, message: 'Amount mismatched' });
+    }
+  } catch (error) {
+    console.error('Webhook error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
