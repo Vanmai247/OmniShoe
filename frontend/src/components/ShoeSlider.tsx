@@ -172,6 +172,8 @@ export default function ShoeSlider() {
                 src={currentSlide.image}
                 alt={currentSlide.name}
                 draggable={false}
+                width={480}
+                height={360}
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=480&q=80";
                 }}
@@ -205,7 +207,7 @@ export default function ShoeSlider() {
       {/* 4. PRELOAD IMAGES */}
       <div style={{ display: 'none' }}>
         {slides.map((slide) => (
-          <img key={`preload-${slide.id}`} src={slide.image} alt="preload" />
+          <img key={`preload-${slide.id}`} src={slide.image} alt="preload" width={480} height={360} />
         ))}
       </div>
     </div>
