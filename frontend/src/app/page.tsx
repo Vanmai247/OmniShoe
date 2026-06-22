@@ -788,10 +788,10 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { id: 1, user: "@namstreetwear", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=500&q=80", shoe: "Air Max 270", size: "social-card-large" },
-              { id: 2, user: "@lanahype", image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&q=80", shoe: "Jordan 1 High", size: "" },
-              { id: 3, user: "@sneakerhead_vn", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&q=80", shoe: "990v6 Made in USA", size: "social-card-large" },
-              { id: 4, user: "@quanganh_oootd", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500&q=80", shoe: "RS-X Bold", size: "" },
+              { id: 1, user: "@namstreetwear", image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=350&q=75", shoe: "Air Max 270", size: "social-card-large" },
+              { id: 2, user: "@lanahype", image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=350&q=75", shoe: "Jordan 1 High", size: "" },
+              { id: 3, user: "@sneakerhead_vn", image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=350&q=75", shoe: "990v6 Made in USA", size: "social-card-large" },
+              { id: 4, user: "@quanganh_oootd", image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=350&q=75", shoe: "RS-X Bold", size: "" },
             ].map((card) => (
               <div
                 key={card.id}
@@ -824,7 +824,7 @@ export default function Home() {
                   id: 1,
                   name: "Hoàng Nam",
                   username: "@namstreetwear",
-                  avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+                  avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=64&q=75",
                   rating: 5,
                   shoe: "RS-X Bold",
                   comment: "Giao hàng siêu tốc chỉ trong 2 giờ nội thành. Giày fullbox, thơm phức, tag mác và giấy chứng nhận đầy đủ. Rất an tâm khi chọn mua tại OmniShoe!"
@@ -833,7 +833,7 @@ export default function Home() {
                   id: 2,
                   name: "Khánh Linh",
                   username: "@linh.kicks",
-                  avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+                  avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&q=75",
                   rating: 5,
                   shoe: "Air Max 270 React",
                   comment: "Chăm sóc khách hàng siêu nhiệt tình, tư vấn size cực chuẩn. Đôi 270 này mang đi bộ cả ngày không lo đau chân, phối màu cam neon quá xuất sắc!"
@@ -842,7 +842,7 @@ export default function Home() {
                   id: 3,
                   name: "Đức Huy",
                   username: "@huy_hypebeast",
-                  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80",
+                  avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=64&q=75",
                   rating: 5,
                   shoe: "Air Jordan 1 High OG",
                   comment: "Là một sneakerhead lâu năm, mình cực kỳ khó tính về tính chính xác của giày. OmniShoe đã thuyết phục hoàn toàn bằng sự minh bạch và bảo hành đền gấp 10 lần."
