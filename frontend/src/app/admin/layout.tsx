@@ -48,6 +48,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <img 
                 src="/omnishoe_logo_fixed.png" 
                 alt="OmniShoe" 
+                width={84}
+                height={28}
                 className="h-7 w-auto object-contain" 
               />
             </div>

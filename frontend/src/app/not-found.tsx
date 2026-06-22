@@ -6,7 +6,7 @@ export default function NotFound() {
       {/* Background Image Overlay */}
       <div
         className="fixed inset-0 z-[-1] opacity-25 pointer-events-none bg-center bg-cover bg-no-repeat"
-        style={{ backgroundImage: `url('/studio_light_bg.png')` }}
+        style={{ backgroundImage: `url('/studio_light_bg.jpg')` }}
       />
 
       {/* Glow mesh */}

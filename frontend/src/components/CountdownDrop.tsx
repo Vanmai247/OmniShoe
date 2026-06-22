@@ -114,6 +114,8 @@ export default function CountdownDrop({ onShowToast, config }: CountdownDropProp
             <img
               src={productImage}
               alt={sneakerName}
+              width={480}
+              height={320}
               className="w-full h-auto object-contain transform scale-110"
               style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.5))" }}
             />

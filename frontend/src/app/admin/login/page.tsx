@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
         {/* Brand Logo & Title */}
         <div className="flex flex-col items-center text-center gap-3">
           <div className="bg-white/95 px-4 py-2 rounded-2xl flex items-center justify-center shadow-md max-w-[180px]">
-            <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="h-8 object-contain" />
+            <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" width={96} height={32} className="h-8 object-contain" />
           </div>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[10px] uppercase font-black tracking-widest bg-orange-500/20 text-orange-500 px-2.5 py-0.5 rounded-md border border-orange-500/30">

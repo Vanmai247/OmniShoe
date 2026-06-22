@@ -325,7 +325,7 @@ body {
 
 /* Hero Section Styles */
 .hero-wrapper {
-  background-image: url('/hero-bg.png');
+  background-image: url('/hero-bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

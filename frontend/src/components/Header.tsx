@@ -95,7 +95,7 @@ export default function Header({ onSelectBrand, onScrollToProducts }: HeaderProp
       <div className="header-container">
         {/* Logo */}
         <Link href="/" className="header-logo-link">
-          <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" className="header-logo-image" />
+          <img src="/omnishoe_logo_fixed.png" alt="OmniShoe Logo" width={192} height={64} className="header-logo-image" />
         </Link>
 
         {/* Desktop Navigation */}
@@ -217,7 +217,7 @@ export default function Header({ onSelectBrand, onScrollToProducts }: HeaderProp
                     onClick={() => handleBrandClick(brand)}
                     className="mega-menu-item"
                   >
-                    <img src={brandLogos[brand]} alt={brand} />
+                    <img src={brandLogos[brand]} alt={brand} width={80} height={32} />
                     <span>{brand}</span>
                   </button>
                 ))}
@@ -405,7 +405,7 @@ export default function Header({ onSelectBrand, onScrollToProducts }: HeaderProp
                 aria-label="Tài khoản"
               >
                 {user.avatar && (user.avatar.startsWith("http") || user.avatar.includes("/")) ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <img src={user.avatar} alt={user.name} width={36} height={36} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
                   user.avatar || "US"
                 )}
@@ -417,7 +417,7 @@ export default function Header({ onSelectBrand, onScrollToProducts }: HeaderProp
                 <div className="flex items-center gap-4 mb-4">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden border border-orange-500/80 shadow-[0_0_12px_rgba(255,107,0,0.2)] flex items-center justify-center shrink-0">
                     {user.avatar && (user.avatar.startsWith("http") || user.avatar.includes("/")) ? (
-                      <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      <img src={user.avatar} alt={user.name} width={56} height={56} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     ) : (
                       <span className="text-white font-black text-lg bg-gradient-to-tr from-orange-500 to-amber-500 w-full h-full flex items-center justify-center">
                         {user.avatar || "US"}

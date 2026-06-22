@@ -518,7 +518,7 @@ export default function LoginPage() {
       <div
         className="absolute inset-0 z-0 pointer-events-none bg-center bg-cover bg-no-repeat scale-105 transition-transform duration-300 ease-out"
         style={{
-          backgroundImage: `url('/hero-bg.png')`, // Thay bằng ảnh bạn chọn, ví dụ: '/login-bg.jpg'
+          backgroundImage: `url('/hero-bg.jpg')`, // Thay bằng ảnh bạn chọn, ví dụ: '/login-bg.jpg'
           transform: `translate(${parallaxOffset.x}px, ${parallaxOffset.y}px)`,
           opacity: 0.8, // Tăng độ mờ của ảnh nền lên 80% để hiển thị rõ nét hơn
         }}
@@ -549,6 +549,8 @@ export default function LoginPage() {
         <img
           src="/omnishoe_logo_fixed.png"
           alt="OmniShoe Logo"
+          width={144}
+          height={48}
           className="h-10 md:h-12 object-contain"
         />
       </div>

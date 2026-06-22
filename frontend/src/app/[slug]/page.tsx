@@ -128,7 +128,7 @@ export default async function DynamicCMSPage({ params }: PageProps) {
       {/* Background Overlay */}
       <div
         className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
-        style={{ backgroundImage: `url('/studio_light_bg.png')` }}
+        style={{ backgroundImage: `url('/studio_light_bg.jpg')` }}
       />
 
       {/* Global Header */}

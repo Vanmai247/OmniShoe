@@ -305,7 +305,7 @@ export default function Home() {
       <div
         className="fixed inset-0 z-[-1] opacity-30 pointer-events-none bg-center bg-cover bg-no-repeat"
         style={{
-          backgroundImage: `url('${pageConfig?.content?.heroBg || "/studio_light_bg.png"}')`,
+          backgroundImage: `url('${pageConfig?.content?.heroBg || "/studio_light_bg.jpg"}')`,
           backgroundBlendMode: 'overlay',
         }}
       />
@@ -415,6 +415,8 @@ export default function Home() {
                   <img
                     src={brandLogos[brand]}
                     alt={brand}
+                    width={160}
+                    height={80}
                     className="h-14 md:h-20 w-auto object-contain opacity-85 group-hover:opacity-100 transition-all duration-300"
                   />
                 </button>
@@ -429,6 +431,8 @@ export default function Home() {
                   <img
                     src={brandLogos[brand]}
                     alt={brand}
+                    width={160}
+                    height={80}
                     className="h-14 md:h-20 w-auto object-contain opacity-85 group-hover:opacity-100 transition-all duration-300"
                   />
                 </button>
@@ -793,7 +797,7 @@ export default function Home() {
                 key={card.id}
                 className={`social-card group ${card.size}`}
               >
-                <img src={card.image} alt={card.user} />
+                <img src={card.image} alt={card.user} width={300} height={card.size === "social-card-large" ? 400 : 300} />
                 <div className="social-card-overlay">
                   <span className="font-extrabold text-sm text-foreground">{card.user}</span>
                   <span className="text-[10px] text-accent font-black tracking-wider uppercase mt-0.5">Diện đôi: {card.shoe}</span>
@@ -859,7 +863,7 @@ export default function Home() {
 
                   {/* User Profile */}
                   <div className="flex items-center gap-3 pt-4 border-t border-border-color">
-                    <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover border border-border-color" />
+                    <img src={t.avatar} alt={t.name} width={44} height={44} className="w-11 h-11 rounded-full object-cover border border-border-color" />
                     <div className="text-left">
                       <h4 className="font-extrabold text-sm text-foreground">{t.name}</h4>
                       <p className="text-[10px] text-text-muted font-bold tracking-wide">{t.username}</p>
