@@ -54,7 +54,7 @@ export default function AboutUsPage() {
       <div
         className="fixed inset-0 z-[-1] opacity-35 pointer-events-none bg-center bg-cover bg-no-repeat"
         style={{
-          backgroundImage: `url('/studio_light_bg.png')`,
+          backgroundImage: `url('/studio_light_bg.jpg')`,
           backgroundBlendMode: 'overlay',
         }}
       />

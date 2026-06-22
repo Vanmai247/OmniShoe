@@ -510,11 +510,11 @@ function CheckoutContent() {
       <div className="min-h-screen bg-zinc-50 text-zinc-800 relative z-0 flex flex-col items-center justify-center font-sans px-6">
         <div
           className="fixed inset-0 z-[-1] opacity-5 pointer-events-none bg-center bg-cover bg-no-repeat"
-          style={{ backgroundImage: `url('/studio_light_bg.png')` }}
+          style={{ backgroundImage: `url('/studio_light_bg.jpg')` }}
         />
         <header className="absolute top-0 left-0 w-full p-6 flex justify-between items-center border-b border-zinc-200">
           <Link href="/">
-            <img src="/omnishoe_logo_fixed.png" alt="Logo" className="h-9 object-contain" />
+            <img src="/omnishoe_logo_fixed.png" alt="Logo" width={108} height={36} className="h-9 object-contain" />
           </Link>
           <Link href="/" className="text-xs font-black uppercase text-[#FF8C00] hover:underline flex items-center gap-1">
             ← Tiếp tục mua sắm
@@ -550,7 +550,7 @@ function CheckoutContent() {
     <div className="min-h-screen bg-zinc-50 text-zinc-800 relative z-0 flex flex-col font-sans selection:bg-[#FF8C00] selection:text-white">
       <div
         className="fixed inset-0 z-[-1] opacity-5 pointer-events-none bg-center bg-cover bg-no-repeat"
-        style={{ backgroundImage: `url('/studio_light_bg.png')` }}
+        style={{ backgroundImage: `url('/studio_light_bg.jpg')` }}
       />
 
       {/* Global Header */}
