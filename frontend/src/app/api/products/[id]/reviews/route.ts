@@ -22,7 +22,7 @@ export async function POST(
 
     let productIndex = products.findIndex((p: any) => p.id === id);
     if (productIndex === -1) {
-      const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+      const BACKEND_URL = process.env.BACKEND_URL || "http://127.0.0.1:5000";
       try {
         const res = await fetch(`${BACKEND_URL}/api/products/${id}`);
         if (!res.ok) {

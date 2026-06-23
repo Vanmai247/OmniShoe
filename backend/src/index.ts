@@ -15,6 +15,14 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    console.log(`[request]: ${req.method} ${req.originalUrl} - ${res.statusCode} in ${Date.now() - start}ms`);
+  });
+  next();
+});
+
 // Base checking endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'OmniShoe Backend' });
