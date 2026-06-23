@@ -605,8 +605,8 @@ export default function LoginPage() {
         )}
       </AnimatePresence>
 
-      {/* Left side: Form Column (100% on mobile, 50% on desktop) */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative z-10">
+      {/* Left side: Form Column (Centered, spans full width) */}
+      <div className="w-full min-h-screen flex flex-col justify-center items-center p-6 sm:p-12 relative z-10">
         {/* Dynamic backgrounds */}
         <div className="absolute top-[-10%] left-[-10%] w-[350px] h-[350px] rounded-full bg-orange-600/10 pointer-events-none filter blur-[80px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] rounded-full bg-orange-500/5 pointer-events-none filter blur-[100px]" />
@@ -621,14 +621,15 @@ export default function LoginPage() {
               ? { x: [-10, 10, -10, 10, -5, 5, 0], transition: { duration: 0.4 } }
               : {}
           }
-          className="w-full max-w-md bg-white/90 backdrop-blur-xl border border-zinc-200/80 p-8 sm:p-10 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] flex flex-col gap-6"
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className="w-full max-w-md bg-[#0d0d0d]/40 backdrop-blur-2xl border border-white/10 p-8 sm:p-10 rounded-[32px] shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col gap-6 text-white"
         >
           {/* Header titles */}
           <div className="flex flex-col gap-2">
-            <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-white">
               {isLogin ? "Đăng nhập" : "Tạo tài khoản"}
             </h2>
-            <p className="text-xs text-zinc-600 font-semibold leading-relaxed">
+            <p className="text-xs text-zinc-400 font-semibold leading-relaxed">
               {isLogin
                 ? "Khám phá các bộ sưu tập sneaker cực giới hạn dành riêng cho bạn."
                 : "Tham gia cộng đồng Sneakerhead OmniShoe và nhận ngay mã giảm giá 10%."}
@@ -652,45 +653,49 @@ export default function LoginPage() {
             {/* Full Name for registration */}
             {!isLogin && (
               <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-black uppercase text-zinc-500 tracking-wider">
+                <label className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
                   Họ và tên
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Nguyễn Văn A"
-                    className="w-full bg-[#F3F4F6] border border-zinc-200 rounded-xl px-4 py-3.5 pl-10 text-sm focus:outline-none focus:border-orange-500 focus:bg-white text-zinc-900 placeholder-zinc-400 font-semibold transition-all duration-300"
-                    required
-                  />
-                  <i className="ti ti-user absolute left-3.5 top-3.5 text-zinc-400 text-base" />
+                <div className="input-glow-container">
+                  <div className="input-inner relative flex items-center">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Nguyễn Văn A"
+                      className="w-full bg-transparent px-4 py-3.5 pl-10 text-sm focus:outline-none text-white placeholder-zinc-500 font-semibold border-none outline-none focus:ring-0"
+                      required
+                    />
+                    <i className="ti ti-user absolute left-3.5 text-zinc-400 text-base" />
+                  </div>
                 </div>
               </div>
             )}
 
             {/* Email Field */}
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black uppercase text-zinc-500 tracking-wider">
+              <label className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
                 Địa chỉ Email
               </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full bg-[#F3F4F6] border border-zinc-200 rounded-xl px-4 py-3.5 pl-10 text-sm focus:outline-none focus:border-orange-500 focus:bg-white text-zinc-900 placeholder-zinc-400 font-semibold transition-all duration-300"
-                  required
-                />
-                <i className="ti ti-mail absolute left-3.5 top-3.5 text-zinc-400 text-base" />
+              <div className="input-glow-container">
+                <div className="input-inner relative flex items-center">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@example.com"
+                    className="w-full bg-transparent px-4 py-3.5 pl-10 text-sm focus:outline-none text-white placeholder-zinc-500 font-semibold border-none outline-none focus:ring-0"
+                    required
+                  />
+                  <i className="ti ti-mail absolute left-3.5 text-zinc-400 text-base" />
+                </div>
               </div>
             </div>
 
             {/* Password Field */}
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <label className="text-[10px] font-black uppercase text-zinc-500 tracking-wider">
+                <label className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
                   Mật khẩu
                 </label>
                 {isLogin && (
@@ -700,29 +705,31 @@ export default function LoginPage() {
                       e.preventDefault();
                       showToast("Chức năng khôi phục mật khẩu đang được nâng cấp!");
                     }}
-                    className="text-[10px] font-bold text-zinc-500 hover:text-orange-500 transition-colors uppercase tracking-wider"
+                    className="text-[10px] font-bold text-zinc-400 hover:text-orange-500 transition-colors uppercase tracking-wider"
                   >
                     Quên mật khẩu?
                   </a>
                 )}
               </div>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-[#F3F4F6] border border-zinc-200 rounded-xl px-4 py-3.5 pl-10 pr-10 text-sm focus:outline-none focus:border-orange-500 focus:bg-white text-zinc-900 placeholder-zinc-400 font-semibold transition-all duration-300"
-                  required
-                />
-                <i className="ti ti-lock absolute left-3.5 top-3.5 text-zinc-400 text-base" />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3.5 text-zinc-400 hover:text-zinc-600 transition-colors"
-                >
-                  <i className={`ti ${showPassword ? "ti-eye-off" : "ti-eye"} text-base`} />
-                </button>
+              <div className="input-glow-container">
+                <div className="input-inner relative flex items-center">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-transparent px-4 py-3.5 pl-10 pr-10 text-sm focus:outline-none text-white placeholder-zinc-500 font-semibold border-none outline-none focus:ring-0"
+                    required
+                  />
+                  <i className="ti ti-lock absolute left-3.5 text-zinc-400 text-base" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 text-zinc-400 hover:text-zinc-200 transition-colors"
+                  >
+                    <i className={`ti ${showPassword ? "ti-eye-off" : "ti-eye"} text-base`} />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -732,18 +739,18 @@ export default function LoginPage() {
                 {/* Password Strength Indicator */}
                 {password && (
                   <div className="flex flex-col gap-1.5 mt-0.5">
-                    <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-wider text-zinc-600">
+                    <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-wider text-zinc-400">
                       <span>Độ an toàn mật khẩu</span>
                       <span className="text-zinc-500">{passwordStrength.label}</span>
                     </div>
-                    <div className="h-1 w-full bg-zinc-200 rounded-full overflow-hidden flex gap-1">
+                    <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden flex gap-1">
                       {[1, 2, 3, 4, 5].map((step) => (
                         <div
                           key={step}
                           className={`h-full flex-1 rounded-full transition-all duration-300 ${
                             step <= passwordStrength.score
                               ? passwordStrength.color
-                              : "bg-zinc-200"
+                              : "bg-zinc-800"
                           }`}
                         />
                       ))}
@@ -753,26 +760,28 @@ export default function LoginPage() {
 
                 {/* Confirm Password */}
                 <div className="flex flex-col gap-2 mt-1">
-                  <label className="text-[10px] font-black uppercase text-zinc-500 tracking-wider">
+                  <label className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
                     Nhập lại mật khẩu
                   </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full bg-[#F3F4F6] border border-zinc-200 rounded-xl px-4 py-3.5 pl-10 pr-10 text-sm focus:outline-none focus:border-orange-500 focus:bg-white text-zinc-900 placeholder-zinc-400 font-semibold transition-all duration-300"
-                      required
-                    />
-                    <i className="ti ti-lock-check absolute left-3.5 top-3.5 text-zinc-400 text-base" />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-3.5 text-zinc-400 hover:text-zinc-600 transition-colors"
-                    >
-                      <i className={`ti ${showConfirmPassword ? "ti-eye-off" : "ti-eye"} text-base`} />
-                    </button>
+                  <div className="input-glow-container">
+                    <div className="input-inner relative flex items-center">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full bg-transparent px-4 py-3.5 pl-10 pr-10 text-sm focus:outline-none text-white placeholder-zinc-500 font-semibold border-none outline-none focus:ring-0"
+                        required
+                      />
+                      <i className="ti ti-lock-check absolute left-3.5 text-zinc-400 text-base" />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3.5 text-zinc-400 hover:text-zinc-200 transition-colors"
+                      >
+                        <i className={`ti ${showConfirmPassword ? "ti-eye-off" : "ti-eye"} text-base`} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </>
@@ -785,9 +794,9 @@ export default function LoginPage() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded border-zinc-300 bg-[#F3F4F6] text-orange-500 accent-orange-500 cursor-pointer"
+                className="w-4 h-4 rounded border-zinc-700 bg-white/5 text-orange-500 accent-orange-500 cursor-pointer"
               />
-              <label htmlFor="checkbox-policy" className="text-xs text-zinc-600 font-semibold cursor-pointer select-none">
+              <label htmlFor="checkbox-policy" className="text-xs text-zinc-400 font-semibold cursor-pointer select-none">
                 {isLogin
                   ? "Duy trì đăng nhập trên thiết bị này"
                   : "Tôi đồng ý với các Điều khoản & Chính sách của OmniShoe"}
@@ -817,36 +826,53 @@ export default function LoginPage() {
 
           {/* Social Logins Divider */}
           <div className="flex items-center gap-3 my-1">
-            <div className="h-[1px] bg-zinc-200 flex-grow" />
+            <div className="h-[1px] bg-white/10 flex-grow" />
             <span className="text-[10px] font-black uppercase text-zinc-400 tracking-wider">
               Hoặc đăng nhập bằng
             </span>
-            <div className="h-[1px] bg-zinc-200 flex-grow" />
+            <div className="h-[1px] bg-white/10 flex-grow" />
           </div>
 
           {/* Social Login Buttons */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { id: "Google", icon: "ti-brand-google" },
-              { id: "Apple", icon: "ti-brand-apple" },
-              { id: "Facebook", icon: "ti-brand-facebook" },
-            ].map((social) => (
-              <Magnetic key={social.id} range={45}>
-                <button
-                  type="button"
-                  onClick={() => handleSocialLogin(social.id)}
-                  className="w-full py-3 border border-zinc-200 hover:border-zinc-300 bg-white hover:bg-zinc-50 rounded-xl flex items-center justify-center text-xl text-zinc-500 hover:text-zinc-900 transition-all group shadow-sm"
-                  title={`Đăng nhập qua ${social.id}`}
-                >
-                  <i className={`ti ${social.icon} group-hover:scale-110 transition-transform`} />
-                </button>
-              </Magnetic>
-            ))}
+          <div className="grid grid-cols-4 gap-3 w-full">
+            <Magnetic range={45}>
+              <button
+                type="button"
+                onClick={() => handleSocialLogin("Google")}
+                className="col-span-2 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center gap-2 text-sm text-white hover:text-white transition-all group shadow-sm animate-none"
+                title="Đăng nhập qua Google"
+              >
+                <i className="ti ti-brand-google group-hover:scale-110 transition-transform text-[#ea4335]" />
+                <span className="font-semibold text-xs">Google</span>
+              </button>
+            </Magnetic>
+            
+            <Magnetic range={45}>
+              <button
+                type="button"
+                onClick={() => handleSocialLogin("Apple")}
+                className="col-span-1 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-xl text-white hover:text-white transition-all group shadow-sm"
+                title="Đăng nhập qua Apple"
+              >
+                <i className="ti ti-brand-apple group-hover:scale-110 transition-transform" />
+              </button>
+            </Magnetic>
+
+            <Magnetic range={45}>
+              <button
+                type="button"
+                onClick={() => handleSocialLogin("Facebook")}
+                className="col-span-1 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-xl text-white hover:text-white transition-all group shadow-sm"
+                title="Đăng nhập qua Facebook"
+              >
+                <i className="ti ti-brand-facebook group-hover:scale-110 transition-transform text-[#1877f2]" />
+              </button>
+            </Magnetic>
           </div>
 
           {/* Tab Switcher Link */}
-          <div className="text-center pt-3 border-t border-zinc-200">
-            <span className="text-xs text-zinc-600 font-semibold">
+          <div className="text-center pt-3 border-t border-white/10">
+            <span className="text-xs text-zinc-400 font-semibold">
               {isLogin ? "Bạn là thành viên mới?" : "Đã có tài khoản?"}
             </span>{" "}
             <button
@@ -863,75 +889,8 @@ export default function LoginPage() {
         </motion.div>
       </div>
 
-      {/* Right side: Sneaker Banner Column (Hidden on mobile, 50% on desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-transparent border-l border-zinc-900/40 relative items-center justify-center p-12 overflow-hidden select-none">
-        {/* Glow behind the shoe */}
-        <div className="absolute w-[450px] h-[450px] rounded-full bg-orange-600/10 filter blur-[100px] pointer-events-none animate-pulse" />
-
-        {/* Abstract grids/lines to feel cyber-premium */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f2e_1px,transparent_1px),linear-gradient(to_bottom,#1f1f2e_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
-
-        <div className="flex flex-col items-center text-center gap-10 relative z-10 w-full max-w-lg">
-          {/* Animated Sneaker Frame */}
-          <div 
-            className="relative w-80 h-80 flex items-center justify-center animate-[float_6s_ease-in-out_infinite]"
-            style={{ perspective: 1000 }}
-          >
-            {/* Sneaker Image with 3D Parallax/Tilt */}
-            <motion.div
-              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
-            >
-              <Image
-                src="/Nike_4-removebg-preview.png"
-                alt="Premium Sneaker"
-                width={400}
-                height={400}
-                className="object-contain filter drop-shadow-[0_25px_40px_rgba(255,107,0,0.35)]"
-                priority
-              />
-            </motion.div>
-
-            {/* Glowing Floor Shadow */}
-            <div className="absolute bottom-[-10px] w-64 h-5 rounded-full bg-orange-500/20 filter blur-md transform scale-x-75 animate-[shadow_6s_ease-in-out_infinite]" />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <span className="text-[10px] font-black uppercase text-orange-500 tracking-[0.25em] bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full w-fit mx-auto">
-              OmniShoe Exclusive
-            </span>
-            <h3 className="text-2xl font-black uppercase tracking-tight text-white leading-tight">
-              KẾT NỐI VĂN HÓA SNEAKER
-            </h3>
-            <p className="text-xs text-zinc-400 font-semibold max-w-sm leading-relaxed mx-auto">
-              Đăng nhập để nhận thông báo về các đợt phát hành giày giới hạn, tích lũy điểm thưởng và hưởng các quyền lợi đặc quyền của thành viên VIP.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Global CSS animations injected for floating effect and progress loading */}
+      {/* Global CSS animations injected for loading and custom glowing inputs */}
       <style jsx global>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        @keyframes shadow {
-          0%, 100% {
-            transform: scale(0.9) opacity(0.7);
-            filter: blur(8px);
-          }
-          50% {
-            transform: scale(0.7) opacity(0.4);
-            filter: blur(12px);
-          }
-        }
         @keyframes loading {
           0% {
             transform: translateX(-100%);
@@ -942,6 +901,52 @@ export default function LoginPage() {
           100% {
             transform: translateX(100%);
           }
+        }
+        .input-glow-container {
+          position: relative;
+          border-radius: 0.95rem;
+          padding: 1px;
+          background: rgba(255, 255, 255, 0.08);
+          transition: background 0.3s;
+          overflow: hidden;
+          width: 100%;
+        }
+        .input-glow-container::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: conic-gradient(
+            transparent,
+            transparent,
+            transparent,
+            rgba(255, 107, 0, 0.8)
+          );
+          transform: rotate(0deg);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          z-index: 1;
+        }
+        .input-glow-container:focus-within::before {
+          opacity: 1;
+          animation: rotateGlow 3s linear infinite;
+        }
+        @keyframes rotateGlow {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        .input-inner {
+          position: relative;
+          z-index: 2;
+          background: #0d0d0d;
+          border-radius: 0.9rem;
+          width: 100%;
         }
       `}</style>
     </div>
