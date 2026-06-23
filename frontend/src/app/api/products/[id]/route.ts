@@ -67,9 +67,10 @@ export async function GET(
       if (jsonProduct) {
         return NextResponse.json({
           ...mapped,
-          rating: jsonProduct.rating ?? mapped.rating,
-          reviews: jsonProduct.reviews ?? mapped.reviews,
-          reviewsList: jsonProduct.reviewsList ?? []
+          ...jsonProduct,
+          price: mapped.price,
+          oldPrice: mapped.oldPrice || jsonProduct.oldPrice,
+          sizes: jsonProduct.sizes ?? mapped.sizes
         });
       }
     } catch (err) {

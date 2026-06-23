@@ -67,9 +67,10 @@ async function getProducts() {
         if (jsonProduct) {
           return {
             ...p,
-            rating: jsonProduct.rating ?? p.rating,
-            reviews: jsonProduct.reviews ?? p.reviews,
-            reviewsList: jsonProduct.reviewsList ?? []
+            ...jsonProduct,
+            price: p.price,
+            oldPrice: p.oldPrice || jsonProduct.oldPrice,
+            sizes: jsonProduct.sizes ?? p.sizes
           };
         }
         return p;

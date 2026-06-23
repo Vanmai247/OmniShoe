@@ -9,16 +9,34 @@
     "badge": "Hot",
     "photoId": "/Nike_4-removebg-preview.png",
     "category": "Lifestyle",
-    "glowColor": "rgba(255, 255, 255, 0.45)",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
+    "glowColor": "rgba(255, 87, 34, 0.45)",
+    "sizes": [39, 40, 41, 42, 43],
+    "description": "Hòa quyện giữa nét cổ điển thập niên 80 và nhịp sống hiện đại. Phối màu thanh lịch mang tính biểu tượng, dễ dàng phối hợp với mọi trang phục hàng ngày.",
+    "materials": "Da tổng hợp tái chế, Đế cao su lưu hóa chống trượt",
+    "colors": [
+      { "name": "Trắng", "hex": "#FFFFFF", "images": ["/Nike_4-removebg-preview.png", "/Nike_3-removebg-preview.png"] },
+      { "name": "Đen/Đỏ", "hex": "#C21807", "images": ["/Nike_air-removebg-preview.png"] }
     ],
-    "description": "Hòa quyện giữa nét cổ điển thập niên 80 và nhịp sống hiện đại. Phối màu thanh lịch mang tính biểu tượng.",
-    "materials": "Da tổng hợp tái chế, Đế cao su chống trượt"
+    "inventory": {
+      "Trắng": { "39": 10, "40": 5, "41": 0, "42": 8, "43": 12 },
+      "Đen/Đỏ": { "39": 4, "40": 0, "41": 3, "42": 1, "43": 0 }
+    },
+    "questions": [
+      {
+        "id": "q1_1",
+        "name": "Nguyễn Hoàng",
+        "question": "Giày này có nhẹ chân không shop?",
+        "answer": "Chào bạn, mẫu Court Vision này có trọng lượng trung bình khoảng 320g mỗi bên, đi rất đầm và chắc chân, phù hợp sử dụng hàng ngày ạ.",
+        "createdAt": "2026-06-20T08:15:30.000Z"
+      },
+      {
+        "id": "q1_2",
+        "name": "Thanh Thảo",
+        "question": "Bảo quản giày da này như thế nào để không bị ố?",
+        "answer": "Chào bạn, đối với chất liệu da tổng hợp này, bạn nên lau sạch bằng khăn ẩm sau khi sử dụng và tránh phơi trực tiếp dưới ánh nắng gắt nhé!",
+        "createdAt": "2026-06-21T03:45:00.000Z"
+      }
+    ]
   },
   {
     "id": 2,
@@ -29,18 +47,29 @@
     "rating": 4.7,
     "reviews": 95,
     "badge": "New Drop",
-    "photoId": "photo-1587563871167-1ee9c731aefb",
+    "photoId": "/Samba_OG-removebg-preview.webp",
     "category": "Running",
     "glowColor": "rgba(0, 150, 255, 0.45)",
-    "sizes": [
-      40,
-      41,
-      42,
-      43,
-      44
+    "sizes": [40, 41, 42, 43, 44],
+    "description": "Công nghệ đế Boost êm ái đàn hồi đỉnh cao của Adidas, thân giày dệt sợi Primeknit thoáng mát mang lại trải nghiệm chạy bộ hoàn hảo.",
+    "materials": "Primeknit dệt sợi, Đệm Boost hạt, Đế ngoài cao su Continental",
+    "colors": [
+      { "name": "Đen", "hex": "#1F1F1F", "images": ["/vans-old-skool-black-white-vn000d3hy28-1.webp"] },
+      { "name": "Trắng/Xám", "hex": "#E5E7EB", "images": ["/Samba_OG-removebg-preview.webp"] }
     ],
-    "description": "Công nghệ đế Boost êm ái đàn hồi đỉnh cao của Adidas, thân giày dệt sợi Primeknit thoáng mát.",
-    "materials": "Primeknit dệt sợi, Đệm Boost hạt, Đế ngoài Continental"
+    "inventory": {
+      "Đen": { "40": 5, "41": 0, "42": 8, "43": 12, "44": 3 },
+      "Trắng/Xám": { "40": 2, "41": 7, "42": 0, "43": 0, "44": 1 }
+    },
+    "questions": [
+      {
+        "id": "q2_1",
+        "name": "Lâm Tùng",
+        "question": "Công nghệ đệm Boost của dòng 23 này có êm hơn dòng cũ không?",
+        "answer": "Dạ chào bạn, đệm Light Boost thế hệ mới nhẹ hơn 30% và cho độ đàn hồi tốt hơn so với các thế hệ trước, mang lại cảm giác cực êm chân khi chạy bộ ạ.",
+        "createdAt": "2026-06-19T10:10:00.000Z"
+      }
+    ]
   },
   {
     "id": 3,
@@ -53,15 +82,16 @@
     "photoId": "/0882-CON162050C000007-1.webp",
     "category": "Lifestyle",
     "glowColor": "rgba(163, 163, 163, 0.45)",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
-    ],
+    "sizes": [39, 40, 41, 42, 43],
     "description": "Đôi giày quốc dân Converse Chuck 70 Classic với chất liệu vải canvas bền bỉ, đế cao sần đặc trưng mang phong cách vintage cổ điển.",
-    "materials": "Vải Canvas dệt dày dặn, Đế cao su lưu hóa cao cấp"
+    "materials": "Vải Canvas dệt dày dặn, Đế cao su lưu hóa cao cấp",
+    "colors": [
+      { "name": "Đen", "hex": "#27272A", "images": ["/0882-CON162050C000007-1.webp"] }
+    ],
+    "inventory": {
+      "Đen": { "39": 20, "40": 15, "41": 22, "42": 18, "43": 10 }
+    },
+    "questions": []
   },
   {
     "id": 4,
@@ -72,18 +102,19 @@
     "rating": 4.5,
     "reviews": 64,
     "badge": "-18%",
-    "photoId": "photo-1608231387042-66d1773070a5",
+    "photoId": "/giay-puma-shuffle-trainers-nam-trang-xanh-la-01.jpg",
     "category": "Lifestyle",
     "glowColor": "rgba(52, 211, 153, 0.45)",
-    "sizes": [
-      38,
-      39,
-      40,
-      41,
-      42
-    ],
+    "sizes": [38, 39, 40, 41, 42],
     "description": "Thiết kế hầm hố retro-chunky cá tính với các mảng màu tương phản rực rỡ, ôm chân cực chuẩn.",
-    "materials": "Lưới dệt Mesh thoáng khí, Lớp phủ Nubuck cá tính"
+    "materials": "Lưới dệt Mesh thoáng khí, Lớp phủ Nubuck cá tính",
+    "colors": [
+      { "name": "Trắng/Xanh", "hex": "#34D399", "images": ["/giay-puma-shuffle-trainers-nam-trang-xanh-la-01.jpg"] }
+    ],
+    "inventory": {
+      "Trắng/Xanh": { "38": 2, "39": 6, "40": 4, "41": 0, "42": 8 }
+    },
+    "questions": []
   },
   {
     "id": 5,
@@ -96,15 +127,16 @@
     "photoId": "/ABZORB 2010 Grey Day's.webp",
     "category": "Lifestyle",
     "glowColor": "rgba(163, 163, 163, 0.45)",
-    "sizes": [
-      40,
-      41,
-      42,
-      43,
-      44
-    ],
+    "sizes": [40, 41, 42, 43, 44],
     "description": "Tôn vinh sắc xám trường tồn huyền thoại của New Balance kết hợp công nghệ Abzorb giảm xóc ấn tượng.",
-    "materials": "Da lộn Premium Suede, Đệm giảm chấn ABZORB"
+    "materials": "Da lộn Premium Suede, Đệm giảm chấn ABZORB",
+    "colors": [
+      { "name": "Xám Grey", "hex": "#78716C", "images": ["/ABZORB 2010 Grey Day's.webp"] }
+    ],
+    "inventory": {
+      "Xám Grey": { "40": 4, "41": 5, "42": 2, "43": 1, "44": 0 }
+    },
+    "questions": []
   },
   {
     "id": 6,
@@ -117,16 +149,16 @@
     "photoId": "/Nike Air Max 90 'Hypervenom'.webp",
     "category": "Lifestyle",
     "glowColor": "rgba(132, 204, 22, 0.45)",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43,
-      44
-    ],
+    "sizes": [39, 40, 41, 42, 43, 44],
     "description": "Mẫu giày kỷ niệm dòng Hypervenom bóng đá nổi tiếng với tông xanh chuối sặc sỡ và lớp đệm khí Air max.",
-    "materials": "Da lộn kết hợp lưới Mesh, Cửa sổ đệm khí Max Air"
+    "materials": "Da lộn kết hợp lưới Mesh, Cửa sổ đệm khí Max Air",
+    "colors": [
+      { "name": "Neon Green", "hex": "#84CC16", "images": ["/Nike Air Max 90 'Hypervenom'.webp"] }
+    ],
+    "inventory": {
+      "Neon Green": { "39": 3, "40": 5, "41": 0, "42": 1, "43": 4, "44": 2 }
+    },
+    "questions": []
   },
   {
     "id": 7,
@@ -139,35 +171,38 @@
     "photoId": "/vans-old-skool-black-white-vn000d3hy28-1.webp",
     "category": "Lifestyle",
     "glowColor": "rgba(163, 163, 163, 0.45)",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
-    ],
+    "sizes": [39, 40, 41, 42, 43],
     "description": "Đôi giày trượt ván Vans Old Skool Classic huyền thoại với sọc Jazz trắng đặc trưng trên nền vải canvas đen bền bỉ, đậm chất đường phố và cổ điển.",
-    "materials": "Vải Canvas kết hợp Da lộn Suede bền chắc, Đế cao su waffle đặc trưng"
+    "materials": "Vải Canvas kết hợp Da lộn Suede bền chắc, Đế cao su waffle đặc trưng",
+    "colors": [
+      { "name": "Đen Classic", "hex": "#18181B", "images": ["/vans-old-skool-black-white-vn000d3hy28-1.webp"] }
+    ],
+    "inventory": {
+      "Đen Classic": { "39": 12, "40": 18, "41": 15, "42": 10, "43": 6 }
+    },
+    "questions": []
   },
   {
+    "id": 8,
     "name": "Puma Shuffle Trainers",
     "brand": "Puma",
-    "price": "1.690.000₫",
-    "oldPrice": "2.200.000₫",
+    "price": "1,690,000₫",
+    "oldPrice": "2,200,000₫",
     "category": "Lifestyle",
     "badge": "SALE",
-    "photoId": "/uploads/img_1781162389754_aa65aa.jpg",
+    "photoId": "/giay-puma-shuffle-trainers-nam-trang-xanh-la-01.jpg",
     "glowColor": "rgba(52, 211, 153, 0.45)",
-    "description": "",
-    "materials": "",
-    "sizes": [
-      39,
-      41,
-      42
-    ],
-    "id": 8,
-    "rating": 5,
+    "description": "Thiết kế giày thể thao mang phong cách thanh lịch hàng ngày của Puma với lớp lót giày êm ái.",
+    "materials": "Da tổng hợp và đế cao su",
+    "sizes": [39, 41, 42],
+    "rating": 5.0,
     "reviews": 1,
+    "colors": [
+      { "name": "Trắng/Xanh", "hex": "#10B981", "images": ["/giay-puma-shuffle-trainers-nam-trang-xanh-la-01.jpg"] }
+    ],
+    "inventory": {
+      "Trắng/Xanh": { "39": 5, "41": 8, "42": 0 }
+    },
     "reviewsList": [
       {
         "id": "rev_1781163098408_lizm",
@@ -176,9 +211,11 @@
         "comment": "Sản phẩm đóng gói kĩ càng, giày đẹp, êm chân",
         "createdAt": "2026-06-11T07:31:38.408Z"
       }
-    ]
+    ],
+    "questions": []
   },
   {
+    "id": 9,
     "name": "Puma Rebound Joy",
     "brand": "Puma",
     "price": "2,190,000₫",
@@ -186,18 +223,20 @@
     "badge": "New Drop",
     "photoId": "/Rebound.webp",
     "description": "Giày thể thao cổ cao phong cách bóng rổ retro cá tính từ Puma.",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
+    "materials": "Da tổng hợp cao cấp, đệm cổ chân dày dặn",
+    "sizes": [39, 40, 41, 42, 43],
+    "rating": 5.0,
+    "reviews": 0,
+    "colors": [
+      { "name": "Đen/Trắng", "hex": "#18181B", "images": ["/Rebound.webp"] }
     ],
-    "id": 9,
-    "rating": 5,
-    "reviews": 0
+    "inventory": {
+      "Đen/Trắng": { "39": 4, "40": 5, "41": 2, "42": 6, "43": 1 }
+    },
+    "questions": []
   },
   {
+    "id": 10,
     "name": "MLB Chunky Runner NY Yankees Metallic Silver",
     "brand": "MLB",
     "price": "3,200,000₫",
@@ -206,18 +245,20 @@
     "badge": "New",
     "photoId": "/mlb.webp",
     "description": "Giày thể thao MLB Chunky Runner với phối màu bạc Metallic trẻ trung cùng biểu tượng New York Yankees nổi bật.",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
+    "materials": "Vải Mesh thoáng khí, các mảng da phủ metallic",
+    "sizes": [39, 40, 41, 42, 43],
+    "rating": 5.0,
+    "reviews": 0,
+    "colors": [
+      { "name": "Bạc/Metallic", "hex": "#CBD5E1", "images": ["/mlb.webp"] }
     ],
-    "id": 10,
-    "rating": 5,
-    "reviews": 0
+    "inventory": {
+      "Bạc/Metallic": { "39": 6, "40": 8, "41": 0, "42": 3, "43": 5 }
+    },
+    "questions": []
   },
   {
+    "id": 11,
     "name": "Adidas Samba OG",
     "brand": "Adidas",
     "price": "2,700,000₫",
@@ -225,16 +266,19 @@
     "badge": "New Drop",
     "photoId": "/Samba_OG.webp",
     "description": "Giày thể thao Adidas Samba OG mang tính biểu tượng với phối màu cổ điển, thiết kế da mềm mại và đế cao su gum bám đường tốt.",
+    "materials": "Da mềm, Suede (da lộn) mũi giày, Đế cao su gum",
     "glowColor": "rgba(0, 150, 255, 0.45)",
-    "sizes": [
-      39,
-      40,
-      41,
-      42,
-      43
+    "sizes": [39, 40, 41, 42, 43],
+    "rating": 5.0,
+    "reviews": 0,
+    "colors": [
+      { "name": "Đen OG", "hex": "#18181B", "images": ["/Samba_OG.webp"] },
+      { "name": "Trắng OG", "hex": "#F4F4F5", "images": ["/Samba_OG-removebg-preview.webp"] }
     ],
-    "id": 11,
-    "rating": 5,
-    "reviews": 0
+    "inventory": {
+      "Đen OG": { "39": 10, "40": 8, "41": 6, "42": 4, "43": 12 },
+      "Trắng OG": { "39": 4, "40": 0, "41": 5, "42": 0, "43": 2 }
+    },
+    "questions": []
   }
 ]
