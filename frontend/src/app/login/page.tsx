@@ -555,15 +555,7 @@ export default function LoginPage() {
         />
       </div>
 
-      <div className="absolute top-6 right-6 sm:top-8 sm:right-10 lg:top-10 lg:right-12 z-20">
-        <Link
-          href="/"
-          className="group flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-orange-500 transition-colors uppercase tracking-widest"
-        >
-          Về trang chủ
-          <i className="ti ti-arrow-right group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </div>
+
 
       {/* Success Modal Overlay */}
       <AnimatePresence>
