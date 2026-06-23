@@ -621,7 +621,6 @@ export default function LoginPage() {
               ? { x: [-10, 10, -10, 10, -5, 5, 0], transition: { duration: 0.4 } }
               : {}
           }
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
           className="w-full max-w-md bg-[#0d0d0d]/40 backdrop-blur-2xl border border-white/10 p-8 sm:p-10 rounded-[32px] shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col gap-6 text-white"
         >
           {/* Header titles */}
