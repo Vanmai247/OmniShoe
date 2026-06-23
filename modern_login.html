@@ -241,5 +241,77 @@
         VỀ TRANG CHỦ <i class="fas fa-arrow-right text-[10px]"></i>
     </a>
 
+    <script>
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password-input');
+        
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.classList.toggle('fa-eye');
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Parallax Effect
+        const container = document.getElementById('parallax-container');
+        const shoe = document.getElementById('parallax-shoe');
+        const text = document.getElementById('parallax-text');
+        const streaks = document.querySelectorAll('.light-streak');
+        const bgGlow = document.querySelector('.bg-glow');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        if (container) {
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                // Get normalized values from -1 to 1 based on mouse position relative to container center
+                targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                targetX = 0;
+                targetY = 0;
+            });
+        }
+
+        // Smooth interpolation loop using requestAnimationFrame
+        function animateParallax() {
+            // Smoothly interpolate current coordinates towards target coordinates
+            mouseX += (targetX - mouseX) * 0.1;
+            mouseY += (targetY - mouseY) * 0.1;
+
+            if (shoe) {
+                // Combine floating animation base with mouse movement offsets
+                shoe.style.transform = `translate(${mouseX * 25}px, ${mouseY * 25}px) rotate(${mouseX * 6}deg)`;
+            }
+
+            if (text) {
+                // Move text slightly opposite to create depth
+                text.style.transform = `translate(${mouseX * -12}px, ${mouseY * -12}px)`;
+            }
+
+            if (bgGlow) {
+                // Background moves slightly along
+                bgGlow.style.transform = `translate(${mouseX * 15}px, ${mouseY * 15}px)`;
+            }
+
+            streaks.forEach((streak, idx) => {
+                const multiplier = (idx + 1) * 30;
+                streak.style.transform = `translate(${mouseX * multiplier}px, ${mouseY * multiplier}px) rotate(45deg)`;
+            });
+
+            requestAnimationFrame(animateParallax);
+        }
+
+        // Start animation loop
+        animateParallax();
+    </script>
 </body>
 </html>
