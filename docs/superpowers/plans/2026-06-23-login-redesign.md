@@ -1,0 +1,331 @@
+# OMNISHOE Modern Login Redesign Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Redesign `modern_login.html` to implement a premium split-screen glassmorphic login page with 3D interactive parallax, a Bento Grid social login, and custom animated input glows.
+
+**Architecture:** Vanilla HTML/CSS with Tailwind CSS via CDN. Features interactive animations powered by optimized Vanilla JS running on requestAnimationFrame. Custom complex animations are implemented in custom CSS `<style>` selectors.
+
+**Tech Stack:** Tailwind CSS, Vanilla JS, FontAwesome, Google Fonts.
+
+---
+
+### Task 1: Update styles and custom CSS animations
+
+**Files:**
+- Modify: `c:\OmniShoe\modern_login.html` (Header styles section)
+
+- [ ] **Step 1: Write CSS classes for Glassmorphism, Floating Sneaker, and Input Border Glow**
+
+Add the following styles to the `<style>` tag in `modern_login.html`:
+
+```css
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #080808;
+            overflow: hidden;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 75% 30%, rgba(255, 107, 0, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 25% 75%, rgba(26, 26, 26, 0.8) 0%, transparent 60%);
+            z-index: -1;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Bento Grid social button custom transition */
+        .social-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 107, 0, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Floating Animation */
+        .floating-shoe {
+            animation: float-cycle 6s ease-in-out infinite alternate;
+            will-change: transform;
+            transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        @keyframes float-cycle {
+            0% {
+                transform: translateY(0px) rotate(-3deg);
+            }
+            100% {
+                transform: translateY(-15px) rotate(3deg);
+            }
+        }
+
+        /* Custom Input Glow Animation */
+        .input-glow-container {
+            position: relative;
+            border-radius: 1rem;
+            padding: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: background 0.3s;
+            overflow: hidden;
+        }
+
+        .input-glow-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                transparent,
+                transparent,
+                rgba(255, 107, 0, 0.8)
+            );
+            transform: rotate(0deg);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .input-glow-container:focus-within::before {
+            opacity: 1;
+            animation: rotateGlow 3s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .input-inner {
+            position: relative;
+            z-index: 2;
+            background: #0d0d0d;
+            border-radius: 0.95rem;
+            width: 100%;
+        }
+
+        .light-streak {
+            position: absolute;
+            width: 2px;
+            height: 400px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 107, 0, 0.3), transparent);
+            transform: rotate(45deg);
+            filter: blur(4px);
+            pointer-events: none;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+```
+
+- [ ] **Step 2: Commit styling changes**
+
+Run: `git commit -am "feat: implement premium login styles and animations"`
+
+---
+
+### Task 2: Implement Bento Grid and Redesigned Input Structure
+
+**Files:**
+- Modify: `c:\OmniShoe\modern_login.html` (Body section)
+
+- [ ] **Step 1: Replace input fields with input-glow-container wrappers**
+
+Modify the form fields in `modern_login.html` to wrap inputs with `.input-glow-container` and `.input-inner`:
+
+```html
+            <form class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-2 ml-1">Địa chỉ Email</label>
+                    <div class="input-glow-container">
+                        <div class="input-inner relative flex items-center">
+                            <i class="far fa-envelope absolute left-4 text-gray-500"></i>
+                            <input type="email" placeholder="name@example.com" class="w-full bg-transparent py-4 pl-12 pr-4 rounded-2xl text-sm text-white border-0 outline-none focus:ring-0">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between mb-2 ml-1">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase">Mật khẩu</label>
+                        <a href="#" class="text-xs text-[#ff6b00] hover:underline">Quên mật khẩu?</a>
+                    </div>
+                    <div class="input-glow-container">
+                        <div class="input-inner relative flex items-center">
+                            <i class="fas fa-lock absolute left-4 text-gray-500"></i>
+                            <input type="password" id="password-input" placeholder="••••••••" class="w-full bg-transparent py-4 pl-12 pr-12 rounded-2xl text-sm text-white border-0 outline-none focus:ring-0">
+                            <i class="far fa-eye absolute right-4 text-gray-500 cursor-pointer hover:text-white" id="toggle-password"></i>
+                        </div>
+                    </div>
+                </div>
+```
+
+- [ ] **Step 2: Implement Bento Grid for Social Logins**
+
+Replace the social grid with the following Bento Grid layout:
+
+```html
+            <div class="grid grid-cols-4 gap-3">
+                <!-- Google (Wide Button - 2 cols) -->
+                <button class="col-span-2 social-btn py-3.5 rounded-2xl flex justify-center items-center gap-2.5 font-medium text-sm text-white">
+                    <i class="fab fa-google text-base text-[#ea4335]"></i>
+                    <span>Google</span>
+                </button>
+                <!-- Apple (1 col) -->
+                <button class="col-span-1 social-btn py-3.5 rounded-2xl flex justify-center items-center text-white">
+                    <i class="fab fa-apple text-lg"></i>
+                </button>
+                <!-- Facebook (1 col) -->
+                <button class="col-span-1 social-btn py-3.5 rounded-2xl flex justify-center items-center text-white">
+                    <i class="fab fa-facebook-f text-base text-[#1877f2]"></i>
+                </button>
+            </div>
+```
+
+- [ ] **Step 3: Add IDs/Classes to elements for JavaScript Parallax selection**
+
+Add `id="parallax-container"` to the main grid wrapper:
+```html
+    <div id="parallax-container" class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
+```
+Add `id="parallax-shoe"` to the sneaker image:
+```html
+            <img id="parallax-shoe" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Sneaker" class="w-full max-w-lg floating-shoe drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)]">
+```
+Add `id="parallax-text"` to the slogan section:
+```html
+            <div id="parallax-text" class="mt-12 text-center transition-transform duration-200 ease-out">
+```
+
+- [ ] **Step 4: Commit UI changes**
+
+Run: `git commit -am "feat: implement inputs and bento grid layout"`
+
+---
+
+### Task 3: Implement 3D Interactive Parallax & Utilities in JavaScript
+
+**Files:**
+- Modify: `c:\OmniShoe\modern_login.html` (Before `</body>`)
+
+- [ ] **Step 1: Write interactive JavaScript for Parallax and Password toggle**
+
+Add the script tag before the closing `</body>` tag:
+
+```html
+    <script>
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password-input');
+        
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.classList.toggle('fa-eye');
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Parallax Effect
+        const container = document.getElementById('parallax-container');
+        const shoe = document.getElementById('parallax-shoe');
+        const text = document.getElementById('parallax-text');
+        const streaks = document.querySelectorAll('.light-streak');
+        const bgGlow = document.querySelector('.bg-glow');
+
+        let isHovered = false;
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        if (container) {
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                // Get normalized values from -1 to 1 based on mouse position relative to container center
+                targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+                isHovered = true;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                targetX = 0;
+                targetY = 0;
+                isHovered = false;
+            });
+        }
+
+        // Smooth interpolation loop using requestAnimationFrame
+        function animateParallax() {
+            // Smoothly interpolate current coordinates towards target coordinates
+            mouseX += (targetX - mouseX) * 0.1;
+            mouseY += (targetY - mouseY) * 0.1;
+
+            if (shoe) {
+                // Combine floating animation base with mouse movement offsets
+                shoe.style.transform = `translate(${mouseX * 25}px, ${mouseY * 25}px) rotate(${mouseX * 6}deg)`;
+            }
+
+            if (text) {
+                // Move text slightly opposite to create depth
+                text.style.transform = `translate(${mouseX * -12}px, ${mouseY * -12}px)`;
+            }
+
+            if (bgGlow) {
+                // Background moves slightly along
+                bgGlow.style.transform = `translate(${mouseX * 15}px, ${mouseY * 15}px)`;
+            }
+
+            streaks.forEach((streak, idx) => {
+                const multiplier = (idx + 1) * 30;
+                streak.style.transform = `translate(${mouseX * multiplier}px, ${mouseY * multiplier}px) rotate(45deg)`;
+            });
+
+            requestAnimationFrame(animateParallax);
+        }
+
+        // Start animation loop
+        animateParallax();
+    </script>
+```
+
+- [ ] **Step 2: Commit JavaScript logic**
+
+Run: `git commit -am "feat: implement 3D parallax script and password toggle"`
+
+---
+
+### Task 4: Verify redesign in browser
+
+**Files:**
+- Test: `c:\OmniShoe\modern_login.html`
+
+- [ ] **Step 1: Open the page in browser subagent and verify layout & animations**
+
+Use the browser subagent to render `c:\OmniShoe\modern_login.html` and visually verify responsiveness, inputs focus state, bento grid layout, and parallax movements.
+
+- [ ] **Step 2: Add validation walkthrough**
+
+Document verification outcomes in `walkthrough.md`.

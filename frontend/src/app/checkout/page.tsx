@@ -246,17 +246,20 @@ function CheckoutContent() {
   useEffect(() => {
     if (buyNowProductId) {
       setLoadingProduct(true);
+      const buyNowColor = searchParams.get("color");
       fetch(`/api/products/${buyNowProductId}`)
         .then((res) => {
           if (!res.ok) throw new Error("Product not found");
           return res.json();
         })
         .then((data) => {
+          const matchingColorImage = data.colors?.find((c: any) => c.name === buyNowColor)?.images?.[0];
           setBuyNowProduct({
             ...data,
+            name: buyNowColor ? `${data.name} - ${buyNowColor}` : data.name,
             selectedSize: parseInt(buyNowSize || "41"),
             quantity: parseInt(buyNowQty || "1"),
-            photoId: data.photoId || data.image || "" 
+            photoId: matchingColorImage || data.photoId || data.image || "" 
           });
           setLoadingProduct(false);
         })
@@ -266,7 +269,7 @@ function CheckoutContent() {
           setLoadingProduct(false);
         });
     }
-  }, [buyNowProductId, buyNowSize, buyNowQty]);
+  }, [buyNowProductId, buyNowSize, buyNowQty, searchParams]);
 
   // Sync user info if loaded later
   useEffect(() => {

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNISHOE - Modern Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #080808;
+            overflow: hidden;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 75% 30%, rgba(255, 107, 0, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 25% 75%, rgba(26, 26, 26, 0.8) 0%, transparent 60%);
+            z-index: -1;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Bento Grid social button custom transition */
+        .social-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 107, 0, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Floating Animation */
+        .floating-shoe {
+            animation: float-cycle 6s ease-in-out infinite alternate;
+            will-change: transform;
+            transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        @keyframes float-cycle {
+            0% {
+                transform: translateY(0px) rotate(-3deg);
+            }
+            100% {
+                transform: translateY(-15px) rotate(3deg);
+            }
+        }
+
+        /* Custom Input Glow Animation */
+        .input-glow-container {
+            position: relative;
+            border-radius: 1rem;
+            padding: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: background 0.3s;
+            overflow: hidden;
+        }
+
+        .input-glow-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                transparent,
+                transparent,
+                rgba(255, 107, 0, 0.8)
+            );
+            transform: rotate(0deg);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+        }
+
+        .input-glow-container:focus-within::before {
+            opacity: 1;
+            animation: rotateGlow 3s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .input-inner {
+            position: relative;
+            z-index: 2;
+            background: #0d0d0d;
+            border-radius: 0.95rem;
+            width: 100%;
+        }
+
+        .light-streak {
+            position: absolute;
+            width: 2px;
+            height: 400px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 107, 0, 0.3), transparent);
+            transform: rotate(45deg);
+            filter: blur(4px);
+            pointer-events: none;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-4">
+    <div class="bg-glow"></div>
+    
+    <!-- Trang trí nền -->
+    <div class="light-streak" style="top: 10%; left: 20%;"></div>
+    <div class="light-streak" style="bottom: 10%; right: 20%;"></div>
+
+    <div id="parallax-container" class="max-w-md w-full relative z-10">
+        <!-- Form Card centered -->
+        <div id="login-card" class="glass-card p-10 rounded-[40px] w-full mx-auto transition-transform duration-100 ease-out">
+            <div class="mb-10">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-10 h-10 bg-[#ff6b00] rounded-lg flex items-center justify-center">
+                        <i class="fas fa-shoe-prints text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold tracking-tighter">OMNISHOE</span>
+                </div>
+                <h1 class="text-3xl font-bold mb-2">Đăng nhập</h1>
+                <p class="text-gray-400 text-sm">Khám phá bộ sưu tập sneaker độc quyền dành riêng cho bạn.</p>
+            </div>
+
+            <form class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-2 ml-1">Địa chỉ Email</label>
+                    <div class="input-glow-container">
+                        <div class="input-inner relative flex items-center">
+                            <i class="far fa-envelope absolute left-4 text-gray-500"></i>
+                            <input type="email" placeholder="name@example.com" class="w-full bg-transparent py-4 pl-12 pr-4 rounded-2xl text-sm text-white border-0 outline-none focus:ring-0">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between mb-2 ml-1">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase">Mật khẩu</label>
+                        <a href="#" class="text-xs text-[#ff6b00] hover:underline">Quên mật khẩu?</a>
+                    </div>
+                    <div class="input-glow-container">
+                        <div class="input-inner relative flex items-center">
+                            <i class="fas fa-lock absolute left-4 text-gray-500"></i>
+                            <input type="password" id="password-input" placeholder="••••••••" class="w-full bg-transparent py-4 pl-12 pr-12 rounded-2xl text-sm text-white border-0 outline-none focus:ring-0">
+                            <i class="far fa-eye absolute right-4 text-gray-500 cursor-pointer hover:text-white" id="toggle-password"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 ml-1">
+                    <input type="checkbox" id="remember" class="accent-[#ff6b00] w-4 h-4">
+                    <label for="remember" class="text-xs text-gray-400">Duy trì đăng nhập trên thiết bị này</label>
+                </div>
+
+                <button class="btn-primary w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-wider mt-4">
+                    Đăng nhập ngay
+                </button>
+            </form>
+
+            <div class="relative my-8">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+                <div class="relative flex justify-center text-xs uppercase"><span class="bg-transparent px-4 text-gray-500">Hoặc tiếp tục với</span></div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3">
+                <!-- Google (Wide Button - 2 cols) -->
+                <button class="col-span-2 social-btn py-3.5 rounded-2xl flex justify-center items-center gap-2.5 font-medium text-sm text-white">
+                    <i class="fab fa-google text-base text-[#ea4335]"></i>
+                    <span>Google</span>
+                </button>
+                <!-- Apple (1 col) -->
+                <button class="col-span-1 social-btn py-3.5 rounded-2xl flex justify-center items-center text-white">
+                    <i class="fab fa-apple text-lg"></i>
+                </button>
+                <!-- Facebook (1 col) -->
+                <button class="col-span-1 social-btn py-3.5 rounded-2xl flex justify-center items-center text-white">
+                    <i class="fab fa-facebook-f text-base text-[#1877f2]"></i>
+                </button>
+            </div>
+
+            <p class="text-center text-sm text-gray-400 mt-10">
+                Chưa có tài khoản? <a href="#" class="text-[#ff6b00] font-bold hover:underline">TẠO TÀI KHOẢN NGAY</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Nút về trang chủ góc trên phải -->
+    <a href="#" class="fixed top-8 right-8 text-xs font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+        VỀ TRANG CHỦ <i class="fas fa-arrow-right text-[10px]"></i>
+    </a>
+
+    <script>
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password-input');
+        
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.classList.toggle('fa-eye');
+                togglePassword.classList.toggle('fa-eye-slash');
+            });
+        }
+
+        // Parallax Effect
+        const container = document.getElementById('parallax-container');
+        const card = document.getElementById('login-card');
+        const streaks = document.querySelectorAll('.light-streak');
+        const bgGlow = document.querySelector('.bg-glow');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        if (container) {
+            window.addEventListener('mousemove', (e) => {
+                // Get normalized values relative to screen center
+                targetX = (e.clientX / window.innerWidth) * 2 - 1;
+                targetY = (e.clientY / window.innerHeight) * 2 - 1;
+            });
+
+            // Reset when leaving window
+            document.addEventListener('mouseleave', () => {
+                targetX = 0;
+                targetY = 0;
+            });
+        }
+
+        // Smooth interpolation loop using requestAnimationFrame
+        function animateParallax() {
+            // Smoothly interpolate current coordinates towards target coordinates
+            mouseX += (targetX - mouseX) * 0.1;
+            mouseY += (targetY - mouseY) * 0.1;
+
+            if (card) {
+                // Move card slightly with mouse to create floating depth
+                card.style.transform = `translate(${mouseX * 10}px, ${mouseY * 10}px) rotateX(${mouseY * -3}deg) rotateY(${mouseX * 3}deg)`;
+            }
+
+            if (bgGlow) {
+                // Background moves slightly along
+                bgGlow.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+            }
+
+            streaks.forEach((streak, idx) => {
+                const multiplier = (idx + 1) * 35;
+                streak.style.transform = `translate(${mouseX * multiplier}px, ${mouseY * multiplier}px) rotate(45deg)`;
+            });
+
+            requestAnimationFrame(animateParallax);
+        }
+
+        // Start animation loop
+        animateParallax();
+    </script>
+</body>
+</html>
