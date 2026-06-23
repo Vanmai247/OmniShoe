@@ -804,24 +804,22 @@ export default function LoginPage() {
             </div>
 
             {/* Submit Button */}
-            <Magnetic range={60}>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 mt-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs tracking-wider uppercase transition-colors shadow-[0_4px_20px_rgba(255,107,0,0.15)] flex items-center justify-center gap-2 select-none"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Đang xử lý...
-                  </>
-                ) : isLogin ? (
-                  "Đăng nhập"
-                ) : (
-                  "Đăng ký tài khoản"
-                )}
-              </button>
-            </Magnetic>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 mt-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs tracking-wider uppercase transition-colors shadow-[0_4px_20px_rgba(255,107,0,0.15)] flex items-center justify-center gap-2 select-none"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Đang xử lý...
+                </>
+              ) : isLogin ? (
+                "Đăng nhập"
+              ) : (
+                "Đăng ký tài khoản"
+              )}
+            </button>
           </form>
 
           {/* Social Logins Divider */}
@@ -834,40 +832,22 @@ export default function LoginPage() {
           </div>
 
           {/* Social Login Buttons */}
-          <div className="grid grid-cols-4 gap-3 w-full">
-            <Magnetic range={45}>
+          <div className="grid grid-cols-3 gap-3 w-full">
+            {[
+              { id: "Google", icon: "ti-brand-google", color: "text-[#ea4335]" },
+              { id: "Apple", icon: "ti-brand-apple", color: "text-white" },
+              { id: "Facebook", icon: "ti-brand-facebook", color: "text-[#1877f2]" },
+            ].map((social) => (
               <button
+                key={social.id}
                 type="button"
-                onClick={() => handleSocialLogin("Google")}
-                className="col-span-2 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center gap-2 text-sm text-white hover:text-white transition-all group shadow-sm animate-none"
-                title="Đăng nhập qua Google"
+                onClick={() => handleSocialLogin(social.id)}
+                className="w-full py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-xl text-white transition-all group shadow-sm"
+                title={`Đăng nhập qua ${social.id}`}
               >
-                <i className="ti ti-brand-google group-hover:scale-110 transition-transform text-[#ea4335]" />
-                <span className="font-semibold text-xs">Google</span>
+                <i className={`ti ${social.icon} ${social.color} group-hover:scale-110 transition-transform`} />
               </button>
-            </Magnetic>
-            
-            <Magnetic range={45}>
-              <button
-                type="button"
-                onClick={() => handleSocialLogin("Apple")}
-                className="col-span-1 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-xl text-white hover:text-white transition-all group shadow-sm"
-                title="Đăng nhập qua Apple"
-              >
-                <i className="ti ti-brand-apple group-hover:scale-110 transition-transform" />
-              </button>
-            </Magnetic>
-
-            <Magnetic range={45}>
-              <button
-                type="button"
-                onClick={() => handleSocialLogin("Facebook")}
-                className="col-span-1 py-3 border border-white/10 hover:border-orange-500/40 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-xl text-white hover:text-white transition-all group shadow-sm"
-                title="Đăng nhập qua Facebook"
-              >
-                <i className="ti ti-brand-facebook group-hover:scale-110 transition-transform text-[#1877f2]" />
-              </button>
-            </Magnetic>
+            ))}
           </div>
 
           {/* Tab Switcher Link */}
