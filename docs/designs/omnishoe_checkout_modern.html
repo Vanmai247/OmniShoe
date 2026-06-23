@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - OMNISHOE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #FF8C00;
+            --primary-dark: #0f0f0f;
+            --secondary-dark: #1a1a1a;
+            --tertiary-dark: #2a2a2a;
+            --text-light: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --accent-green: #00d084;
+            --accent-blue: #00a8ff;
+            --border-color: rgba(255, 140, 0, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 15, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-orange);
+            color: var(--primary-orange);
+        }
+
+        .progress-status {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .checkout-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Progress Indicator */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--tertiary-dark);
+            z-index: 0;
+        }
+
+        .progress-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tertiary-dark);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .progress-circle {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+        }
+
+        .progress-step.completed .progress-circle {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: white;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-step.active .progress-label {
+            color: var(--primary-orange);
+        }
+
+        /* Main Content */
+        .checkout-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Section Card */
+        .section-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: var(--border-color);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.2);
+        }
+
+        /* Radio & Checkbox */
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-item:hover {
+            background: rgba(255, 140, 0, 0.1);
+            border-color: var(--primary-orange);
+        }
+
+        .option-item input[type="radio"] {
+            width: auto;
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .option-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .option-price {
+            font-weight: 600;
+            color: var(--primary-orange);
+            font-size: 0.95rem;
+        }
+
+        /* Order Summary Sidebar */
+        .order-summary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .product-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .product-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary-orange);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .summary-row.total {
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+
+        .summary-value {
+            text-align: right;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, #ff9f1c 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.5);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-orange);
+            color: var(--primary-orange);
+        }
+
+        /* Trust Signals */
+        .trust-signals {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .trust-icon {
+            color: var(--accent-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+                top: auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-bar {
+                flex-wrap: wrap;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .section-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-card {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .section-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .section-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo">
+            <span>◆</span> OMNISHOE
+        </a>
+        <div class="header-actions">
+            <span class="progress-status">Bước 3 / 3: Thanh toán</span>
+            <button class="back-btn">← Quay lại giỏ hàng</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-step completed">
+                <div class="progress-circle">✓</div>
+                <div class="progress-label">Giỏ hàng</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="progress-circle">✓</div>
+                <div class="progress-label">Thông tin</div>
+            </div>
+            <div class="progress-step active">
+                <div class="progress-circle">3</div>
+                <div class="progress-label">Thanh toán</div>
+            </div>
+        </div>
+
+        <!-- Checkout Wrapper -->
+        <div class="checkout-wrapper">
+            <!-- Main Content -->
+            <div class="checkout-content">
+                <!-- Section 1: Thông tin nhận hàng -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-number">1</div>
+                        <div class="section-title">Thông tin nhận hàng</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullname">Họ và tên *</label>
+                            <input type="text" id="fullname" placeholder="Nhập họ và tên">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại *</label>
+                            <input type="tel" id="phone" placeholder="Nhập số điện thoại">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" placeholder="Nhập email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Địa chỉ giao hàng *</label>
+                        <input type="text" id="address" placeholder="Nhập số nhà, tên đường, phường/xã...">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Thành phố *</label>
+                            <select id="city">
+                                <option>Chọn thành phố</option>
+                                <option>TP. Hồ Chí Minh</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="district">Quận/Huyện *</label>
+                            <select id="district">
+                                <option>Chọn quận/huyện</option>
+                                <option>Quận 1</option>
+                                <option>Quận 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="note">Ghi chú đơn hàng (không bắt buộc)</label>
+                        <textarea id="note" rows="3" placeholder="Ghi chú thêm cho đơn hàng..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Section 2: Phương thức vận chuyển -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-number">2</div>
+                        <div class="section-title">Phương thức vận chuyển</div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-item">
+                            <input type="radio" name="shipping" value="standard" checked>
+                            <div class="option-content">
+                                <div class="option-title">🚚 Giao hàng tiêu chuẩn</div>
+                                <div class="option-desc">Dự kiến giao vào Thứ Tư, 26/06/2024 (1-3 ngày)</div>
+                            </div>
+                            <div class="option-price">20.000₫</div>
+                        </label>
+
+                        <label class="option-item">
+                            <input type="radio" name="shipping" value="express">
+                            <div class="option-content">
+                                <div class="option-title">⚡ Giao hàng hỏa tốc (FAST)</div>
+                                <div class="option-desc">Dự kiến giao vào Thứ Ba, 25/06/2024 (Hôm nay)</div>
+                            </div>
+                            <div class="option-price">50.000₫</div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section 3: Phương thức thanh toán -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-number">3</div>
+                        <div class="section-title">Phương thức thanh toán</div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-item">
+                            <input type="radio" name="payment" value="cod" checked>
+                            <div class="option-content">
+                                <div class="option-title">💵 Thanh toán khi nhận hàng (COD)</div>
+                                <div class="option-desc">Nhận hàng, kiểm tra rồi thanh toán cho nhân viên giao hàng</div>
+                            </div>
+                        </label>
+
+                        <label class="option-item">
+                            <input type="radio" name="payment" value="qr">
+                            <div class="option-content">
+                                <div class="option-title">📱 Chuyển khoản ngân hàng (QR Code)</div>
+                                <div class="option-desc">Hỗ trợ tất cả ngân hàng, thanh toán tức thì qua ứng dụng ngân hàng</div>
+                            </div>
+                        </label>
+
+                        <label class="option-item">
+                            <input type="radio" name="payment" value="ewallet">
+                            <div class="option-content">
+                                <div class="option-title">💳 Ví điện tử / Cổng thanh toán (Momo, VNPay)</div>
+                                <div class="option-desc">Thanh toán an toàn qua các ứng dụng ví điện tử phổ biến</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="trust-signals">
+                        <div class="trust-item">
+                            <span class="trust-icon">🔒</span>
+                            <span>Thanh toán an toàn (SSL)</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-icon">✓</span>
+                            <span>Được bảo vệ bởi OMNISHOE</span>
+                        </div>
+                        <div class="trust-item">
+                            <span class="trust-icon">↩️</span>
+                            <span>Đổi trả 30 ngày</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button class="btn btn-secondary">← Quay lại</button>
+                    <button class="btn btn-primary">✓ Xác nhận đặt hàng</button>
+                </div>
+            </div>
+
+            <!-- Order Summary Sidebar -->
+            <div class="order-summary">
+                <div class="summary-title">📦 Đơn hàng của bạn</div>
+
+                <!-- Product Items -->
+                <div class="product-item">
+                    <div class="product-image">👟</div>
+                    <div class="product-info">
+                        <div class="product-name">Nike Air Jordan 1</div>
+                        <div class="product-details">Size: 41 | Số lượng: 1</div>
+                        <div class="product-price">8.990.000₫</div>
+                    </div>
+                </div>
+
+                <div class="product-item">
+                    <div class="product-image">👟</div>
+                    <div class="product-info">
+                        <div class="product-name">Converse Chuck Taylor</div>
+                        <div class="product-details">Size: 41 | Số lượng: 1</div>
+                        <div class="product-price">2.490.000₫</div>
+                    </div>
+                </div>
+
+                <!-- Summary Details -->
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span class="summary-value">11.480.000₫</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Phí vận chuyển:</span>
+                    <span class="summary-value">20.000₫</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Giảm giá:</span>
+                    <span class="summary-value" style="color: var(--accent-green);">-108.000₫</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Tổng cộng:</span>
+                    <span class="summary-value">11.392.000₫</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple form validation
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('focus', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.1)';
+            });
+        });
+
+        // Confirm order button
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            alert('Đơn hàng của bạn đã được xác nhận! Cảm ơn bạn đã mua sắm tại OMNISHOE.');
+        });
+    </script>
+</body>
+</html>
