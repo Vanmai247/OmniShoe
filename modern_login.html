@@ -143,10 +143,9 @@
     <div class="light-streak" style="top: 10%; left: 20%;"></div>
     <div class="light-streak" style="bottom: 10%; right: 20%;"></div>
 
-    <div id="parallax-container" class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center relative z-10">
-        
-        <!-- Left Side: Form -->
-        <div class="glass-card p-10 rounded-[40px] w-full max-w-md mx-auto lg:mx-0">
+    <div id="parallax-container" class="max-w-md w-full relative z-10">
+        <!-- Form Card centered -->
+        <div id="login-card" class="glass-card p-10 rounded-[40px] w-full mx-auto transition-transform duration-100 ease-out">
             <div class="mb-10">
                 <div class="flex items-center gap-2 mb-6">
                     <div class="w-10 h-10 bg-[#ff6b00] rounded-lg flex items-center justify-center">
@@ -218,22 +217,6 @@
                 Chưa có tài khoản? <a href="#" class="text-[#ff6b00] font-bold hover:underline">TẠO TÀI KHOẢN NGAY</a>
             </p>
         </div>
-
-        <!-- Right Side: Visual -->
-        <div class="hidden lg:flex flex-col items-center justify-center relative">
-            <div class="absolute w-[500px] h-[500px] bg-[#ff6b00]/10 rounded-full blur-[100px] -z-10 animate-pulse" style="animation-duration: 8s;"></div>
-            <img id="parallax-shoe" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Sneaker" class="w-full max-w-lg floating-shoe drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)]">
-            
-            <div id="parallax-text" class="mt-12 text-center">
-                <span class="inline-block px-4 py-1 rounded-full bg-[#ff6b00]/20 text-[#ff6b00] text-[10px] font-bold uppercase tracking-widest mb-4 border border-[#ff6b00]/30">
-                    Omnishoe Exclusive
-                </span>
-                <h2 class="text-5xl font-black italic tracking-tighter mb-4 uppercase">Kết nối văn hóa<br><span class="text-[#ff6b00]">Sneaker</span></h2>
-                <p class="text-gray-400 max-w-md mx-auto text-sm leading-relaxed">
-                    Đăng nhập để nhận thông báo về các đợt phát hành giày giới hạn, tích lũy điểm thưởng và hưởng quyền lợi đặc quyền của thành viên VIP.
-                </p>
-            </div>
-        </div>
     </div>
 
     <!-- Nút về trang chủ góc trên phải -->
@@ -257,8 +240,7 @@
 
         // Parallax Effect
         const container = document.getElementById('parallax-container');
-        const shoe = document.getElementById('parallax-shoe');
-        const text = document.getElementById('parallax-text');
+        const card = document.getElementById('login-card');
         const streaks = document.querySelectorAll('.light-streak');
         const bgGlow = document.querySelector('.bg-glow');
 
@@ -268,14 +250,14 @@
         let targetY = 0;
 
         if (container) {
-            container.addEventListener('mousemove', (e) => {
-                const rect = container.getBoundingClientRect();
-                // Get normalized values from -1 to 1 based on mouse position relative to container center
-                targetX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-                targetY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+            window.addEventListener('mousemove', (e) => {
+                // Get normalized values relative to screen center
+                targetX = (e.clientX / window.innerWidth) * 2 - 1;
+                targetY = (e.clientY / window.innerHeight) * 2 - 1;
             });
 
-            container.addEventListener('mouseleave', () => {
+            // Reset when leaving window
+            document.addEventListener('mouseleave', () => {
                 targetX = 0;
                 targetY = 0;
             });
@@ -287,23 +269,18 @@
             mouseX += (targetX - mouseX) * 0.1;
             mouseY += (targetY - mouseY) * 0.1;
 
-            if (shoe) {
-                // Combine floating animation base with mouse movement offsets
-                shoe.style.transform = `translate(${mouseX * 25}px, ${mouseY * 25}px) rotate(${mouseX * 6}deg)`;
-            }
-
-            if (text) {
-                // Move text slightly opposite to create depth
-                text.style.transform = `translate(${mouseX * -12}px, ${mouseY * -12}px)`;
+            if (card) {
+                // Move card slightly with mouse to create floating depth
+                card.style.transform = `translate(${mouseX * 10}px, ${mouseY * 10}px) rotateX(${mouseY * -3}deg) rotateY(${mouseX * 3}deg)`;
             }
 
             if (bgGlow) {
                 // Background moves slightly along
-                bgGlow.style.transform = `translate(${mouseX * 15}px, ${mouseY * 15}px)`;
+                bgGlow.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
             }
 
             streaks.forEach((streak, idx) => {
-                const multiplier = (idx + 1) * 30;
+                const multiplier = (idx + 1) * 35;
                 streak.style.transform = `translate(${mouseX * multiplier}px, ${mouseY * multiplier}px) rotate(45deg)`;
             });
 
